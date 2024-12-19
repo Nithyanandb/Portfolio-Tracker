@@ -1,13 +1,13 @@
-package Portfolio.Tracker.App;
+package Portfolio.Tracker;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AppApplication {
-
+public class Application {
 	public static void main(String[] args) {
-		SpringApplication.run(AppApplication.class, args);
+		SpringApplication.run(Application.class, args);
 	}
-
 }
+
+
