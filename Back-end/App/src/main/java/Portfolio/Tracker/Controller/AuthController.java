@@ -1,74 +1,70 @@
 package Portfolio.Tracker.Controller;
 
+import Portfolio.Tracker.Entity.JwtResponse;
+import Portfolio.Tracker.Entity.LoginRequest;
+import Portfolio.Tracker.Entity.RegisterRequest;
 import Portfolio.Tracker.Entity.User;
-import Portfolio.Tracker.Service.JwtTokenProvider;
+import Portfolio.Tracker.Repository.UserRepository;
+import Portfolio.Tracker.Service.UserService;
+import Portfolio.Tracker.Utility.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import Portfolio.Tracker.Entity.LoginRequest;
-import Portfolio.Tracker.Entity.LoginResponse;
-import Portfolio.Tracker.Entity.RegisterRequest;
-import Portfolio.Tracker.Service.CustomUserDetailsService;
-
-import java.util.List;
 
 @RestController
 public class AuthController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
+    private final UserService userService;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    private JwtTokenProvider jwtTokenProvider;
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    public AuthController(UserRepository userRepository, UserService userService, JwtUtil jwtUtil,
+                          AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.userService = userService;
+        this.jwtUtil = jwtUtil;
+        this.authenticationManager = authenticationManager;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            // Authenticate the user with AuthenticationManager
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+            );
 
-            // Generate JWT token after successful authentication
-            String token = jwtTokenProvider.generateToken(loginRequest.getUsername());
+            // If authentication is successful, generate the token
+            User user = userRepository.findByUsername(loginRequest.getUsername());
+            String token = jwtUtil.generateToken(user.getUsername());
+            return ResponseEntity.ok(new JwtResponse(token));
 
-            return ResponseEntity.ok(new LoginResponse(token));
-        } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Invalid credentials"));
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Invalid credentials");
         }
     }
-
-
 
     @PostMapping("/register")
-    public ResponseEntity<LoginResponse> register(@RequestBody RegisterRequest registerRequest) {
-        try {
-            User user = customUserDetailsService.registerUser(registerRequest);
-            return ResponseEntity.ok(new LoginResponse("User registered successfully"));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponse("Error registering user"));
+    public ResponseEntity<String> registerUser(@RequestBody RegisterRequest registerRequest) {
+        if (userRepository.existsByUsername(registerRequest.getUsername())) {
+            return ResponseEntity.status(409).body("Username already exists");
         }
-    }
-    @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUsers() {
+
         try {
-            List<User> users = customUserDetailsService.getAllUsers();
-            return ResponseEntity.ok(users);
+            userService.registerUser(registerRequest);
+            return ResponseEntity.ok("User registered successfully");
         } catch (Exception e) {
-            System.err.println("Error fetching users: " + e.getMessage());
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.badRequest().body("Error during registration");
         }
     }
 }

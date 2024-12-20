@@ -1,10 +1,8 @@
 .home-container {
-    max-width: 1200px;
+    max-width: 100%px;
     margin: 40px auto;
     padding: 20px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #000000;
   }
   
   .home-header {
@@ -21,7 +19,8 @@
     font-size: 18px;
     color: #666;
   }
-  
+ 
+
   .get-started-btn {
     background-color: #4CAF50;
     color: #fff;
@@ -79,4 +78,14 @@
   
   .sign-up-btn:hover {
     background-color: #3e8e41;
+  }
+
+
+  .io{
+    color: white;
+    background-color: #000000;
+    font-size: medium;
+    padding: 20px 0px;
+    margin: 0%;
+    
   }

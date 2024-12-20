@@ -1,30 +1,33 @@
-    package Portfolio.Tracker.Entity;
+package Portfolio.Tracker.Entity;
 
-    import lombok.Data;
+public class LoginRequest {
 
-    @Data
-    public class LoginRequest {
-        private String username;
-        private String password;
+    private String username;
+    private String password;
 
-        public LoginRequest(String password, String username) {
-            this.password = password;
-            this.username = username;
-        }
+    // Default constructor
+    public LoginRequest() {}
 
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
+    // Constructor for easier initialization
+    public LoginRequest(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
+
+    // Getter and Setter methods
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+}

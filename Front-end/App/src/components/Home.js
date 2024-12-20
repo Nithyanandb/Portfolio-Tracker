@@ -1,16 +1,15 @@
-import React from 'react';
-import d from './372878.jpg';
-import { 
-  Button, 
-  Typography, 
-  Grid, 
-  Container, 
-  Card, 
-  CardContent, 
-  CardMedia 
-} from '@mui/material';
+import React from "react";
+import d from "../static/img.jpg";
+import {
+  Button,
+  Typography,
+  Grid,
+  Container,
+  Card,
+  CardContent,
+  CardMedia,
+} from "@mui/material";
 
-import { Line } from 'react-chartjs-2';
 
 const Home = () => {
   return (
@@ -18,55 +17,40 @@ const Home = () => {
       <Container maxWidth="lg">
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography 
-              variant="h1" 
-              component="h1" 
-              sx={{ 
-                fontSize: '3rem', 
-                fontWeight: 'bold', 
-                color: '#333', 
-                textAlign: 'center', 
-                marginBottom: '2rem' 
+            <Typography
+              variant="h1"
+              component="h1"
+              sx={{
+                fontSize: "3  rem",
+                fontWeight: "bold",
+                color: "#333",
+                textAlign: "center",
+                marginBottom: "2rem",
               }}
-            >
-              Welcome to Portfolio Tracker
-            </Typography>
+            ></Typography>
           </Grid>
           <Grid item xs={12} md={6}>
-            <Card sx={{ maxWidth: 345 }}>
-              <CardMedia 
-                component="img" 
-                height="150" 
-                image={d}
-                />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
+            <Card sx={{ maxWidth: 400 }}>
+              <CardMedia component="img" height="180" image={d} />
+              
+              <div className="io">
+               
                   Track your investments and stay on top of the market
-                </Typography>
-                <Button 
-                  variant="contained" 
-                  color="primary" 
-                  sx={{ 
-                    fontSize: '1.2rem', 
-                    fontWeight: 'bold', 
-                    padding: '1rem 2rem' 
-                  }}
-                >
-                  Get Started
-                </Button>
-              </CardContent>
+                <Button>Get Started</Button>
+              </div>
+              
             </Card>
           </Grid>
           <Grid item xs={12}>
-            <Typography 
-              variant="h3" 
-              component="h2" 
-              sx={{ 
-                fontSize: '2rem', 
-                fontWeight: 'bold', 
-                color: '#333', 
-                textAlign: 'center', 
-                marginBottom: '2rem' 
+            <Typography
+              variant="h3"
+              component="h2"
+              sx={{
+                fontSize: "2rem",
+                fontWeight: "bold",
+                color: "#333",
+                textAlign: "center",
+                marginBottom: "2rem",
               }}
             >
               Features
@@ -91,7 +75,8 @@ const Home = () => {
                   Stay Informed
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
-                  Get market news and updates to help you make informed decisions
+                  Get market news and updates to help you make informed
+                  decisions
                 </Typography>
               </CardContent>
             </Card>

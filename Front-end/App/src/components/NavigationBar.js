@@ -4,8 +4,9 @@ import { Nav, Navbar } from 'react-bootstrap';
 
 const NavigationBar = () => {
   return (
-    <Navbar bg="light" expand="lg">
-      <Navbar.Brand href="#home">Zerodha</Navbar.Brand>
+    <div className='er' style={{padding:'0px 40px'}}>
+    <Navbar expand="sm" >
+      <Navbar.Brand href="/" >Zerodha</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
@@ -19,16 +20,19 @@ const NavigationBar = () => {
             About
           </Link>
         </Nav>
+        <div className='er'>
         <Nav>
           <Link to="/login" className="nav-link">
             Login
           </Link>
-          <Link to="/signup" className="nav-link">
-            Signup
+          <Link to="/register" className="nav-link">
+            Register
           </Link>
         </Nav>
+        </div>
       </Navbar.Collapse>
     </Navbar>
+    </div>
   );
 };
 

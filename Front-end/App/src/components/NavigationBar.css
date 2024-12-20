@@ -25,8 +25,12 @@
     color: #007bff;
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 400px) {
     .navbar {
       padding: 0.5rem 1rem;
     }
+    .er{
+      padding:0px 0px;
+    }
   }
+
