@@ -17,15 +17,15 @@ public class Stock {
 
     private String symbol;
     private int quantity;
-    private BigDecimal purchase_Price;  // Changed to BigDecimal
-    private BigDecimal current_Price;  // Changed to BigDecimal
-    private BigDecimal profit_Loss;  // Changed to BigDecimal
+    private BigDecimal purchase_Price;
+    private BigDecimal current_Price;
+    private BigDecimal profit_Loss;
     private Long portfolio_Id;
     private LocalDateTime purchase_Date;
     private LocalDateTime updated_Date;
-    private String exchange;
-    private String sector;
-    private BigDecimal day_Change_Percentage;  // Changed to BigDecimal
+    private String exchange = "NASDAQ";  // Default value for exchange
+    private String sector = "Technology";  // Default value for sector
+    private BigDecimal day_Change_Percentage;
     private String type;
 
     // Constructor that accepts only required fields
@@ -143,7 +143,7 @@ public class Stock {
         this.type = type;
     }
 
-
+    // Default constructor
     public Stock() {}
 
 }
