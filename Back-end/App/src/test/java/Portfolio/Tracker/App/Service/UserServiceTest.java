@@ -29,7 +29,7 @@ public class UserServiceTest {
 
     @Test
     void testRegisterUser() {
-        RegisterRequest registerRequest = new RegisterRequest("user", "password");
+        RegisterRequest registerRequest = new RegisterRequest("username","email", "password");
 
         // Mock the PasswordEncoder to return an encoded password
         when(passwordEncoder.encode(any(String.class))).thenReturn("encodedPassword");
@@ -58,7 +58,7 @@ public class UserServiceTest {
 
     @Test
     void testRegisterUserWithShortPassword() {
-        RegisterRequest registerRequest = new RegisterRequest("user", "pwd");
+        RegisterRequest registerRequest = new RegisterRequest("username","email", "password");
 
         // Call the method under test and expect an exception to be thrown
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {

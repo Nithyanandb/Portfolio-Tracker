@@ -18,7 +18,7 @@ public class UserService {
 
     public void registerUser(RegisterRequest registerRequest) {
         // Validate user input
-        if (registerRequest.getUsername() == null || registerRequest.getPassword() == null) {
+        if (registerRequest.getUsername() == null || registerRequest.getEmail() == null || registerRequest.getPassword() == null) {
             throw new RuntimeException("Username and password are required");
         }
 
@@ -29,10 +29,11 @@ public class UserService {
         // Encode password
         User user = new User();
         user.setUsername(registerRequest.getUsername());
+        user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
 
         // Assign default role
-        user.setRole("ROLE_USER"); // Use Enum or Configuration property for roles
+        user.setRole("ROLE_USER");
 
         try {
             // Save user to database

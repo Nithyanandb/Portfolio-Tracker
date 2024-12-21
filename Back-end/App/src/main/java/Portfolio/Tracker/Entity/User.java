@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Email;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,6 +20,8 @@ public class User implements UserDetails {
     private Long id; // User ID
 
     private String username;
+    @Email
+    private String email;
     private String password;
 
     private String role;
@@ -27,8 +30,9 @@ public class User implements UserDetails {
     public User() {}
 
     // All-args constructor for easier object creation
-    public User(String username, String password, String role) {
+    public User(String username,String email, String password, String role) {
         this.username = username;
+        this.email = email;
         this.password = password;
         this.role = role;
     }
@@ -50,6 +54,13 @@ public class User implements UserDetails {
         this.username = username;
     }
 
+    public String getEmail(){
+        return email;
+    }
+    public void setEmail(String email)
+    {
+        this.email = email;
+    }
     public String getPassword() {
         return password;
     }

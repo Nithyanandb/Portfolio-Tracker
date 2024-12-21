@@ -25,8 +25,10 @@ public class SecurityConfig {
     public SecurityFilterChain jwtSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/register", "/login", "/users", "/public/**").permitAll() // Public endpoints
-                        .anyRequest().authenticated() // Protecting other endpoints
+                        .requestMatchers("/", "/register", "/login", "/public/**").permitAll() // Public endpoints (for registration and login)
+                        .requestMatchers("/stocks/**").authenticated() // Require authentication for /stocks/**
+                        .requestMatchers("/portfolio/**").authenticated()
+                        .anyRequest().authenticated() // All other requests require authentication
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // JWT is stateless
@@ -39,11 +41,11 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(); // Use bcrypt for password encryption
     }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+        return authenticationConfiguration.getAuthenticationManager(); // Retrieve authentication manager for user authentication
     }
 }

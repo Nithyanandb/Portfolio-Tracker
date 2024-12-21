@@ -65,7 +65,7 @@ public class AuthControllerTest {
 
     @Test
     public void testRegister() throws Exception {
-        RegisterRequest registerRequest = new RegisterRequest("user", "password");
+        RegisterRequest registerRequest = new RegisterRequest("username","email", "password");
 
         // Mock the userService's registerUser method (assuming it returns void)
         doNothing().when(userService).registerUser(any(RegisterRequest.class));

@@ -1,26 +1,33 @@
 package Portfolio.Tracker.Entity;
 
+import Portfolio.Tracker.Validation.UsernameOrEmail;
+import jakarta.validation.constraints.NotBlank;
+
 public class LoginRequest {
 
-    private String username;
+    @NotBlank(message = "Username or email cannot be blank")
+    @UsernameOrEmail
+    private String usernameOrEmail;
+
+    @NotBlank(message = "Password cannot be blank")
     private String password;
 
-    // Default constructor
+
     public LoginRequest() {}
 
-    // Constructor for easier initialization
-    public LoginRequest(String username, String password) {
-        this.username = username;
+
+    public LoginRequest(String usernameOrEmail, String password) {
+        this.usernameOrEmail = usernameOrEmail;
         this.password = password;
     }
 
-    // Getter and Setter methods
-    public String getUsername() {
-        return username;
+
+    public String getUsernameOrEmail() {
+        return usernameOrEmail;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsernameOrEmail(String usernameOrEmail) {
+        this.usernameOrEmail = usernameOrEmail;
     }
 
     public String getPassword() {
