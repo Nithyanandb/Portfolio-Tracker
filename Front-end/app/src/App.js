@@ -6,13 +6,14 @@ import Stock from './components/Stock';
 import About from './components/About';
 import Home from './components/Home';
 import Auth from './components/Auth';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
     <BrowserRouter>
       <NavigationBar />
       <Routes>
-      <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Auth />} />
         <Route path="/register" element={<Auth />} />
         <Route path="/portfolio" element={<Portfolio />} />

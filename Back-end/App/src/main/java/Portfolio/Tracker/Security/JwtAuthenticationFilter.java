@@ -1,51 +1,65 @@
 package Portfolio.Tracker.Security;
 
+import Portfolio.Tracker.Utility.JwtUtil;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import Portfolio.Tracker.Utility.JwtUtil;
 import java.io.IOException;
-
-
+import java.util.ArrayList;
 
 @Component
-@WebFilter("/*")
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    private final JwtUtil jwtUtils;
+
     @Autowired
-    private JwtUtil jwtUtil;
+    public JwtAuthenticationFilter(JwtUtil jwtUtils) {
+        this.jwtUtils = jwtUtils;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String token = extractJwtFromRequest(request);
-
-        if (token != null) {
-            String username = jwtUtil.extractUsername(token); // Extract username from token
-
-            // Validate token using JwtUtil
-            if (jwtUtil.validateToken(token, username)) {
-                Authentication authentication = jwtUtil.getAuthentication(token);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = extractToken(request);
+        if (jwt != null) {
+            try {
+                if (jwtUtils.validateToken(jwt)) {
+                    String username = jwtUtils.getUsernameFromToken(jwt);
+                    Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+            } catch (JwtException e) {
+                // Handle invalid or expired token
+                response.setStatus(HttpStatus.FORBIDDEN.value());
+                response.getWriter().write("Invalid or expired token");
+                return; // Stop further processing
+            } catch (Exception e) {
+                // Handle other unexpected errors
+                response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+                response.getWriter().write("Internal server error");
+                return; // Stop further processing
             }
         }
 
         filterChain.doFilter(request, response);
     }
 
-    private String extractJwtFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);  // Extract token
+    private String extractToken(HttpServletRequest request) {
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (header != null && header.startsWith("Bearer ")) {
+            return header.substring(7);  // Extracts token after "Bearer "
         }
         return null;
     }

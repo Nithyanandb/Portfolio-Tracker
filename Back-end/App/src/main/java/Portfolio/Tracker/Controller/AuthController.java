@@ -8,6 +8,8 @@ import Portfolio.Tracker.Repository.UserRepository;
 import Portfolio.Tracker.Service.UserService;
 import Portfolio.Tracker.Utility.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -44,41 +46,34 @@ public class AuthController {
             String password = loginRequest.getPassword();
 
             // Determine if the input is an email or username
-            User user = null;
-            if (input.contains("@")) {
-                // Assuming it's an email
-                user = userRepository.findByEmail(input);
-            } else {
-                // Assuming it's a username
-                user = userRepository.findByUsername(input);
-            }
+            User user = (input.contains("@")) ? userRepository.findByEmail(input) : userRepository.findByUsername(input);
 
-            // If user is not found, return error
-            if (user == null) {
-                return ResponseEntity.status(401).body("User not found. Please check your credentials.");
-            }
-
-            // Verify the password
-            if (!passwordEncoder.matches(password, user.getPassword())) {
-                return ResponseEntity.status(401).body("Invalid password.");
+            if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
+                return ResponseEntity.status(401).body("Invalid credentials.");
             }
 
             // Authenticate the user (Spring Security check)
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getUsername(), password)
-            );
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), password));
 
             // Generate the token
             String token = jwtUtil.generateToken(user.getUsername());
-            return ResponseEntity.ok(new JwtResponse(token, "Login successful"));
+
+            // Set the token as a cookie
+            ResponseCookie cookie = ResponseCookie.from("jwtToken", token)
+                    .httpOnly(true)
+                    .secure(true) // Use true in production for HTTPS
+                    .path("/") // Token valid across the entire site
+                    .maxAge(3600) // 1 hour expiration
+                    .build();
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                    .body(new JwtResponse(token, "Login successful"));
 
         } catch (Exception e) {
-            // Log the exception (optional) and return a generic error message
             return ResponseEntity.status(500).body("An error occurred during login. Please try again.");
         }
     }
-
-
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody RegisterRequest registerRequest) {

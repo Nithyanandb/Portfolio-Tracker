@@ -26,15 +26,14 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/", "/register", "/login", "/public/**").permitAll() // Public endpoints (for registration and login)
-                        .requestMatchers("/stocks/**").authenticated() // Require authentication for /stocks/**
-                        .requestMatchers("/portfolio/**").authenticated()
+                        .requestMatchers("/stocks/**", "/portfolio/**").authenticated() // Restricted for authenticated users
                         .anyRequest().authenticated() // All other requests require authentication
                 )
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // JWT is stateless
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Stateless session as JWT is used for authentication
                 )
                 .csrf(csrf -> csrf.disable()) // Disable CSRF protection for stateless apps
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT filter
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT authentication filter before standard authentication
 
         return http.build();
     }

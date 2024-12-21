@@ -1,7 +1,6 @@
 package Portfolio.Tracker.Utility;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.User;
@@ -20,51 +19,91 @@ public class JwtUtil {
     private Key secretKey;
 
     public JwtUtil() {
-        // Generate a secure random key using the built-in method from io.jsonwebtoken.security.Keys
-        this.secretKey = Keys.secretKeyFor(io.jsonwebtoken.SignatureAlgorithm.HS256); // Auto-generated secret key
+        this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);  // Generate a secret key
     }
 
     public String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hour expiration
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
                 .signWith(secretKey)
                 .compact();
     }
 
-    public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+    // Extracts the username (subject) from the token
+    public String getUsernameFromToken(String token) {
+        try {
+            return extractClaim(token, Claims::getSubject);
+        } catch (JwtException | IllegalArgumentException e) {
+            // Log or handle the exception as needed
+            throw new JwtException("Error extracting username from token", e);
+        }
     }
 
-    public boolean validateToken(String token, String username) {
-        return username.equals(extractUsername(token)) && !isTokenExpired(token);
+    public boolean validateToken(String token) {
+        try {
+            String username = getUsernameFromToken(token);
+            return username != null && !isTokenExpired(token);
+        } catch (JwtException e) {
+            // Token is invalid or has expired
+            return false;
+        }
     }
 
     private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        try {
+            Date expiration = extractExpiration(token);
+            return expiration.before(new Date());
+        } catch (JwtException e) {
+            throw new JwtException("Error checking token expiration", e);
+        }
     }
 
     private Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
+        try {
+            return extractClaim(token, Claims::getExpiration);
+        } catch (JwtException e) {
+            throw new JwtException("Error extracting expiration date from token", e);
+        }
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
+        try {
+            final Claims claims = extractAllClaims(token);
+            return claimsResolver.apply(claims);
+        } catch (JwtException e) {
+            throw new JwtException("Error extracting claim from token", e);
+        }
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (SignatureException e) {
+            throw new JwtException("JWT signature does not match", e);
+        } catch (ExpiredJwtException e) {
+            throw new JwtException("JWT token is expired", e);
+        } catch (MalformedJwtException e) {
+            throw new JwtException("JWT token is malformed", e);
+        } catch (UnsupportedJwtException e) {
+            throw new JwtException("JWT token is unsupported", e);
+        } catch (IllegalArgumentException e) {
+            throw new JwtException("JWT token is invalid", e);
+        }
     }
 
-    // New method to return the authentication object
     public Authentication getAuthentication(String token) {
-        String username = extractUsername(token);
-        UserDetails userDetails = new User(username, "", new ArrayList<>()); // You can also load user details from the database if needed
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        try {
+            String username = getUsernameFromToken(token);
+            UserDetails userDetails = new User(username, "", new ArrayList<>());
+            return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        } catch (JwtException e) {
+            // Handle error or return null if needed
+            throw new JwtException("Error during authentication from token", e);
+        }
     }
 }

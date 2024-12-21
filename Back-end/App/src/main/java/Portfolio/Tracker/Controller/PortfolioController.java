@@ -4,9 +4,8 @@ import Portfolio.Tracker.Entity.Portfolio;
 import Portfolio.Tracker.Service.PortfolioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-
 
 @RestController
 @RequestMapping("/portfolio")
@@ -18,49 +17,44 @@ public class PortfolioController {
         this.portfolioService = portfolioService;
     }
 
-    // Endpoint to add a new portfolio
+    // Add portfolio
     @PostMapping("/add")
+    @PreAuthorize("hasRole('ROLE_USER')")  // Example of role-based access
     public ResponseEntity<Portfolio> addPortfolio(@RequestBody Portfolio portfolio) {
         Portfolio createdPortfolio = portfolioService.addPortfolio(portfolio);
         return new ResponseEntity<>(createdPortfolio, HttpStatus.CREATED);
     }
 
-    // Endpoint to get a portfolio by ID using request param
+    // Get portfolio by ID
     @GetMapping("/get")
     public ResponseEntity<Portfolio> getPortfolioById(@RequestParam("id") Long id) {
         Portfolio portfolio = portfolioService.getPortfolioById(id);
-        if (portfolio != null) {
-            return new ResponseEntity<>(portfolio, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return portfolio != null
+                ? new ResponseEntity<>(portfolio, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    // Endpoint to get all portfolios
+    // Get all portfolios
     @GetMapping("/all")
     public ResponseEntity<Iterable<Portfolio>> getAllPortfolios() {
         Iterable<Portfolio> portfolios = portfolioService.getAllPortfolios();
         return new ResponseEntity<>(portfolios, HttpStatus.OK);
     }
 
-    // Endpoint to update an existing portfolio
+    // Update portfolio
     @PutMapping("/update")
     public ResponseEntity<Portfolio> updatePortfolio(@RequestParam("id") Long id, @RequestBody Portfolio portfolio) {
         Portfolio updatedPortfolio = portfolioService.updatePortfolio(id, portfolio);
-        if (updatedPortfolio != null) {
-            return new ResponseEntity<>(updatedPortfolio, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return updatedPortfolio != null
+                ? new ResponseEntity<>(updatedPortfolio, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    // Endpoint to delete a portfolio by ID
+    // Delete portfolio
     @DeleteMapping("/delete")
     public ResponseEntity<Void> deletePortfolio(@RequestParam("id") Long id) {
-        if (portfolioService.deletePortfolio(id)) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return portfolioService.deletePortfolio(id)
+                ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
