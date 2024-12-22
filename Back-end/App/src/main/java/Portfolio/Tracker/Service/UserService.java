@@ -16,6 +16,14 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    public void registerOAuthUser(RegisterRequest registerRequest) {
+        User user = new User();
+        user.setUsername(registerRequest.getUsername());
+        user.setEmail(registerRequest.getEmail());
+        user.setPassword(""); // No password for OAuth users
+        userRepository.save(user);
+    }
+
     public void registerUser(RegisterRequest registerRequest) {
         // Validate user input
         if (registerRequest.getUsername() == null || registerRequest.getEmail() == null || registerRequest.getPassword() == null) {

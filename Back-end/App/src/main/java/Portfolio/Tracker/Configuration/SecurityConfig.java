@@ -11,6 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class SecurityConfig {
@@ -22,17 +24,32 @@ public class SecurityConfig {
     }
 
     @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**").allowedOrigins("http://localhost:3000");
+            }
+        };
+    }
+
+    @Bean
     public SecurityFilterChain jwtSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/", "/register", "/login", "/public/**").permitAll() // Public endpoints (for registration and login)
                         .requestMatchers("/stocks/**", "/portfolio/**").authenticated() // Restricted for authenticated users
+                        .requestMatchers("/oauth2/**").permitAll() // Allow OAuth2 endpoints
                         .anyRequest().authenticated() // All other requests require authentication
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Stateless session as JWT is used for authentication
                 )
                 .csrf(csrf -> csrf.disable()) // Disable CSRF protection for stateless apps
+                .oauth2Login(oauth2 -> oauth2
+                        .defaultSuccessUrl("/oauth2/login/success", true) // Redirect after successful login
+                        .failureUrl("/oauth2/login/failure") // Redirect on failure
+                )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT authentication filter before standard authentication
 
         return http.build();

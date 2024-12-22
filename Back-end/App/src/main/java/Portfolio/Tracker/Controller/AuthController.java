@@ -13,11 +13,10 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/")
 @RestController
@@ -87,5 +86,43 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error during registration");
         }
+    }
+
+
+    @GetMapping("/oauth2/login/success")
+    public ResponseEntity<?> oauth2LoginSuccess(Authentication authentication) {
+        OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
+        String email = oauthUser.getAttribute("email");
+        String name = oauthUser.getAttribute("name");
+
+        // Check if user already exists or register a new one
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            RegisterRequest registerRequest = new RegisterRequest();
+            registerRequest.setUsername(email.split("@")[0]);
+            registerRequest.setEmail(email);
+            registerRequest.setPassword(""); // No password for OAuth users
+            userService.registerOAuthUser(registerRequest);
+        }
+
+        // Generate a JWT token
+        String token = jwtUtil.generateToken(email);
+
+        // Set the token as a cookie
+        ResponseCookie cookie = ResponseCookie.from("jwtToken", token)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(3600)
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(new JwtResponse(token, "OAuth2 Login successful"));
+    }
+
+    @GetMapping("/oauth2/login/failure")
+    public ResponseEntity<String> oauth2LoginFailure() {
+        return ResponseEntity.status(401).body("OAuth2 login failed. Please try again.");
     }
 }

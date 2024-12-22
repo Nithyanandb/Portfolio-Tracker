@@ -43,7 +43,13 @@ const Security = () => {
   );
 };
 
-const SecurityFeature = ({ title, description }) => (
+// Define prop types for the SecurityFeature component
+interface SecurityFeatureProps {
+  title: string;
+  description: string;
+}
+
+const SecurityFeature: React.FC<SecurityFeatureProps> = ({ title, description }) => (
   <div className="bg-gray-900 p-8 rounded-2xl">
     <h3 className="text-xl font-bold mb-4">{title}</h3>
     <p className="text-gray-400">{description}</p>

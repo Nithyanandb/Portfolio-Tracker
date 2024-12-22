@@ -6,3 +6,53 @@
 
 @import 'tailwindcss/utilities';
 @import './styles/utilities.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background-dark: #000000;
+  --card-dark: #1a1a1a;
+  --text-primary: #ffffff;
+  --text-secondary: #a0aec0;
+  --accent-blue: #3B82F6;
+}
+
+.dark {
+  background-color: var(--background-dark);
+  color: var(--text-primary);
+}
+
+.gradient-background {
+  background: linear-gradient(to bottom right, #000000, #1a1a1a);
+  position: relative;
+  overflow: hidden;
+}
+
+.gradient-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+  animation: pulse 8s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0.5; }
+}
+
+.card-dark {
+  background-color: var(--card-dark);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
