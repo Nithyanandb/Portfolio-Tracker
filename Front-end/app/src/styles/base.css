@@ -1,0 +1,14 @@
+@layer base {
+  :root {
+    --gradient-primary: linear-gradient(135deg, #FF8F71 0%, #EF2D1A 100%);
+  }
+
+  body {
+    @apply antialiased text-white bg-black min-h-screen;
+    font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+  }
+
+  ::selection {
+    @apply bg-white/20;
+  }
+}

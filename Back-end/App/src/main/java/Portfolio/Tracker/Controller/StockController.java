@@ -21,7 +21,7 @@ public class StockController {
 
     // Add stock to portfolio
     @PostMapping("/add")
-    @PreAuthorize("hasRole('ROLE_USER')")  // Role-based access control
+    @PreAuthorize("hasRole('ROLE_USER')")
 
     public ResponseEntity<Stock> addStock(@RequestBody Stock stock) {
         try {

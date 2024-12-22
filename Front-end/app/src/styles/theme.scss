@@ -1,0 +1,19 @@
+// Enterprise theme customizations
+$primary: #0052CC;
+$secondary: #6B778C;
+$success: #36B37E;
+$info: #00B8D9;
+$warning: #FFAB00;
+$danger: #FF5630;
+$light: #F4F5F7;
+$dark: #172B4D;
+
+// Custom enterprise variables
+$border-radius: 0.375rem;
+$box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+$enable-shadows: true;
+$enable-gradients: false;
+$enable-responsive-font-sizes: true;
+
+// Import Bootstrap
+@import "bootstrap/scss/bootstrap";
