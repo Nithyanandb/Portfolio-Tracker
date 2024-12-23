@@ -1,55 +1,56 @@
 package Portfolio.Tracker.Service;
 
 import org.json.JSONObject;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+
+@Service
 public class AlphaVantageAPI {
 
     private static final String API_KEY = "PK64B7TK3WKUBWBR"; // Replace with your actual API key
     private static final String BASE_URL = "https://www.alphavantage.co/query";
 
-    public static void main(String[] args) {
-        String symbol = "IBM"; // Example stock symbol
+    public String getStockData(String symbol) throws Exception {
         String interval = "5min"; // Time interval (e.g., 1min, 5min, etc.)
         String outputSize = "full"; // Output size (compact or full)
 
-        try {
-            // Construct the API URL
-            String urlString = String.format("%s?function=TIME_SERIES_INTRADAY&symbol=%s&interval=%s&outputsize=%s&apikey=%s",
-                    BASE_URL, symbol, interval, outputSize, API_KEY);
+        String urlString = String.format("%s?function=TIME_SERIES_INTRADAY&symbol=%s&interval=%s&outputsize=%s&apikey=%s",
+                BASE_URL, symbol, interval, outputSize, API_KEY);
 
-            // Send HTTP request and get response
-            String response = sendHttpRequest(urlString);
+        // Send HTTP request and get response
+        String response = sendHttpRequest(urlString);
 
-            // Parse the JSON response
-            JSONObject jsonResponse = new JSONObject(response);
+        // Parse the JSON response
+        JSONObject jsonResponse = new JSONObject(response);
 
-            // Extract and print the time series data
-            if (jsonResponse.has("Time Series (5min)")) {
-                JSONObject timeSeries = jsonResponse.getJSONObject("Time Series (5min)");
-                timeSeries.keys().forEachRemaining(key -> {
-                    JSONObject dataPoint = timeSeries.getJSONObject(key);
-                    System.out.println("Timestamp: " + key);
-                    System.out.println("Open: " + dataPoint.getString("1. open"));
-                    System.out.println("High: " + dataPoint.getString("2. high"));
-                    System.out.println("Low: " + dataPoint.getString("3. low"));
-                    System.out.println("Close: " + dataPoint.getString("4. close"));
-                    System.out.println("Volume: " + dataPoint.getString("5. volume"));
-                    System.out.println("----------------------------");
-                });
-            } else {
-                System.out.println("Error: " + jsonResponse.toString());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        // Extract and print the time series data
+        if (jsonResponse.has("Time Series (5min)")) {
+            JSONObject timeSeries = jsonResponse.getJSONObject("Time Series (5min)");
+            StringBuilder data = new StringBuilder();
+
+            timeSeries.keys().forEachRemaining(key -> {
+                JSONObject dataPoint = timeSeries.getJSONObject(key);
+                data.append("Timestamp: ").append(key).append("\n")
+                        .append("Open: ").append(dataPoint.getString("1. open")).append("\n")
+                        .append("High: ").append(dataPoint.getString("2. high")).append("\n")
+                        .append("Low: ").append(dataPoint.getString("3. low")).append("\n")
+                        .append("Close: ").append(dataPoint.getString("4. close")).append("\n")
+                        .append("Volume: ").append(dataPoint.getString("5. volume")).append("\n")
+                        .append("----------------------------\n");
+            });
+
+            return data.toString();
+        } else {
+            return "Error: No time series data found for the symbol.";
         }
     }
 
-    private static String sendHttpRequest(String urlString) throws Exception {
+    private String sendHttpRequest(String urlString) throws Exception {
         URL url = new URL(urlString);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");

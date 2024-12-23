@@ -33,7 +33,7 @@ const Security = () => {
           <h2 className="text-4xl font-bold mb-8">
             Security First Trading
           </h2>
-          <p className="text-xl text-gray-400 mb-12 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-100 mb-12 max-w-3xl mx-auto bg-clip-text">
             Trade with confidence knowing your assets are protected by industry-leading security measures.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">

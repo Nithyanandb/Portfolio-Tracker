@@ -1,4 +1,3 @@
-// HeroData.ts
 export const heroSections = [
     {
       title: "Welcome",

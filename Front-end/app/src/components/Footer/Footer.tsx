@@ -5,7 +5,7 @@ const Footer = () => (
     <div className=" text-white py-30 bg-gradient-to-b from-black to-gray-1000 max-w-6xl mx-auto px-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
         <div>
-          <img src="/capx-logo.svg" alt="Company Logo" className="h-8 w-auto mb-6" />CapX
+          <img src="/capx-logo.svg" alt="Company Logo" className="h-8 w-auto mb-6" />
           <p className="text-gray-300">
             Your trusted partner in the world of finance.
           </p>

@@ -38,7 +38,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/", "/register", "/login", "/public/**").permitAll() // Public endpoints (for registration and login)
-                        .requestMatchers("/stocks/**", "/portfolio/**").authenticated() // Restricted for authenticated users
+                        .requestMatchers("/stocks/**", "/portfolio/**", "/market/**").authenticated() // Restricted for authenticated users
                         .requestMatchers("/oauth2/**").permitAll() // Allow OAuth2 endpoints
                         .anyRequest().authenticated() // All other requests require authentication
                 )

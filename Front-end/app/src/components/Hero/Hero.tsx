@@ -36,43 +36,33 @@ const Hero = () => {
       {/* Main Content Grid */}
       <div className="container mx-auto px-4 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Left Content Area */}
           <div className="lg:col-span-8">
-            {heroSections.map((section, index) => (
-              <motion.section
-                key={index}
-                className="min-h-screen pt-20"
-                initial={{ opacity: 1 }} // Ensure it starts visible
-                animate={{ opacity: currentSection === index ? 1 : 0 }} // Keep opacity logic, no transition
-              >
-                {/* Hero Content */}
-                <div className="mb-12">
-                  <HeroContent />
-                </div>
+            <div className="min-h-screen pt-20">
+              <div className="mb-12">
+                <HeroContent />
+              </div>
 
-                {/* Market Metrics */}
-                <div className="mb-12">
-                  <MarketMetrics />
-                </div>
-
-                {/* Market Visuals */}
-                <div>
-                  <MarketVisuals />
-                </div>
-              </motion.section>
-            ))}
-          </div>
-
-          {/* Right Sidebar - Market Dashboard */}
-          <div className="lg:col-span-4">
-            <div className="sticky top-20">
-              <MarketDashboard />
+              {/* Market Metrics */}
+              <div className="mb-12">
+                <MarketMetrics />
+              </div>
             </div>
+            {/* Market Visuals */}
+            <div>
+              <MarketVisuals />
+            </div>
+            {/* Right Sidebar - Market Dashboard */}
           </div>
+            <div className="lg:col-span-4">
+              <div className="sticky top-20">
+                <MarketDashboard />
+              </div>
+            </div>
         </div>
       </div>
-    </div>
-  );
+      </div>
+      
+      );
 };
 
-export default Hero;
+      export default Hero;

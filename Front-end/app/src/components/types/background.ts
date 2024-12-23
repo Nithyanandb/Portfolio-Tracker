@@ -1,18 +1,18 @@
 export interface BackgroundSection {
-    type: 'video' | 'image';
-    content: {
-      src: string;
-      fallback?: string;
+  type: 'image' | 'video'; // Ensures only these types are allowed
+  content: {
+    src: string;
+    fallback?: string;
+  };
+  effects: {
+    gradient: {
+      colors: string[];
+      opacity: number;
     };
-    effects: {
-      gradient?: {
-        colors: string[];
-        opacity: number;
-      };
-      overlay?: {
-        type: 'rays' | 'noise' | 'grid';
-        opacity: number;
-      };
-      particles?: boolean;
+    overlay: {
+      type: string;
+      opacity: number;
     };
-  }
+    particles?: boolean;
+  };
+}

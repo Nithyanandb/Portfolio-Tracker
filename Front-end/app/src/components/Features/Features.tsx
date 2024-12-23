@@ -47,12 +47,12 @@ const Features = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white/10 rounded-2xl p-8 backdrop-blur-xl hover:bg-white/20 transition-all duration-300"
+                className=" rounded-1 p-8 backdrop-blur-xl hover:bg-white/5 transition-all duration-0"
               >
                 <img
                   src={feature.image}
                   alt={feature.title}
-                  className="w-full h-48 object-cover rounded-2xl mb-6"
+                  className="w-full h-48 object-cover rounded-1 mb-6"
                   onError={(e) => (e.target.src = "https://via.placeholder.com/300")}
                 />
                 <h3 className="text-xl font-bold text-white mb-4">{feature.title}</h3>

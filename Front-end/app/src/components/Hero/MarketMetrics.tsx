@@ -1,40 +1,48 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { format } from 'date-fns';
-import {AreaChart, Area, XAxis, YAxis, Tooltip,
-  ResponsiveContainer, CartesianGrid, Legend
-} from 'recharts';
-import { TrendingUp, TrendingDown, Activity } from 'lucide-react';
-import { generateMarketData, portfolioStocks, marketInsights } from '../types/mockData';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { format } from "date-fns";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+  Legend,
+} from "recharts";
+import { TrendingUp, TrendingDown, Activity } from "lucide-react";
+import { generateMarketData, portfolioStocks, marketInsights } from "../types/mockData";
 
 const MarketMetrics = () => {
-  const [timeframe, setTimeframe] = useState<'1D' | '1W' | '1M' | '3M'>('1M');
-  const marketData = generateMarketData(timeframe === '1D' ? 24 : 
-    timeframe === '1W' ? 7 : timeframe === '1M' ? 30 : 90);
+  const [timeframe, setTimeframe] = useState<"1D" | "1W" | "1M" | "3M">("1M");
+  const marketData = generateMarketData(
+    timeframe === "1D" ? 24 : timeframe === "1W" ? 7 : timeframe === "1M" ? 30 : 90
+  );
 
   const formatValue = (value: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(value);
   };
 
   return (
-    <div className="bg-black/80 backdrop-blur-xl rounded-2xl p-6 space-y-8">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-white">Global Market Metrics</h2>
-        <div className="flex gap-2">
-          {['1D', '1W', '1M', '3M'].map((tf) => (
+    <div className="bg-black/80 backdrop-blur-xl rounded-2xl p-4 md:p-6 space-y-6 md:space-y-8 mt-10 md:mt-20">
+      {/* Header with Timeframe Selection */}
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+        <h2 className="text-xl sm:text-2xl font-bold text-white text-center">Global Market Metrics</h2>
+        <div className="flex gap-2 flex-wrap justify-center">
+          {["1D", "1W", "1M", "3M"].map((tf) => (
             <button
               key={tf}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              onClick={() => setTimeframe(tf as any)}
+              onClick={() => setTimeframe(tf as never)}
               className={`px-3 py-1 rounded-lg ${
                 timeframe === tf
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                  ? "bg-blue-500 text-white"
+                  : "bg-white/5 text-gray-400 hover:bg-white/10"
               }`}
             >
               {tf}
@@ -46,11 +54,11 @@ const MarketMetrics = () => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="space-y-8"
+        className="space-y-6 md:space-y-8"
       >
-        {/* Main Chart */}
-        <div className="bg-white/5 rounded-xl p-4">
-          <div className="h-[400px]">
+        {/* Chart Section - Hidden on Mobile */}
+        <div className="bg-white/5 rounded-xl p-4 hidden sm:block">
+          <div className="h-64 sm:h-[300px] md:h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={marketData}>
                 <defs>
@@ -60,28 +68,30 @@ const MarketMetrics = () => {
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
-                <XAxis 
-                  dataKey="date" 
+                <XAxis
+                  dataKey="date"
                   stroke="#9CA3AF"
-                  tickFormatter={(date) => format(new Date(date), 'MMM d')}
+                  tickFormatter={(date) => format(new Date(date), "MMM d")}
+                  tick={{ fontSize: 8 }}
                 />
-                <YAxis 
+                <YAxis
                   stroke="#9CA3AF"
                   tickFormatter={(value) => `$${(value / 1000).toFixed(1)}k`}
+                  tick={{ fontSize: 8 }}
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#1F2937',
-                    border: 'none',
-                    borderRadius: '8px',
-                    color: '#fff'
+                    backgroundColor: "#1F2937",
+                    border: "none",
+                    borderRadius: "8px",
+                    color: "#fff",
                   }}
                   formatter={(value: number) => formatValue(value)}
                 />
-                <Area 
-                  type="monotone" 
-                  dataKey="value" 
-                  stroke="#3B82F6" 
+                <Area
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#3B82F6"
                   fill="url(#colorValue)"
                   strokeWidth={2}
                 />
@@ -91,39 +101,38 @@ const MarketMetrics = () => {
           </div>
         </div>
 
-        {/* Market Insights Grid */}
-        <div className="grid grid-cols-4 gap-4">
+        {/* Insights Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
           {marketInsights.map((insight, index) => (
-            <motion.div
-              key={insight.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-white/5 rounded-xl p-4"
-            >
+            <div key={insight.title} className="bg-white/5 rounded-xl p-4">
               <div className="flex justify-between items-start">
-                <h4 className="text-sm font-medium text-gray-400">{insight.title}</h4>
-                {insight.trend === 'up' ? (
+                <h4 className="text-xs sm:text-sm font-medium text-gray-400">{insight.title}</h4>
+                {insight.trend === "up" ? (
                   <TrendingUp className="w-4 h-4 text-green-400" />
-                ) : insight.trend === 'down' ? (
+                ) : insight.trend === "down" ? (
                   <TrendingDown className="w-4 h-4 text-red-400" />
                 ) : (
                   <Activity className="w-4 h-4 text-blue-400" />
                 )}
               </div>
-              <p className="text-2xl font-bold text-white mt-2">{insight.value}</p>
-              <p className={`text-sm mt-1 ${insight.change > 0 ? 'text-green-400' : 'text-red-400'}`}>
-                {insight.change > 0 ? '+' : ''}{insight.change}%
+              <p className="text-lg md:text-xl font-bold text-white mt-2">{insight.value}</p>
+              <p
+                className={`text-xs sm:text-sm mt-1 ${
+                  insight.change > 0 ? "text-green-400" : "text-red-400"
+                }`}
+              >
+                {insight.change > 0 ? "+" : ""}
+                {insight.change}%
               </p>
-            </motion.div>
+            </div>
           ))}
         </div>
 
-        {/* Portfolio Overview */}
+        {/* Portfolio Table */}
         <div className="bg-white/5 rounded-xl p-4">
-          <h3 className="text-lg font-semibold text-white mb-4">Portfolio Overview</h3>
+          <h3 className="text-md md:text-lg font-semibold text-white mb-4">Portfolio Overview</h3>
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full text-xs sm:text-sm">
               <thead>
                 <tr className="text-gray-400 text-sm">
                   <th className="text-left pb-4">Asset</th>
@@ -146,8 +155,13 @@ const MarketMetrics = () => {
                     <td className="text-right text-white">{stock.quantity}</td>
                     <td className="text-right text-white">{formatValue(stock.averagePrice)}</td>
                     <td className="text-right text-white">{formatValue(stock.currentPrice)}</td>
-                    <td className={`text-right ${stock.change24h > 0 ? 'text-green-400' : 'text-red-400'}`}>
-                      {stock.change24h > 0 ? '+' : ''}{stock.change24h}%
+                    <td
+                      className={`text-right ${
+                        stock.change24h > 0 ? "text-green-400" : "text-red-400"
+                      }`}
+                    >
+                      {stock.change24h > 0 ? "+" : ""}
+                      {stock.change24h}%
                     </td>
                     <td className="text-right text-white">
                       {formatValue(stock.quantity * stock.currentPrice)}
