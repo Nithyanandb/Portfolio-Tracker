@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import AuthModal from '../Auth/AuthModal';
-import MarketMetrics from './MarketMetrics';
 
 const HeroContent: React.FC = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);

@@ -4,7 +4,7 @@ import { Search, User, Menu, X } from 'lucide-react';
 import { Popover, Transition } from '@headlessui/react';
 import MobileNav from './MobileMenu';
 import NavMenu from './NavLinks';
-import DynamicBackground from '../Hero/DynamicBackground';
+import DynamicBackground from '../background/ImageBackground';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -20,8 +20,8 @@ const Header = () => {
 
   return (
     <>
-          <DynamicBackground currentSection={0}/>
-      <header style={{padding:'25px 30px 0px 30px'}}
+        <DynamicBackground src={''} isActive={false}/>
+      <header style={{padding:'50px 30px 0px 30px'}}
         className={`fixed z-40 w-100 transition-all duration-300 ${
           isScrolled ? 'bg-black/80 backdrop-blur-xl' : 'bg-transparent'
         }`}

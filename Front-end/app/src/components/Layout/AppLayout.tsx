@@ -8,7 +8,7 @@ interface AppLayoutProps {
 
 const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen w-full overflow-hidden">
       <Header />
       <main className="relative">
         {children}

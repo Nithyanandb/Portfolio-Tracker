@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, useScroll } from "framer-motion";
-import DynamicBackground from "./DynamicBackground";
+import DynamicBackground from "../background/DynamicBackground";
 import HeroContent from "./HeroContent";
 import MarketDashboard from "./MarketDashboard";
 import MarketMetrics from "./MarketMetrics";
@@ -27,8 +27,7 @@ const Hero = () => {
   return (
     <div className="relative">
       {/* Fixed Background */}
-      <DynamicBackground currentSection={currentSection} />
-
+      <DynamicBackground sections={[]} currentSection={0} />
       {/* Stock Ticker */}
       <div className="fixed top-0 left-0 w-full z-20 bg-black/50 backdrop-blur-sm py-3">
         <StockTicker />
@@ -43,11 +42,8 @@ const Hero = () => {
               <motion.section
                 key={index}
                 className="min-h-screen pt-20"
-                initial={{ opacity: 0 }}
-                animate={{
-                  opacity: currentSection === index ? 1 : 0,
-                  transition: { duration: 0.8 },
-                }}
+                initial={{ opacity: 1 }} // Ensure it starts visible
+                animate={{ opacity: currentSection === index ? 1 : 0 }} // Keep opacity logic, no transition
               >
                 {/* Hero Content */}
                 <div className="mb-12">

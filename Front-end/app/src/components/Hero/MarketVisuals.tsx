@@ -3,14 +3,14 @@ import { motion } from 'framer-motion';
 
 const MarketVisuals = () => {
   return (
-    <div className="bg-black/80 backdrop-blur-xl  rounded-2xl p-6">
+    <div className="bg-black/80 rounded-2xl p-6">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Market Chart */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1 }}
-          className="lg:col-span-2 bg-white/5 rounded-xl p-6"
+          className="lg:col-span-2 rounded-xl p-6"
         >
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold text-white">S&P 500</h3>

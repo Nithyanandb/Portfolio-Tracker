@@ -1,5 +1,5 @@
 import { TrendingUp, Users, Shield, BarChart2, Globe, Clock } from 'lucide-react';
-import { Feature } from '../types/types';
+import { Feature } from './types';
 
 export const featuresList: Feature[] = [
   {
