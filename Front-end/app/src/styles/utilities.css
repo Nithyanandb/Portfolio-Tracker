@@ -10,4 +10,16 @@
   .text-shadow {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
-} 
+
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  .absolute-center {
+    @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
+  }
+}

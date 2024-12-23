@@ -10,8 +10,8 @@
 
   <!-- Main Text -->
   <text x="40" y="28" fill="#FFFFFF" font-family="Arial, sans-serif" font-weight="700" font-size="24">
-    CapX
-    <tspan fill="#3B82F6">.live</tspan>
+    Cap
+    <tspan fill="#3B223">X</tspan>
   </text>
 
   <!-- Trading Chart Icon -->

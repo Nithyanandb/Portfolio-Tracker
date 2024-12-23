@@ -9,8 +9,12 @@ function App() {
   
   return (
     <AppLayout>
-      <Hero />
-      <Features />
+        <div className="relative">
+          <Hero />
+        </div>
+        <div className="relative z-10 mt-20">
+          <Features />
+        </div>
       <Security />
     </AppLayout>
   );

@@ -2,58 +2,58 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import AuthModal from '../Auth/AuthModal';
+import MarketMetrics from './MarketMetrics';
 
-const HeroContent = () => {
+const HeroContent: React.FC = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   return (
-    <>
-      <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
-        <motion.div 
+    <div className="relative" style={{width:'75%', padding:'20px 20px 0px 20px'}}>
+      <main className="mt-32">
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="sm:text-center lg:text-left"
+          className="lg:grid lg:grid-cols-2 lg:items-center lg:gap-8"
         >
-          <h1 className="text-4xl tracking-tight font-extrabold text-white sm:text-5xl md:text-6xl">
-            <span className="block">Trade Global Markets</span>
-            <span className="block text-blue-500">Without Borders</span>
-          </h1>
-          <p className="mt-3 text-base text-gray-400 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-            Access international markets, trade stocks, ETFs, and more with our advanced trading platform. Join millions of traders worldwide.
-          </p>
-          <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start space-x-4">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <button
+          {/* Left Content */}
+          <div className="flex flex-col justify-start lg:justify-center mb-0 lg:mb-0" style={{width:'800px', marginBottom:'0px'}}>
+            <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl">
+              <span className="block">Trade Global Markets</span>
+              <span className="block bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+                Without Borders
+              </span>
+            </h1>
+            <p className="mt-4 text-base text-gray-300 sm:text-lg md:text-xl">
+              Access international markets, trade stocks, ETFs, and more with our advanced trading platform. Join millions of traders worldwide.
+            </p>
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setIsAuthModalOpen(true)}
-                className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10"
+                className="glass-button bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-md shadow-md"
               >
                 Start Trading
-              </button>
-            </motion.div>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <a
+              </motion.button>
+              <motion.a
                 href="#markets"
-                className="w-full flex items-center justify-center px-8 py-3 border border-gray-600 text-base font-medium rounded-md text-gray-300 bg-transparent hover:bg-white/5 md:py-4 md:text-lg md:px-10"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="glass-button px-6 py-3 rounded-md shadow-md flex items-center justify-center text-gray-200 bg-gray-700"
               >
-                View Markets <ArrowRight className="ml-2 h-5 w-5" />
-              </a>
-            </motion.div>
+                View Markets
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </motion.a>
+            </div>
           </div>
+
+       
         </motion.div>
       </main>
 
-      <AuthModal 
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-      />
-    </>
+      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+    </div>
   );
 };
 

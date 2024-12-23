@@ -1,5 +1,4 @@
 import React from 'react';
-import { Container } from 'react-bootstrap';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 
@@ -9,12 +8,10 @@ interface AppLayoutProps {
 
 const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   return (
-    <div className="d-flex flex-column min-vh-100">
+    <div className="relative min-h-screen">
       <Header />
-      <main className="flex-grow-1">
-        <Container fluid className="px-0">
-          {children}
-        </Container>
+      <main className="relative">
+        {children}
       </main>
       <Footer />
     </div>

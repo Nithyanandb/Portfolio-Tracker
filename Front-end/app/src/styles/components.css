@@ -1,20 +1,20 @@
-@layer components {
-  .btn-primary {
-    @apply relative inline-flex items-center justify-center px-8 py-4 overflow-hidden font-semibold rounded-full 
-           bg-gradient-to-r from-[#FF8F71] to-[#EF2D1A] transition-all duration-300
-           hover:scale-105 hover:shadow-[0_0_40px_8px_rgba(239,45,26,0.25)];
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
+  @layer components {
+    .btn-primary {
+      @apply relative inline-flex items-center justify-center px-8 py-4 overflow-hidden font-semibold rounded-full 
+            bg-gradient-to-r from-[#FF8F71] to-[#EF2D1A] transition-all duration-300
+            hover:scale-105 hover:shadow-[0_0_40px_8px_rgba(239,45,26,0.25)];
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
-  .glass-card {
-    @apply bg-white/5 backdrop-blur-lg rounded-2xl border border-white/10
-           hover:border-white/20 transition-all duration-300
-           hover:shadow-[0_0_30px_rgba(255,255,255,0.1)];
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
+    .glass-card {
+      @apply bg-white/5 backdrop-blur-lg rounded-2xl border border-white/10
+            hover:border-white/20 transition-all duration-300
+            hover:shadow-[0_0_30px_rgba(255,255,255,0.1)];
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
-  .heading-gradient {
-    @apply bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent;
-    background-clip: text;
+    .heading-gradient {
+      @apply bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent;
+      background-clip: text;
+    }
   }
-}
