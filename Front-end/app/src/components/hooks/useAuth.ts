@@ -1,6 +1,12 @@
 import { useState } from 'react';
 
-const AUTH_WINDOW_FEATURES = 'width=500,height=500,left=540,top=200';
+const width = 500;
+const height = 500;
+const left = (window.innerWidth / 2) - (width / 2);
+const top = (window.innerHeight / 2) - (height / 2);
+
+const AUTH_WINDOW_FEATURES = `width=${width},height=${height},left=${left},top=${top}`;
+
 
 export const useAuth = () => {
   const [isLoading, setIsLoading] = useState(false);

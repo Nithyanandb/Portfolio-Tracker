@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ProfileHeader } from '../Header/ProfileHeader';
-import { StockRecommendations } from './StockRecommendation';
 import { fetchMarketData } from '../Service/marketApi';
+import StockDashboard from '../Stock/StockDashboard';
+import { MarketData } from '../types/markets';
 
 const MarketDashboard: React.FC = () => {
   const [marketData, setMarketData] = useState<MarketData[]>([]);
@@ -10,10 +10,10 @@ const MarketDashboard: React.FC = () => {
   const [user, setUser] = useState({
     name: 'John Doe',
     email: 'john@example.com',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+    avatar: 'https://demo-source.imgix.net/snowboard.jpg'
   });
 
-  // Mock recommendations data
+  // Mock recommendations data with buy/sell information
   const recommendations = [
     {
       symbol: 'AAPL',
@@ -35,15 +35,15 @@ const MarketDashboard: React.FC = () => {
       targetPrice: 180.00,
       riskLevel: 'high'
     },
-    { 
+    {
       symbol: 'MSFT',
       name: 'Microsoft',
       price: 378.85,
       change: 3.02,
-      recommendation: 'sell',
-      reason: 'Increasing competition and margin pressure',
-      targetPrice: 180.00,
-      riskLevel: 'high'
+      recommendation: 'hold',
+      reason: 'Solid financials, but limited upside in the short term',
+      targetPrice: 385.00,
+      riskLevel: 'medium'
     },
     // Add more recommendations as needed
   ];
@@ -82,50 +82,47 @@ const MarketDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-screen bg-gray-1000 py-5" >
-   
-      
-      <main className="container lg:mx-auto px-0 py-8">
-        <div className="grid gap-0">
-         
-          {/* Market Overview */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-black/80 backdrop-blur-xl rounded-1xl p-0"
-          >
- 
- <div className="grid xs:grid-cols-2 xs:w-72 lg:w-full md:grid-cols-3 xl:grid-cols-3 gap-2">
-
-              {marketData.map((item) => (
-                <div key={item.symbol} className="bg-white/5 rounded-xl xs:p-5 lg:p-2">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="text-sm text-gray-400">{item.symbol}</p>
-                      <p className="text-lg font-medium text-white">${item.price.toFixed(2)}</p>
-                    </div>
-                    <div className={`text-sm ${item.changePercent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                      {item.changePercent.toFixed(2)}%
-                    </div>
+    <div className="min-screen bg-gray-1000 lg:mt-20" style={{width:'470px'}}>
+    <main className="container px-0 py-8">
+      <div className="grid gap-0">
+        {/* Market Overview */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-black/10 backdrop-blur-xl rounded-xl"
+        >
+          <div className="grid xs:grid-cols-2 lg:grid-cols-3 gap-2">
+            {marketData.map((item) => (
+              <div key={item.symbol} className="bg-white/5 rounded-2 p-2">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-sm text-gray-400">{item.symbol}</p>
+                    <p className="text-lg font-medium text-white">${item.price.toFixed(2)}</p>
+                  </div>
+                  <div className={`text-sm ${item.changePercent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                    {item.changePercent.toFixed(2)}%
                   </div>
                 </div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Trading Recommendations */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="bg-black/80 backdrop-blur-xl rounded-2xl py-4 px-0"
-          >
-            <StockRecommendations recommendations={recommendations}  />
-          </motion.div>
-        </div>
-      </main>
-    </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+  
+        {/* Trading Recommendations */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="bg-gray-1000 backdrop-blur-xl rounded-xl py-4"
+        >
+          <StockDashboard recommendations={recommendations} />
+        </motion.div>
+      </div>
+    </main>
+  </div>
+  
   );
 };
 
 export default MarketDashboard;
+

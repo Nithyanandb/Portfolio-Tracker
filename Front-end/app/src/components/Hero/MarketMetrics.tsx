@@ -29,7 +29,10 @@ const MarketMetrics: React.FC = () => {
   return (
     
     <div className="container mx-auto px-4 py-8">
-      <WorldIndices indices={indices} isLoading={isLoading} />
+      {/* Hide on mobile screens, visible on larger devices */}
+      <div className="hidden md:block">
+        <WorldIndices indices={indices} isLoading={isLoading} />
+      </div>
     </div>
   );
 };

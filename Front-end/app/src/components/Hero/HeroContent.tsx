@@ -38,7 +38,7 @@ const HeroContent: React.FC = React.memo(() => {
   }, []);
 
   return (
-    <div className="relative w-full lg:px-4 sm:px-8 xs:p-0 md:px-12 lg:px-20 lg:py-8 -mt-[110px]">
+    <div className="relative lg:px-4 sm:px-8 xs:p-0 md:px-12 lg:px-20 lg:py-8 -mt-[110px]">
       <main className="mt-12 sm:mt-20 md:mt-28 lg:mt-32 xs:p-0 xs:w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

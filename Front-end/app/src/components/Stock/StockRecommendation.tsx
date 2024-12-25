@@ -1,6 +1,7 @@
 import React from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 interface StockRecommendation {
   symbol: string;
@@ -17,7 +18,9 @@ interface StockRecommendationsProps {
   recommendations: StockRecommendation[];
 }
 
-export const StockRecommendations: React.FC<StockRecommendationsProps> = ({ recommendations }) => {
+const StockRecommendation: React.FC<StockRecommendationsProps> = ({ recommendations }) => {
+  const navigate = useNavigate();
+
   const getRiskColor = (risk: string) => {
     switch (risk) {
       case 'low': return 'text-green-400';
@@ -27,34 +30,37 @@ export const StockRecommendations: React.FC<StockRecommendationsProps> = ({ reco
     }
   };
 
-  return (
-    <div className="space-y-1" style={{width:'450px'}}>
-      <h3 className="text-lg font-semibold text-white mb-4">Recommendations</h3>
-      
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 lg:gap-4 lg:w-50 xs:max-w-100 xs:mr-40 xs:gap-8 lg:mr-0">
+  const handleTransaction = (stock: StockRecommendation, type: 'buy' | 'sell') => {
+    navigate(`/${type}/${stock.symbol}`, {
+      state: {
+        stock: {
+          id: stock.symbol,
+          name: stock.name,
+          price: stock.price,
+        },
+      },
+    });
+  };
 
+  return (
+    <div className="bg-gray-1000 backdrop-blur-xl rounded-xl space-y-4 p-0 " style={{ width: '100%' }}>
+      <h3 className="text-lg bg-gray-1000 font-semibold text-white mb-4"></h3>
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-4">
         {recommendations.map((stock, index) => (
           <motion.div
             key={stock.symbol}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="bg-white/5 rounded-xl p-3"
+            className="bg-gray-1000 backdrop-blur-xl rounded-xl mr-0"
           >
             <div className="flex justify-between items-start mb-3">
               <div>
-                <h4 className="text-white font-medium">{stock.name}</h4>
+                <h5 className="text-white font-medium">{stock.name}</h5>
                 <p className="text-sm text-gray-400">{stock.symbol}</p>
               </div>
-              <div className={`px-3 py-1 rounded-full text-sm font-medium ${
-                stock.recommendation === 'buy' ? 'bg-green-500/20 text-green-400' :
-                stock.recommendation === 'sell' ? 'bg-red-500/20 text-red-400' :
-                'bg-yellow-500/20 text-yellow-400'
-              }`}>
-                {stock.recommendation.toUpperCase()}
-              </div>
+           
             </div>
-
             <div className="grid grid-cols-2 gap-4 mb-3">
               <div>
                 <p className="text-sm text-gray-400">Current Price</p>
@@ -65,22 +71,32 @@ export const StockRecommendations: React.FC<StockRecommendationsProps> = ({ reco
                 <p className="text-white font-medium">${stock.targetPrice.toFixed(2)}</p>
               </div>
             </div>
-
             <div className="flex items-center space-x-2 mb-3">
               <AlertTriangle size={16} className={getRiskColor(stock.riskLevel)} />
               <span className={`text-sm ${getRiskColor(stock.riskLevel)}`}>
                 {stock.riskLevel.charAt(0).toUpperCase() + stock.riskLevel.slice(1)} Risk
               </span>
             </div>
-
-            <p className="text-sm text-gray-400">{stock.reason}</p>
+            <p className="text-sm text-gray-400 mb-4">{stock.reason}</p>
+            <div className="flex justify-between mt-4">
+              <button
+                onClick={() => handleTransaction(stock, 'buy')}
+                className="px-4 py-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-colors"
+              >
+                Buy
+              </button>
+              <button
+                onClick={() => handleTransaction(stock, 'sell')}
+                className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors"
+              >
+                Sell
+              </button>
+            </div>
           </motion.div>
         ))}
       </div>
     </div>
   );
 };
-
-
 
 export default StockRecommendation;

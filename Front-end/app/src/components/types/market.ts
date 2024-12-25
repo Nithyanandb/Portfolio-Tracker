@@ -1,4 +1,5 @@
 export interface MarketData {
+  name: ReactNode;
   symbol: string;
   price: number;
   change: number;

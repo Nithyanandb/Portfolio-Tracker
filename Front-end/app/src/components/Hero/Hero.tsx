@@ -55,7 +55,7 @@ const Hero = () => {
           
             {/* Right Sidebar - Market Dashboard */}
           </div>
-            <div className="lg:col-span-4">
+            <div className="lg:col-span-4" style={{width:'470px'}}>
               <div className="sticky top-20">
                 <MarketDashboard />
               </div>

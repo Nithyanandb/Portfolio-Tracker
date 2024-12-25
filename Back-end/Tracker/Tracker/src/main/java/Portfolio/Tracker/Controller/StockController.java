@@ -1,55 +1,42 @@
 package Portfolio.Tracker.Controller;
 
-import org.springframework.http.HttpStatus;
+import Portfolio.Tracker.DTO.StockTransactionDTO;
+import Portfolio.Tracker.Entity.Stock;
+import Portfolio.Tracker.Service.StockService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
 @RequestMapping("/api/stocks")
+@CrossOrigin(origins = "http://localhost:3000")
 public class StockController {
+    private final StockService stockService;
 
-    // Get all stocks
+    public StockController(StockService stockService) {
+        this.stockService = stockService;
+    }
+
     @GetMapping
     public ResponseEntity<List<Stock>> getAllStocks() {
-        List<Stock> stocks = // Retrieve stocks from service
-        if (stocks.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);  // 204 - No Content
-        }
-        return new ResponseEntity<>(stocks, HttpStatus.OK);  // 200 - OK
+        return ResponseEntity.ok(stockService.getAllStocks());
     }
 
-    // Get stock by id
     @GetMapping("/{id}")
     public ResponseEntity<Stock> getStock(@PathVariable Long id) {
-        Stock stock = // Retrieve stock by id from service
-        if (stock == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // 404 - Not Found
-        }
-        return new ResponseEntity<>(stock, HttpStatus.OK);  // 200 - OK
+        return ResponseEntity.ok(stockService.getStock(id));
     }
 
-    // Buy stock
     @PostMapping("/buy")
-    public ResponseEntity<?> buyStock(@Valid @RequestBody StockTransaction transaction) {
-        // Validate and process the transaction
-        boolean isSuccess = // Call service to process the transaction
-        if (isSuccess) {
-            return new ResponseEntity<>(HttpStatus.CREATED);  // 201 - Created
-        } else {
-            return new ResponseEntity<>("Transaction failed", HttpStatus.BAD_REQUEST);  // 400 - Bad Request
-        }
+    public ResponseEntity<Stock> buyStock(@Valid @RequestBody StockTransactionDTO transaction) {
+        return ResponseEntity.ok(stockService.buyStock(transaction));
     }
 
-    // Sell stock
     @PostMapping("/sell")
-    public ResponseEntity<?> sellStock(@Valid @RequestBody StockTransaction transaction) {
-        // Validate and process the transaction
-        boolean isSuccess = // Call service to process the transaction
-        if (isSuccess) {
-            return new ResponseEntity<>(HttpStatus.OK);  // 200 - OK
-        } else {
-            return new ResponseEntity<>("Transaction failed", HttpStatus.BAD_REQUEST);  // 400 - Bad Request
-        }
+    public ResponseEntity<Stock> sellStock(@Valid @RequestBody StockTransactionDTO transaction) {
+        return ResponseEntity.ok(stockService.sellStock(transaction));
     }
 }

@@ -1,18 +1,22 @@
 export interface BackgroundSection {
-  type: 'image' | 'video';
+  type: 'video' | 'image';
   content: {
     src: string;
     fallback?: string;
   };
   effects: {
-    gradient: {
+    gradient?: {
       colors: string[];
       opacity: number;
     };
-    overlay: {
-      type: string;
+    overlay?: {
+      type: 'rays' | 'noise' | 'grid';
       opacity: number;
     };
-    particles?: boolean;
   };
+}
+
+export interface MarketTrendEffect {
+  type: 'bullish' | 'bearish' | 'neutral';
+  intensity: number;
 }

@@ -1,3 +1,4 @@
+/* Tailwind Imports */
 @import 'tailwindcss/base';
 @import './styles/base.css';
 
@@ -7,15 +8,7 @@
 @import 'tailwindcss/utilities';
 @import './styles/utilities.css';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+/* CSS Variables */
 :root {
   --background-dark: #000000;
   --card-dark: #1a1a1a;
@@ -24,11 +17,14 @@
   --accent-blue: #3B82F6;
 }
 
+/* Dark Theme */
 .dark {
+  color-scheme: dark;
   background-color: var(--background-dark);
   color: var(--text-primary);
 }
 
+/* Gradient Background */
 .gradient-background {
   background: linear-gradient(to bottom right, #000000, #1a1a1a);
   position: relative;
@@ -38,51 +34,55 @@
 .gradient-background::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: radial-gradient(circle at center, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
   animation: pulse 8s infinite;
 }
 
 @keyframes pulse {
-  0% { opacity: 0.5; }
+  0%, 100% { opacity: 0.5; }
   50% { opacity: 0.8; }
-  100% { opacity: 0.5; }
 }
 
+/* Card Styling */
 .card-dark {
   background-color: var(--card-dark);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+/* Tailwind Layers - Base */
 @layer base {
   body {
     @apply bg-black text-white antialiased;
   }
 }
 
+/* Tailwind Layers - Components */
 @layer components {
   .glass-card {
     @apply bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl;
   }
-  
+
   .glass-button {
     @apply bg-white/10 hover:bg-white/20 backdrop-blur-lg border border-white/20 rounded-lg px-6 py-3 text-white transition-all duration-300;
   }
 }
 
+/* Tailwind Layers - Utilities */
+@layer utilities {
+  .grid-auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  .glass-effect {
+    @apply backdrop-blur-lg bg-white/5 border border-white/10;
+  }
+}
+
 /* Custom Animations */
 @keyframes float {
-  0% { transform: translateY(0px); }
+  0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-20px); }
-  100% { transform: translateY(0px); }
 }
 
 .animate-float {

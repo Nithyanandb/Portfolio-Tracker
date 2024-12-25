@@ -2,11 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
-import { NavigationMenu } from './NavLinks';
+import { NavigationMenu } from '../Header/NavLinks';
 import { SearchPopover } from '../Header/SearchPopover';
 
-import { Logo } from './Logo';
-import UserMenu from './UserMenu';
+import { LogoC } from './LogoC';
+import UserMenu from '../Header/UserMenu';
+import StockTicker from '../Hero/StockTicker';
 
 interface HeaderProps {
   user: {
@@ -18,7 +19,7 @@ interface HeaderProps {
   onLogin: (user: any) => void;
 }
 
-const Header: React.FC<HeaderProps> = ({  }) => {
+const Headertx: React.FC<HeaderProps> = ({  }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -35,11 +36,11 @@ const Header: React.FC<HeaderProps> = ({  }) => {
         transition-all duration-300 ease-in-out xs:py-10
         ${isScrolled ? 'bg-black/80 backdrop-blur-xl py-4' : 'bg-transparent py-6'}
       `}
-    >
+    ><div style={{marginTop:'-35px'}}><StockTicker/></div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xs:p-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-8">
-            <Logo/>
+            <LogoC/>
             <NavigationMenu className="hidden mt-10 lg:flex lg:text-align-center flex" />
           </div>
 
@@ -74,4 +75,4 @@ const Header: React.FC<HeaderProps> = ({  }) => {
   );
 };
 
-export default Header;
+export default Headertx;
