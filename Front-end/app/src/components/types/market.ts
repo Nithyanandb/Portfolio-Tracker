@@ -1,53 +1,38 @@
-export interface StockData {
-    symbol: string;
-    price: string;
-    change: string;
-    changePercent: string;
-    volume: string;
-    previousClose: string;
-    open: string;
-    high: string;
-    low: string;
-  }
-  
-  export interface MarketOverview {
-    marketStatus: string;
-    totalVolume: string;
-    totalTrades: string;
-    marketCap: string;
-  }
-  
-  export interface CompanyMetrics {
-    name: string;
-    symbol: string;
-    price: string;
-    change: string;
-    volume: string;
-    marketCap: string;
-    dayRange: string;
-    yearRange: string;
-  }
+export interface MarketData {
+  symbol: string;
+  price: number;
+  change: number;
+  changePercent: number;
+  volume: number;
+  high24h?: number;
+  low24h?: number;
+}
 
-  // export interface StockData {
-  //   date: string;
-  //   value: number;
-  //   volume: number;
-  //   marketCap: number;
-  //   change24h: number;
-  // }
-  
-  export interface PortfolioStock {
-    symbol: string;
-    name: string;
-    quantity: number;
-    averagePrice: number;
-    currentPrice: number;
-    change24h: number;
-  }
-  
-  export interface MarketInsight {
-    title: string;
-    value: string;
-    change: number;
-    trend: 'up' | 'down' | 'neutral';
-  }
+export interface MarketIndex {
+  symbol: string;
+  name: string;
+  price: number;
+  change: number;
+  changePercent: number;
+  high: number;
+  low: number;
+  timestamp: number;
+  region: 'Americas' | 'Europe' | 'Asia-Pacific';
+}
+
+export interface MarketResponse {
+  data: MarketData[];
+  timestamp: number;
+}
+
+
+
+
+export interface WatchlistItem {
+  id: string;
+  userId: string;
+  symbol: string;
+  alertPrice?: number;
+  notes?: string;
+  createdAt: Date;
+}

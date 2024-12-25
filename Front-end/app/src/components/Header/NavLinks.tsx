@@ -1,114 +1,97 @@
-import React, { useState } from 'react';
+import React from 'react';
+import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
 import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 
-const menuItems = [
-  {
-    name: 'Markets',
-    href: '#markets',
-    submenu: [
-      { name: 'Stocks', description: 'Trade global stocks and ETFs', href: '#stocks' },
-      { name: 'Crypto', description: 'Digital asset trading 24/7', href: '#crypto' },
-      { name: 'Forex', description: 'Currency pair trading', href: '#forex' },
-    ],
-  },
-  {
-    name: 'Trading',
-    href: '#trading',
-    submenu: [
-      { name: 'Platform', description: 'Advanced trading tools', href: '#platform' },
-      { name: 'Analysis', description: 'Technical and fundamental analysis', href: '#analysis' },
-      { name: 'API', description: 'Programmatic trading access', href: '#api' },
-    ],
-  },
-  {
-    name: 'Portfolio',
-    href: '#portfolio',
-    submenu: [
-      { name: 'Dashboard', description: 'Track your investments', href: '#dashboard' },
-      { name: 'Reports', description: 'Performance analytics', href: '#reports' },
-      { name: 'Tax Center', description: 'Tax documents and reporting', href: '#tax' },
-    ],
-  },
-  {
-    name: 'Learn',
-    href: '#learn',
-    submenu: [
-      { name: 'Academy', description: 'Trading education and courses', href: '#academy' },
-      { name: 'Research', description: 'Market insights and analysis', href: '#research' },
-      { name: 'Community', description: 'Join the discussion', href: '#community' },
-    ],
-  },
-];
-
-interface NavMenuProps {
+interface NavigationMenuProps {
   className?: string;
 }
 
-const NavLinks: React.FC<NavMenuProps> = ({ className = '' }) => {
-  const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
-
+export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => {
   return (
-    <nav className={`${className} items-center space-x-8`}>
-      {menuItems.map((item) => (
-        <div
-          key={item.name}
-          className="relative"
-          onMouseEnter={() => setHoveredMenu(item.name)}
-          onMouseLeave={() => setHoveredMenu(null)}
-        >
-          <button
-            className="flex items-center text-sm text-gray-300 hover:text-white transition-colors"
-          >
-            {item.name}
-            <ChevronDown
-              className={`ml-1 h-4 w-4 transition-transform ${
-                hoveredMenu === item.name ? 'rotate-180' : ''
-              }`}
-            />
-          </button>
+    <NavigationMenuPrimitive.Root className={className}>
+      <NavigationMenuPrimitive.List className="flex items-center gap-6">
+        <NavItem href="/markets" label="Markets">
+          <div className="grid grid-cols-1 gap-4 p-4 w-[200px]">
+            <NavLink href="/markets/stocks">Stocks</NavLink>
+            <NavLink href="/markets/crypto">Crypto</NavLink>
+            <NavLink href="/markets/forex">Forex</NavLink>
+            <NavLink href="/markets/commodities">Commodities</NavLink>
+          </div>
+        </NavItem>
 
-          {hoveredMenu === item.name && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2, ease: 'easeInOut' }}
-              className="absolute left-1/2 z-10 mt-3 w-screen max-w-xs -translate-x-1/2 transform px-2"
-            >
-              <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-                <div className="relative bg-white/10 backdrop-blur-xl">
-                  <div className="p-4 space-y-2">
-                    {item.submenu.map((subItem, index) => (
-                      <motion.a
-                        key={subItem.name}
-                        href={subItem.href}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{
-                          delay: index * 0.05, // Adds a cascading effect
-                          duration: 0.2,
-                          ease: 'easeInOut',
-                        }}
-                        className="block rounded-lg p-3 hover:bg-white/5 transition-colors"
-                      >
-                        <p className="text-sm font-medium text-white">
-                          {subItem.name}
-                        </p>
-                        <p className="text-sm text-gray-400">
-                          {subItem.description}
-                        </p>
-                      </motion.a>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </div>
-      ))}
-    </nav>
+        <NavItem href="/trading" label="Trading">
+          <div className="grid grid-cols-2 gap-2 p-4 w-[350px]">
+            <NavLink href="/trading/spot">Spot Trading</NavLink>
+            <NavLink href="/trading/margin">Margin Trading</NavLink>
+            <NavLink href="/trading/futures">Futures</NavLink>
+            <NavLink href="/trading/options">Options</NavLink>
+          </div>
+        </NavItem>
+
+        <NavItem href="/learn" label="Learn">
+          <div className="grid grid-cols-1 gap-4 p-4 w-[250px]">
+            <NavLink href="/learn/basics">Trading Basics</NavLink>
+            <NavLink href="/learn/technical">Technical Analysis</NavLink>
+            <NavLink href="/learn/fundamental">Fundamental Analysis</NavLink>
+            <NavLink href="/learn/strategies">Trading Strategies</NavLink>
+          </div>
+        </NavItem>
+
+        <SimpleNavLink href="/about">About</SimpleNavLink>
+      </NavigationMenuPrimitive.List>
+    </NavigationMenuPrimitive.Root>
   );
 };
 
-export default NavLinks;
+const NavItem: React.FC<{
+  href: string;
+  label: string;
+  children: React.ReactNode;
+}> = ({ href, label, children }) => (
+  <NavigationMenuPrimitive.Item>
+    <NavigationMenuPrimitive.Trigger className="group flex items-center gap-1 text-gray-100 hover:text-white transition-colors">
+      {label}
+      <ChevronDown
+        className="h-4 w-4 transition-transform duration-200 group-data-[state=open]:rotate-180"
+        aria-hidden="true"
+      />
+    </NavigationMenuPrimitive.Trigger>
+    <NavigationMenuPrimitive.Content className="absolute top-full mt-2">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 10 }}
+        className="bg-white/10 backdrop-blur-xl rounded-lg shadow-lg"
+      >
+        {children}
+      </motion.div>
+    </NavigationMenuPrimitive.Content>
+  </NavigationMenuPrimitive.Item>
+);
+
+const NavLink: React.FC<{
+  href: string;
+  children: React.ReactNode;
+}> = ({ href, children }) => (
+  <a
+    href={href}
+    className="block p-2 rounded-md text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+  >
+    {children}
+  </a>
+);
+
+const SimpleNavLink: React.FC<{
+  href: string;
+  children: React.ReactNode;
+}> = ({ href, children }) => (
+  <NavigationMenuPrimitive.Item>
+    <NavigationMenuPrimitive.Link
+      href={href}
+      className="text-gray-300 hover:text-white transition-colors"
+    >
+      {children}
+    </NavigationMenuPrimitive.Link>
+  </NavigationMenuPrimitive.Item>
+);

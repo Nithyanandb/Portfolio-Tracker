@@ -1,5 +1,5 @@
 export interface BackgroundSection {
-  type: 'image' | 'video'; // Ensures only these types are allowed
+  type: 'image' | 'video';
   content: {
     src: string;
     fallback?: string;

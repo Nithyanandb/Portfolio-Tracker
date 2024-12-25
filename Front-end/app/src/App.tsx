@@ -6,6 +6,8 @@ import Security from './components/Security/Security';
 import DynamicBackground from './components/background/DynamicBackground';
 import Footer from './components/Footer/Footer';
 
+
+
 const backgroundSections = [
   {
     type: 'image',
@@ -28,7 +30,9 @@ const backgroundSections = [
 
 function App() {
   return (
+    <div>
     <AppLayout>
+     
       <DynamicBackground sections={backgroundSections} currentSection={0} />
       <div className="relative z-10">
         <div className="relative z-10 mt-20">
@@ -46,6 +50,7 @@ function App() {
       </div>
      
     </AppLayout>
+    </div>
   );
 }
 

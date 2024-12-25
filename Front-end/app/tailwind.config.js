@@ -6,6 +6,10 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        xs: '300px', // For 300px and up
+        sm2: '500px', // For 500px and up
+      },
       colors: {
         black: '#0f0f0f',
       },

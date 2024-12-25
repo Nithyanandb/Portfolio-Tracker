@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion, useScroll } from "framer-motion";
+import { useScroll } from "framer-motion";
 import DynamicBackground from "../background/DynamicBackground";
 import HeroContent from "./HeroContent";
 import MarketDashboard from "./MarketDashboard";
@@ -25,7 +25,7 @@ const Hero = () => {
   }, [scrollY, currentSection]);
 
   return (
-    <div className="relative">
+    <div className="relatives lg:p-0 xs:pt-20">
       {/* Fixed Background */}
       <DynamicBackground sections={[]} currentSection={0} />
       {/* Stock Ticker */}
@@ -34,23 +34,25 @@ const Hero = () => {
       </div>
 
       {/* Main Content Grid */}
-      <div className="container mx-auto px-4 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="container lg:mx-auto xs:p-1 xs:w-full xs:px-0 lg:px-12 ">
+        <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-8 xs:gap-30">
           <div className="lg:col-span-8">
-            <div className="min-h-screen pt-20">
+            <div className="min-h-screen lg:pt-20 xs:p-0">
               <div className="mb-12">
                 <HeroContent />
               </div>
 
               {/* Market Metrics */}
-              <div className="mb-12">
+              <div className="mb-12 xs:mb-0 xs:p-0">
                 <MarketMetrics />
               </div>
             </div>
+      
             {/* Market Visuals */}
             <div>
               <MarketVisuals />
             </div>
+          
             {/* Right Sidebar - Market Dashboard */}
           </div>
             <div className="lg:col-span-4">
