@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const AUTH_WINDOW_FEATURES = 'width=400,height=400,left=590,top=200';
+const AUTH_WINDOW_FEATURES = 'width=500,height=500,left=540,top=200';
 
 export const useAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -17,12 +17,13 @@ export const useAuth = () => {
             setIsAuthenticating(false);
           } else if (authWindow.location.href.includes('success')) {
             authWindow.close(); // Close the authentication window
-            window.location.href = 'http://localhost:3000/success'; // Navigate to the success page
+           
           }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
           // Cross-origin errors are expected and can be ignored
         }
-      }, 500);
+      }, 10);
     }
   };
 

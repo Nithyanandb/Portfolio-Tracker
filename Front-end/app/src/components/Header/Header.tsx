@@ -3,9 +3,9 @@ import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { NavigationMenu } from './NavLinks';
 import { SearchPopover } from '../Header/SearchPopover';
-// import { MobileNav } from './MobileMenu';
+
 import { Logo } from './Logo';
-import { UserMenu } from './UserMenu';
+import UserMenu from './UserMenu';
 
 interface HeaderProps {
   user: {
@@ -17,7 +17,7 @@ interface HeaderProps {
   onLogin: (user: any) => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ user, onLogout, onLogin }) => {
+const Header: React.FC<HeaderProps> = ({  }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -44,12 +44,15 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout, onLogin }) => {
 
           <div className="flex items-center gap-6 mt-10 ">
             <SearchPopover />
-            <UserMenu 
-              user={user}
-              onLogout={onLogout}
-              onLogin={onLogin}
-            />
+            <UserMenu username={''} onLogout={function (): void {
+              throw new Error('Function not implemented.');
+            } } onProfile={function (): void {
+              throw new Error('Function not implemented.');
+            } } />
             
+            {/* <UserProfile user={null} onLogout={function (): void {
+              throw new Error('Function not implemented.');
+            } } /> */}
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

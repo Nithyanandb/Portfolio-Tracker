@@ -35,7 +35,7 @@ export const SearchPopover: React.FC = () => {
     <Popover className="hidden lg:block relative">
       {({ open }) => (
         <>
-          <Popover.Button className="flex items-center text-gray-500 hover:text-white transition-colors">
+          <Popover.Button className="flex items-center text-gray-500 hover:text-white  transition-colors">
             <Search />
           </Popover.Button>
           <Transition
