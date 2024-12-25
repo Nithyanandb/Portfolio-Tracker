@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-
 public class StockServiceImpl implements StockService {
     private final StockRepository stockRepository;
 
@@ -28,34 +27,36 @@ public class StockServiceImpl implements StockService {
     @Override
     public Stock getStock(Long id) {
         return stockRepository.findById(id)
-            .orElseThrow(() -> new StockNotFoundException(id));
+                .orElseThrow(() -> new StockNotFoundException(id));
     }
 
     @Override
     @Transactional
     public Stock buyStock(StockTransactionDTO transaction) {
-        Stock stock = stockRepository.findWithLockById(transaction.getStockId())
-            .orElseThrow(() -> new StockNotFoundException(transaction.getStockId()));
+        Stock stock = stockRepository.findById(transaction.getStockId())
+                .orElseThrow(() -> new StockNotFoundException(transaction.getStockId()));
 
+        // Update stock quantity and price
         stock.setQuantity(stock.getQuantity() + transaction.getQuantity());
         stock.setPrice(transaction.getPrice());
-        
+
         return stockRepository.save(stock);
     }
 
     @Override
     @Transactional
     public Stock sellStock(StockTransactionDTO transaction) {
-        Stock stock = stockRepository.findWithLockById(transaction.getStockId())
-            .orElseThrow(() -> new StockNotFoundException(transaction.getStockId()));
+        Stock stock = stockRepository.findById(transaction.getStockId())
+                .orElseThrow(() -> new StockNotFoundException(transaction.getStockId()));
 
         if (stock.getQuantity() < transaction.getQuantity()) {
             throw new InsufficientStockException(stock.getSymbol());
         }
 
+        // Update stock quantity and price
         stock.setQuantity(stock.getQuantity() - transaction.getQuantity());
         stock.setPrice(transaction.getPrice());
-        
+
         return stockRepository.save(stock);
     }
 }

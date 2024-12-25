@@ -50,3 +50,5 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({
     </div>
   );
 };
+
+export default MarketOverview;

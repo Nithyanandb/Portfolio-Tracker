@@ -16,7 +16,7 @@ interface HeaderProps {
     avatar?: string;
   } | null;
   onLogout: () => void;
-  onLogin: (user: any) => void;
+  onLogin: (user: unknown) => void;
 }
 
 const Headertx: React.FC<HeaderProps> = ({  }) => {
@@ -36,7 +36,8 @@ const Headertx: React.FC<HeaderProps> = ({  }) => {
         transition-all duration-300 ease-in-out xs:py-10
         ${isScrolled ? 'bg-black/80 backdrop-blur-xl py-4' : 'bg-transparent py-6'}
       `}
-    ><div style={{marginTop:'-35px'}}><StockTicker/></div>
+    >
+      <div style={{marginTop:'-35px'}}><StockTicker/></div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xs:p-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-8">

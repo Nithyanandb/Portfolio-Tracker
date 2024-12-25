@@ -104,11 +104,11 @@ const UserMenu = () =>{
   }
 
   return (
-    <Popover className="hidden lg:block relative">
+    <Popover className="hidden lg:block relative ">
       {({ open }) => (
         <>
           <Popover.Button className="flex items-center text-gray-300 hover:text-white transition-colors">
-            <User className="h-5 w-5" />
+            <User className="h-5 w-5 bg-black" />
           </Popover.Button>
           <Transition
             show={open}
@@ -119,19 +119,19 @@ const UserMenu = () =>{
             leaveFrom="opacity-100 translate-y-0"
             leaveTo="opacity-0 translate-y-1"
           >
-            <Popover.Panel className="absolute right-0 z-10 mt-3 w-screen max-w-xs transform px-2">
+            <Popover.Panel className="absolute right-0 mt-3 w-screen max-w-xs px-0 rounded-2">
               <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-                <div className="relative bg-white/10 backdrop-blur-xl p-4">
-                  <div className="space-y-3">
+                <div className="relative bg-white/60  backdrop-blur-xl p-4">
+                  <div className="space-y-3 text-gray-900" >
                     <button
                       onClick={LoginRequest}
-                      className="w-full text-left px-4 py-2 text-white hover:bg-white/10 rounded-lg transition-colors"
+                      className="w-full text-left px-4 py-2 text-blue hover:bg-black/20 rounded-lg transition-colors"
                     >
                       Sign In
                     </button>
                     <button
                       onClick={RegisterRequest}
-                      className="w-full text-left px-4 py-2 text-white hover:bg-white/10 rounded-lg transition-colors"
+                      className="w-full text-left px-4 py-2 text-blue hover:bg-black/20 rounded-lg transition-colors"
                     >
                       Create Account
                     </button>

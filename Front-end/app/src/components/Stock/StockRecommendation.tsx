@@ -43,20 +43,20 @@ const StockRecommendation: React.FC<StockRecommendationsProps> = ({ recommendati
   };
 
   return (
-    <div className="bg-gray-1000 backdrop-blur-xl rounded-xl space-y-4 p-0 " style={{ width: '100%' }}>
-      <h3 className="text-lg bg-gray-1000 font-semibold text-white mb-4"></h3>
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-4">
+    <div className="bg-gray-1000 backdrop-blur-xl rounded-xl space-y-0 p-0 " style={{ width: '100%' }}>
+      <h3 className="text-lg font-semibold text-white mb-6"></h3>
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-4">
         {recommendations.map((stock, index) => (
           <motion.div
             key={stock.symbol}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="bg-gray-1000 backdrop-blur-xl rounded-xl mr-0"
+            className="bg-white/5 backdrop-blur-xl rounded-xl mr-0 border-none glass-card px-3 py-4"
           >
-            <div className="flex justify-between items-start mb-3">
-              <div>
-                <h5 className="text-white font-medium">{stock.name}</h5>
+            <div className="flex justify-between items-start mb-6">
+              <div className='bg-white/10 rounded-3 pl-6 px-12 py-2'>
+                <h5 className="text-white font-medium mb-2">{stock.name}</h5>
                 <p className="text-sm text-gray-400">{stock.symbol}</p>
               </div>
            

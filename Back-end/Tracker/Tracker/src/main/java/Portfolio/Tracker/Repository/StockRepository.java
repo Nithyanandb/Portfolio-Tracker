@@ -10,6 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface StockRepository extends JpaRepository<Stock, Long> {
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
-    Optional<Stock> findWithLockById(Long id);
+    Stock findBySymbol(String symbol);
 }

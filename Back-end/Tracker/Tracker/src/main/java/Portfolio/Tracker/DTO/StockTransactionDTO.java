@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-
 public class StockTransactionDTO {
     @NotNull
     private Long stockId;
@@ -25,6 +24,7 @@ public class StockTransactionDTO {
         BUY, SELL
     }
 
+    // Constructors, getters, setters
     public StockTransactionDTO(Long stockId, Integer quantity, BigDecimal price, TransactionType type) {
         this.stockId = stockId;
         this.quantity = quantity;

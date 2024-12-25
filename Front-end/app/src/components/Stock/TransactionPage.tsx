@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -11,6 +12,8 @@ import { generateMockChartData, generateMockMetrics } from './mockDataGenerators
 import MarketDashboard from '../Hero/MarketDashboard';
 import Headertx from '../Stock/Headertx';
 import DynamicBackground from '../background/DynamicBackground';
+import StockCard from './StockCard';
+import Chartx from './Chartx';
 
 
 interface LocationState {
@@ -47,12 +50,11 @@ const TransactionPage: React.FC = () => {
   return (
       <div className="m-0 p-0" >
         <DynamicBackground sections={[]} currentSection={0}/>
-       
         <Headertx user={null} onLogout={function (): void {
           throw new Error('Function not implemented.');
-      } } onLogin={function (user: any): void {
+        } } onLogin={function (user: unknown): void {
           throw new Error('Function not implemented.');
-      } }/> 
+        } }/> 
       <div className="min-screen bg-black/10 backdrop-blur-xl lg:mt-0 py-0 flex">
 
       {/* Main Content */}
@@ -68,7 +70,7 @@ const TransactionPage: React.FC = () => {
             price={stock.price}
             trend={trend}
           />
-
+          {/* <Chartx data={[]} symbol={''}/> */}
           <StockChart data={mockChartData} trend={trend} />
           
           <div className="mt-20 mb-8">

@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { fetchMarketData } from '../Service/marketApi';
 import StockDashboard from '../Stock/StockDashboard';
 import { MarketData } from '../types/markets';
 
-const MarketDashboard: React.FC = () => {
+const MarketDashboardtx: React.FC = () => {
   const [marketData, setMarketData] = useState<MarketData[]>([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState({
@@ -73,7 +74,7 @@ const MarketDashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-screen">
+      <div className="min-screen ">
         <div className="flex justify-center items-center h-screen">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
         </div>
@@ -82,7 +83,7 @@ const MarketDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-screen p-0 bg-gray-1000 lg:mt-20" style={{width:'480px'}}>
+    <div className="min-screen  bg-gray-1000 lg:mt-20" style={{width:'480px'}}>
     <main className="container px-0 py-8">
       <div className="grid gap-0">
         {/* Market Overview */}
@@ -96,7 +97,7 @@ const MarketDashboard: React.FC = () => {
               <div key={item.symbol} className="bg-white/5 rounded-2 glass-card border-none p-2">
                 <div className="flex justify-between items-start ">
                   <div>
-                    <p className="text-sm text-gray-400 mb-3">{item.symbol}</p>
+                    <p className="text-sm text-gray-400">{item.symbol}</p>
                     <p className="text-lg font-medium text-white">${item.price.toFixed(2)}</p>
                   </div>
                   <div className={`text-sm ${item.changePercent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
@@ -124,5 +125,5 @@ const MarketDashboard: React.FC = () => {
   );
 };
 
-export default MarketDashboard;
+export default MarketDashboardtx;
 

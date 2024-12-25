@@ -49,7 +49,7 @@ const HeroContent: React.FC = React.memo(() => {
           {/* Hero Content */}
           <div className="flex flex-col items-center lg:items-start text-center lg:text-left lg:justify-center xs:py-20 space-y-4">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
-              <span className="block">Trade Global Markets</span>
+              <span className="block ">Trade Global Markets</span>
               <span className="block bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-200  xs:py-1">
                 Without Borders
               </span>
@@ -63,7 +63,7 @@ const HeroContent: React.FC = React.memo(() => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setIsAuthModalOpen(true)}
-                className="glass-button bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-md shadow-md w-full sm:w-auto"
+                className="glass-button bg-gradient-to-r border-none from-blue-600 to-purple-600 text-white px-6 py-3 rounded-md shadow-md w-full sm:w-auto"
               >
                 Start Trading
               </motion.button>
@@ -71,7 +71,7 @@ const HeroContent: React.FC = React.memo(() => {
                 href="#markets"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="glass-button px-6 py-3 rounded-md shadow-md flex items-center justify-center text-gray-200 bg-gray-700 w-full sm:w-auto"
+                className="glass-button px-6 py-3 rounded-md shadow-md flex items-center justify-center text-gray-200 border-none bg-gray-700 w-full sm:w-auto"
               >
                 View Markets
                 <ArrowRight className="ml-2 w-5 h-5" />
@@ -80,14 +80,9 @@ const HeroContent: React.FC = React.memo(() => {
           </div>
 <div className="xs:p-0">
           {/* Market Watch Component */}
-          <MarketWatch
-          
-            marketData={marketData}
-            isLoading={isLoading}
-            error={error}
-            onRefresh={fetchData}
-          
-          />
+          <MarketWatch marketData={[]} marketStats={undefined} isLoading={false} error={null} onRefresh={function (): void {
+              throw new Error("Function not implemented.");
+            } }/>
           </div>
         </motion.div>
       </main>

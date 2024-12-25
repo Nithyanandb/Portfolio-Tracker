@@ -10,3 +10,6 @@ export interface SearchResult {
     email: string;
     avatar?: string;
   }
+
+  export { default as StockDashboard } from '../Stock/StockDashboard';
+export { default as StockRecommendation } from '../Stock/StockRecommendation';

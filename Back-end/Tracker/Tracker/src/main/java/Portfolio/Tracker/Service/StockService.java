@@ -1,6 +1,5 @@
 package Portfolio.Tracker.Service;
 
-
 import Portfolio.Tracker.DTO.StockTransactionDTO;
 import Portfolio.Tracker.Entity.Stock;
 

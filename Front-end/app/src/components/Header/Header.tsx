@@ -51,9 +51,7 @@ const Header: React.FC<HeaderProps> = ({  }) => {
               throw new Error('Function not implemented.');
             } } />
             
-            {/* <UserProfile user={null} onLogout={function (): void {
-              throw new Error('Function not implemented.');
-            } } /> */}
+         
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
