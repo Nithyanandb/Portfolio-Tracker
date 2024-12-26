@@ -4,9 +4,9 @@ import Portfolio.Tracker.DTO.StockTransactionDTO;
 import Portfolio.Tracker.Entity.Stock;
 import Portfolio.Tracker.Service.StockService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -15,6 +15,8 @@ import java.util.List;
 public class StockController {
     private final StockService stockService;
 
+
+    @Autowired
     public StockController(StockService stockService) {
         this.stockService = stockService;
     }

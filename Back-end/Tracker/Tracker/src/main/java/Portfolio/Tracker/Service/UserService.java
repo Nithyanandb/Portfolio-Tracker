@@ -1,28 +1,14 @@
 package Portfolio.Tracker.Service;
 
+import Portfolio.Tracker.DTO.AuthRequest;
+import Portfolio.Tracker.DTO.AuthResponse;
 import Portfolio.Tracker.Entity.User;
-import Portfolio.Tracker.Repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import jakarta.validation.Valid;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 
-@Service
-public class UserService {
-
-    @Autowired
-    private UserRepository userRepository;
-
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    // Register a new user
-    public User registerUser(String email, String password, String authType) {
-        User user = new User(email, password, authType);
-        return userRepository.save(user);
-    }
-
-    // Find a user by email
-    public User findUserByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
+public interface UserService {
+    AuthResponse register(@Valid AuthRequest request);
+    AuthResponse login(AuthRequest request);
+    AuthResponse processOAuthPostLogin(OAuth2AuthenticationToken token);
+    User getCurrentUser();
 }

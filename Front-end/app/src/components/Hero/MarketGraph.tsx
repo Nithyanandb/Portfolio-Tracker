@@ -1,97 +1,70 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Line } from 'react-chartjs-2';
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
   Tooltip,
-  Legend,
-  Filler
-} from 'chart.js';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import exp from 'constants';
-
-// Register ChartJS components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-);
+  ResponsiveContainer,
+  CartesianGrid
+} from 'recharts';
+import { useQuery } from '@tanstack/react-query';
+import { fetchHistoricalData } from '../portfolio/stockHistoricalData';
 
 interface MarketGraphProps {
-  data: number[];
-  labels: string[];
   symbol: string;
-  isPositive: boolean;
 }
 
-export const MarketGraph: React.FC<MarketGraphProps> = ({ data, labels, symbol, isPositive }) => {
-  const chartData = {
-    labels,
-    datasets: [
-      {
-        label: symbol,
-        data,
-        fill: true,
-        borderColor: isPositive ? 'rgb(34, 197, 94)' : 'rgb(239, 68, 68)',
-        backgroundColor: isPositive 
-          ? 'rgba(34, 197, 94, 0.1)'
-          : 'rgba(239, 68, 68, 0.1)',
-        tension: 0.4,
-        pointRadius: 0,
-        borderWidth: 2,
-      },
-    ],
-  };
+export const MarketGraph: React.FC<MarketGraphProps> = ({ symbol }) => {
+  const { data, isLoading } = useQuery({
+    queryKey: ['stockHistory', symbol],
+    queryFn: () => fetchHistoricalData(symbol),
+    refetchInterval: 60000 // Refetch every minute
+  });
 
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: false,
-      },
-      tooltip: {
-        mode: 'index' as const,
-        intersect: false,
-        backgroundColor: 'rgba(17, 24, 39, 0.9)',
-        titleColor: 'rgb(243, 244, 246)',
-        bodyColor: 'rgb(243, 244, 246)',
-        borderColor: 'rgba(255, 255, 255, 0.1)',
-        borderWidth: 1,
-      },
-    },
-    scales: {
-      x: {
-        display: false,
-      },
-      y: {
-        display: false,
-      },
-    },
-    interaction: {
-      intersect: false,
-      mode: 'index' as const,
-    },
-  };
+  if (isLoading) {
+    return (
+      <div className="h-64 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
+      </div>
+    );
+  }
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="h-[60px] w-[120px]"
-    >
-      <Line data={chartData} options={options} />
-    </motion.div>
+    <div className="h-64 mt-4">
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+          <XAxis 
+            dataKey="date"
+            tickFormatter={(date) => new Date(date).toLocaleDateString()}
+            stroke="#666"
+          />
+          <YAxis 
+            domain={['auto', 'auto']}
+            stroke="#666"
+            tickFormatter={(value) => `$${value}`}
+          />
+          <Tooltip
+            contentStyle={{
+              backgroundColor: '#1a1a1a',
+              border: '1px solid #333',
+              borderRadius: '4px',
+            }}
+            labelFormatter={(date) => new Date(date).toLocaleDateString()}
+            formatter={(value: number) => [`$${value.toFixed(2)}`, 'Price']}
+          />
+          <Line
+            type="monotone"
+            dataKey="close"
+            stroke="#4ade80"
+            strokeWidth={2}
+            dot={false}
+            animationDuration={300}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
   );
 };
 

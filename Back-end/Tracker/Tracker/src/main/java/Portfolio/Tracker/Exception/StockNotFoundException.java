@@ -1,4 +1,4 @@
-package com.example.stockmanagement.exception;
+package Portfolio.Tracker.Exception;
 
 public class StockNotFoundException extends RuntimeException {
     public StockNotFoundException(Long id) {

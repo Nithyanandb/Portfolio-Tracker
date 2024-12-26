@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer = () => (
  
-    <div className=" text-white py-30 bg-gradient-to-b from-black to-gray-1000 max-w-6xl mx-auto px-6">
+    <div className=" text-white py-60 bg-gradient-to-b from-black to-gray-1000 max-w-6xl mx-auto px-6 ">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
         <div>
           <img src="/capx-logo.svg" alt="Company Logo" className="h-8 w-auto mb-6" />

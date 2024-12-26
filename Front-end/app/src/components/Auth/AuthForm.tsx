@@ -1,81 +1,77 @@
-import React from 'react';
-import { useAuth } from '../hooks/useAuth';
+import React, { useState } from 'react';
+import useAuth from '../hooks/useAuth'; // Adjust the path to where your useAuth hook is located
 
 interface AuthFormProps {
-  authType: 'login' | 'register';
-  onSuccess: () => void;
+  mode: 'login' | 'register';
+  onSuccess?: () => void;
 }
 
-const AuthForm: React.FC<AuthFormProps> = ({ authType, onSuccess }) => {
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [errorMessage, setErrorMessage] = React.useState('');
-  const { login, register, isLoading } = useAuth();
+export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSuccess }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { login, register, loading, error } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMessage('');
-
+    
     try {
-      if (authType === 'register') {
-        await register(email, password);
-      } else {
+      if (mode === 'login') {
+        // Call login method from useAuth
         await login(email, password);
+      } else {
+        // Call register method from useAuth
+        await register(email, password);
       }
-      onSuccess();
-    } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : 'Authentication failed');
+      
+      onSuccess?.(); // Callback to handle success (e.g., redirect, message)
+    } catch (err) {
+      console.error('Auth error:', err);
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-400 mb-1">
+        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
           Email
         </label>
         <input
           type="email"
-          required
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          id="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className="mt-1 block w-full rounded-md border text-black border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+          required
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-400 mb-1">
+        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
           Password
         </label>
         <input
           type="password"
-          required
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className="mt-1 block w-full rounded-md border text-black border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+          required
         />
       </div>
 
-      {errorMessage && (
-        <div className="text-red-500 text-sm mt-2">{errorMessage}</div>
+      {error && (
+        <div className="text-red-500 text-sm bg-red-50 p-2 rounded">{error}</div>
       )}
 
       <button
         type="submit"
-        disabled={isLoading}
-        className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
+        disabled={loading}
+        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
       >
-        {isLoading ? (
-          <span className="flex items-center justify-center">
-            <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></span>
-            Processing...
-          </span>
-        ) : (
-          authType === 'login' ? 'Sign In' : 'Create Account'
-        )}
+        {loading ? 'Processing...' : mode === 'login' ? 'Sign In' : 'Sign Up'}
       </button>
     </form>
   );
-}
+};
 
-  export default AuthForm;
+export default AuthForm;

@@ -83,7 +83,7 @@ const MarketDashboardtx: React.FC = () => {
   }
 
   return (
-    <div className="min-screen  bg-gray-1000 lg:mt-20" style={{width:'480px'}}>
+    <div className="min-screen  bg-gray-1000 lg:mt-20 " style={{width:'480px'}}>
     <main className="container px-0 py-8">
       <div className="grid gap-0">
         {/* Market Overview */}
@@ -114,7 +114,7 @@ const MarketDashboardtx: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-gray-1000 backdrop-blur-xl rounded-xl py-4"
+          className="py-0 mt-0 bg-none "
         >
           <StockDashboard recommendations={recommendations} />
         </motion.div>

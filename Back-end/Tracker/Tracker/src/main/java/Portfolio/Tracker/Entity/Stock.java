@@ -39,7 +39,6 @@ public class Stock {
         lastUpdated = LocalDateTime.now();
     }
 
-
     public Stock(Long id, String symbol, String name, BigDecimal price, Integer quantity, LocalDateTime lastUpdated) {
         this.id = id;
         this.symbol = symbol;
@@ -48,6 +47,9 @@ public class Stock {
         this.quantity = quantity;
         this.lastUpdated = lastUpdated;
     }
+    public Stock()
+    {}
+
 
     public Long getId() {
         return id;

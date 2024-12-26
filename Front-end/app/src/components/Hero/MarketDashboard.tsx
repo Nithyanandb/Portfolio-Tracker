@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { fetchMarketData } from '../Service/marketApi';
@@ -82,8 +83,8 @@ const MarketDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-screen p-0 bg-gray-1000 lg:mt-20" style={{width:'480px'}}>
-    <main className="container px-0 py-8">
+    <div className="min-screen p-0 bg-gray-1000 lg:mt-0" style={{width:'480px'}}>
+    <main className="  px-0 py-8">
       <div className="grid gap-0">
         {/* Market Overview */}
         <motion.div
@@ -113,7 +114,7 @@ const MarketDashboard: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-gray-1000 backdrop-blur-xl rounded-xl py-4"
+          className=""
         >
           <StockDashboard recommendations={recommendations} />
         </motion.div>

@@ -1,57 +1,98 @@
 import axios from 'axios';
 
-// Set the base URL for the API
-const API_URL = 'http://localhost:2000';
+const API_URL = 'http://localhost:2000/auth';
 
-export interface LoginRequest {
+export interface AuthCredentials {
   email: string;
   password: string;
 }
 
-export interface User {
+export interface AuthResponse {
+  token: string;
+  type: string;
+  email: string;
   name: string;
-  email: string;
-  avatar?: string;
-}
-export interface RegisterRequest {
-  email: string;
-  password: string;
 }
 
-// Login function to send credentials to the backend
-export const login = async (credentials: LoginRequest) => {
-  try {
-    // Send a POST request to login endpoint
-    const response = await axios.post(`${API_URL}/auth/login`, credentials, {
-      withCredentials: true, // Allows sending cookies with the request
-    });
-    return response.data;
-  } catch (error: any) {
-    // Handle errors and provide a default message if one is not available
-    const errorMessage = error?.response?.data?.message || 'An error occurred. Please try again later.';
-    throw new Error(errorMessage);
+// Create axios instance with default config
+const api = axios.create({
+  baseURL: 'http://localhost:2000',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  withCredentials: true // Enable sending cookies
+});
+
+// Add interceptor to add token to requests
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
-};
+  return config;
+});
 
-// Register function to send user data to the backend
-export const register = async (email: string, password: string, name: string, userData: RegisterRequest) => {
-  try {
-    // Send a POST request to the register endpoint
-    const response = await axios.post(`${API_URL}/auth/register`, userData);
-    return response.data;
-  } catch (error: any) {
-    // Handle errors and provide a default message if one is not available
-    const errorMessage = error?.response?.data?.message || 'An error occurred. Please try again later.';
-    throw new Error(errorMessage);
+// Add response interceptor to handle errors
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Clear auth state on unauthorized
+      authService.logout();
+    }
+    return Promise.reject(error);
   }
-};
+);
 
-// Redirect function for Google OAuth2 login
-export const loginWithGoogle = () => {
-  window.location.href = `${API_URL}/oauth2/authorization/google`;
-};
+export const authService = {
+  async register(credentials: AuthCredentials): Promise<AuthResponse> {
+    try {
+      const response = await api.post('/api/auth/register', credentials);
+      if (response.data.token) {
+        this.setAuthUser(response.data);
+      }
+      return response.data;
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message || 'Registration failed');
+    }
+  },
 
-// Redirect function for GitHub OAuth2 login
-export const loginWithGithub = () => {
-  window.location.href = `${API_URL}/oauth2/authorization/github`;
+  async login(credentials: AuthCredentials): Promise<AuthResponse> {
+    try {
+      const response = await api.post('/api/auth/login', credentials);
+      if (response.data.token) {
+        this.setAuthUser(response.data);
+      }
+      return response.data;
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message || 'Login failed');
+    }
+  },
+
+  loginWithGoogle(): void {
+    window.location.href = 'http://localhost:2000/oauth2/authorization/google';
+  },
+
+  loginWithGithub(): void {
+    window.location.href = 'http://localhost:2000/oauth2/authorization/github';
+  },
+
+  logout(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    delete api.defaults.headers.common['Authorization'];
+  },
+
+  getCurrentUser(): AuthResponse | null {
+    const user = localStorage.getItem('user');
+    const token = localStorage.getItem('token');
+    if (!user || !token) return null;
+    return JSON.parse(user);
+  },
+
+  setAuthUser(response: AuthResponse): void {
+    localStorage.setItem('token', response.token);
+    localStorage.setItem('user', JSON.stringify(response));
+    api.defaults.headers.common['Authorization'] = `Bearer ${response.token}`;
+  }
 };

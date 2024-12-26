@@ -1,4 +1,4 @@
-package com.example.stockmanagement.exception;
+package Portfolio.Tracker.Exception;
 
 public class InsufficientStockException extends RuntimeException {
     public InsufficientStockException(String symbol) {

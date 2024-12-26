@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { User, Bell, Settings } from 'lucide-react';
 import { Popover, Transition } from '@headlessui/react';
 import { motion } from 'framer-motion';
-import { LoginRequest,RegisterRequest, loginWithGithub, loginWithGoogle } from '../Service/Auth';
+import { useAuth } from '../hooks/useAuth'; // Assuming this is the correct path
 import SocialAuth from '../Auth/SocialAuth';
+
 interface UserMenuProps {
   user: {
     name: string;
@@ -15,96 +16,31 @@ interface UserMenuProps {
   onLogout: () => void;
 }
 
-// export const UserMenu: React.FC<UserMenuProps> = ({ user, onLogin, onRegister, onLogout }) => {
-//   if (user) {
-//     return (
-//       <Popover className="relative">
-//         {({ open }) => (
-//           <>
-//             <div className="flex items-center space-x-6">
-//               <motion.button
-//                 whileHover={{ scale: 1.05 }}
-//                 whileTap={{ scale: 0.95 }}
-//                 className="text-gray-300 hover:text-white transition-colors"
-//               >
-//                 <Bell size={20} />
-//               </motion.button>
-//               <motion.button
-//                 whileHover={{ scale: 1.05 }}
-//                 whileTap={{ scale: 0.95 }}
-//                 className="text-gray-300 hover:text-white transition-colors"
-//               >
-//                 <Settings size={20} />
-//               </motion.button>
-              
-//               <Popover.Button className="flex items-center space-x-3">
-//                 {user.avatar ? (
-//                   <img 
-//                     src={user.avatar} 
-//                     alt={user.name}
-//                     className="w-8 h-8 rounded-full"
-//                   />
-//                 ) : (
-//                   <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-//                     <User size={20} className="text-gray-400" />
-//                   </div>
-//                 )}
-//                 <div className="hidden md:block text-left">
-//                   <p className="text-sm font-medium text-white">{user.name}</p>
-//                   <p className="text-xs text-gray-400">{user.email}</p>
-//                 </div>
-//               </Popover.Button>
-//             </div>
+const UserMenu = () => {
+  const { login, register, loginWithGoogle, loginWithGithub, isLoading, isAuthenticating } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-//             <Transition
-//               show={open}
-//               enter="transition duration-200 ease-out"
-//               enterFrom="opacity-0 translate-y-1"
-//               enterTo="opacity-100 translate-y-0"
-//               leave="transition duration-150 ease-in"
-//               leaveFrom="opacity-100 translate-y-0"
-//               leaveTo="opacity-0 translate-y-1"
-//             >
-//               <Popover.Panel className="absolute right-0 z-10 mt-3 w-screen max-w-xs transform px-2">
-//                 <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-//                   <div className="relative bg-white/10 backdrop-blur-xl p-4">
-//                     <div className="space-y-3">
-//                       <button className="w-full text-left px-4 py-2 text-white hover:bg-white/20 rounded-lg transition-colors">
-//                         Profile Settings
-//                       </button>
-//                       <button className="w-full text-left px-4 py-2 text-white hover:bg-white/20 rounded-lg transition-colors">
-//                         Trading History
-//                       </button>
-//                       <button 
-//                         onClick={onLogout}
-//                         className="w-full text-left px-4 py-2 text-red-400 hover:bg-white/20 rounded-lg transition-colors"
-//                       >
-//                         Logout
-//                       </button>
-//                     </div>
-//                   </div>
-//                 </div>
-//               </Popover.Panel>
-//             </Transition>
-//           </>
-//         )}
-//       </Popover>
-//     );
-//   }
+  const handleLogin = async () => {
+    try {
+      await login(email, password);
+    } catch (error) {
+      // Handle login error (e.g., show a notification)
+      console.error(error);
+    }
+  };
 
-const UserMenu = () =>{
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function LoginRequest(event: MouseEvent<HTMLButtonElement, MouseEvent>): void {
-    throw new Error('Function not implemented.');
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function RegisterRequest(event: MouseEvent<HTMLButtonElement, MouseEvent>): void {
-    throw new Error('Function not implemented.');
-  }
+  const handleRegister = async () => {
+    try {
+      await register(email, password);
+    } catch (error) {
+      // Handle register error (e.g., show a notification)
+      console.error(error);
+    }
+  };
 
   return (
-    <Popover className="hidden lg:block relative ">
+    <Popover className="hidden lg:block relative">
       {({ open }) => (
         <>
           <Popover.Button className="flex items-center text-gray-300 hover:text-white transition-colors">
@@ -121,21 +57,42 @@ const UserMenu = () =>{
           >
             <Popover.Panel className="absolute right-0 mt-3 w-screen max-w-xs px-0 rounded-2">
               <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-                <div className="relative bg-white/60  backdrop-blur-xl p-4">
-                  <div className="space-y-3 text-gray-900" >
+                <div className="relative bg-white/60 backdrop-blur-xl p-4">
+                  <div className="space-y-3 text-gray-900">
+                    {/* Login Form */}
+                    <div className="space-y-2">
+                      <input
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                      />
+                      <input
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
                     <button
-                      onClick={LoginRequest}
+                      onClick={handleLogin}
                       className="w-full text-left px-4 py-2 text-blue hover:bg-black/20 rounded-lg transition-colors"
+                      disabled={isLoading || isAuthenticating}
                     >
-                      Sign In
+                      {isLoading || isAuthenticating ? 'Logging in...' : 'Sign In'}
                     </button>
                     <button
-                      onClick={RegisterRequest}
+                      onClick={handleRegister}
                       className="w-full text-left px-4 py-2 text-blue hover:bg-black/20 rounded-lg transition-colors"
+                      disabled={isLoading || isAuthenticating}
                     >
-                      Create Account
+                      {isLoading || isAuthenticating ? 'Registering...' : 'Create Account'}
                     </button>
-                    <SocialAuth/>
+                    {/* Social Auth */}
+                    
+                    <SocialAuth />
                   </div>
                 </div>
               </div>
@@ -145,5 +102,6 @@ const UserMenu = () =>{
       )}
     </Popover>
   );
-  }
-  export default UserMenu;
+};
+
+export default UserMenu;

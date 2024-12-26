@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from 'react';
 
 const width = 500;
@@ -6,7 +7,6 @@ const left = (window.innerWidth / 2) - (width / 2);
 const top = (window.innerHeight / 2) - (height / 2);
 
 const AUTH_WINDOW_FEATURES = `width=${width},height=${height},left=${left},top=${top}`;
-
 
 export const useAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -22,10 +22,8 @@ export const useAuth = () => {
             clearInterval(checkWindow);
             setIsAuthenticating(false);
           } else if (authWindow.location.href.includes('success')) {
-            authWindow.close(); // Close the authentication window
-           
+            authWindow.close();
           }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
           // Cross-origin errors are expected and can be ignored
         }
@@ -100,3 +98,5 @@ export const useAuth = () => {
     isAuthenticating,
   };
 };
+
+export default useAuth; 

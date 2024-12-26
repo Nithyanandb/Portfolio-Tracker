@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
-import { NavigationMenu } from '../Header/NavLinks';
+import { NavigationMenu } from '../Header/NavigationMenu';
 import { SearchPopover } from '../Header/SearchPopover';
 
 import { LogoC } from './LogoC';
@@ -46,12 +46,12 @@ const Headertx: React.FC<HeaderProps> = ({  }) => {
           </div>
 
           <div className="flex items-center gap-6 mt-10 ">
-            <SearchPopover />
+            {/* <SearchPopover />
             <UserMenu username={''} onLogout={function (): void {
               throw new Error('Function not implemented.');
             } } onProfile={function (): void {
               throw new Error('Function not implemented.');
-            } } />
+            } } /> */}
             
             {/* <UserProfile user={null} onLogout={function (): void {
               throw new Error('Function not implemented.');

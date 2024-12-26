@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import VideoBackground from './VideoBackground';
-import ImageBackground from './ImageBackground';
-import GradientOverlay from './GradientOverlay';
-import MarketEffects from '../background/MarketEffects';
 import { useThrottledCallback } from '../hooks/useThrottledCallback';
 import type { BackgroundSection } from '../types/background';
+import GradientOverlay from './GradientOverlay';
+import ImageBackground from './ImageBackground';
+import MarketEffects from './MarketEffects';
+import VideoBackground from './VideoBackground';
 
 interface DynamicBackgroundProps {
   sections: BackgroundSection[];

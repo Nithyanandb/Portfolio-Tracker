@@ -1,54 +1,46 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, TrendingUp } from 'lucide-react';
 import { MarketTicker } from './MarketTicker';
-import type { MarketData } from '../types/market';
+import { useQuery } from '@tanstack/react-query';
 
-interface MarketWatchProps {
-  marketData: MarketData[];
-  isLoading: boolean;
-  error: string | null;
-  onRefresh: () => void;
-}
+const WATCHED_SYMBOLS = ['AAPL', 'TSLA', 'MSFT', 'GOOGL', 'AMZN', 'META'];
 
-export const MarketWatch: React.FC<MarketWatchProps> = ({
-  marketData,
-  isLoading,
-  error,
-  onRefresh,
-}) => {
+export const MarketWatch: React.FC = () => {
+  const { refetch, isRefetching } = useQuery({
+    queryKey: ['market-data'],
+    queryFn: () => Promise.all(WATCHED_SYMBOLS.map(symbol => Promise.all([
+      fetch(`/api/quote/${symbol}`),
+      fetch(`/api/company/${symbol}`)
+    ])))
+  });
+
   return (
-    <div className="
-    lg:mt-8 lg:max-w-30 lg:mt-0 lg:px-4 lg:py-6 
-    rounded-xl 
-    xs:w-full xs:p-0 xs:mt-20  
-    bg-gray-1000 bg-opacity-50 backdrop-blur-lg shadow-xl">
-      <div className="flex items-center justify-between mb-4 xs:p-0">
-        <h2 className="text-xl font-bold text-white">Market Watch</h2>
+    <div className="bg-gray-900 rounded-xl overflow-hidden border border-white/10">
+      <div className="flex items-center justify-between p-4 border-b border-white/10">
+        <div className="flex items-center gap-2">
+          <TrendingUp className="w-6 h-6 text-blue-400" />
+          <h2 className="text-xl font-bold text-white">Market Watch</h2>
+        </div>
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={onRefresh}
-          disabled={isLoading}
-          className="text-gray-400 hover:text-white transition-colors xs:p-0"
+          onClick={() => refetch()}
+          disabled={isRefetching}
+          className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
         >
-          <RefreshCw className={`w-10 h-6 ${isLoading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`w-5 h-5 text-blue-400 ${isRefetching ? 'animate-spin' : ''}`} />
         </motion.button>
       </div>
-      
-      {error ? (
-        <div className="text-red-400 text-center lg:py-4 xs:p-0">{error}</div>
-      ) : (
-        <div className="space-y-2 xs:max-h-[1500px] lg:max-h-[510px] overflow-y-auto custom-scrollbar xs:p-0 xs:w-full">
-          {marketData.map((data) => (
-            <MarketTicker key={data.symbol} data={data} />
-          ))}
-        </div>
-      )}
+
+      <div className="p-4 space-y-4 max-h-[calc(100vh-12rem)] overflow-y-auto">
+        {WATCHED_SYMBOLS.map((symbol) => (
+          <MarketTicker key={symbol} symbol={symbol} />
+        ))}
+      </div>
     </div>
   );
 };
-
 
 
 export default MarketWatch;

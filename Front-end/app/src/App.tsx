@@ -5,9 +5,9 @@ import Hero from './components/Hero/Hero';
 import Features from './components/Features/Features';
 import Security from './components/Security/Security';
 import DynamicBackground from './components/background/DynamicBackground';
-import Footer from './components/Footer/Footer';
-import StockDashboard from '../src/components/Stock/StockDashboard';
 import TransactionPage from '../src/components/Stock/TransactionPage';
+import PortfolioDashboard from './components/portfolio/PortfolioDashboard';
+import StockForm from './components/portfolio/StockForm';
 
 const backgroundSections = [
   {
@@ -32,11 +32,12 @@ const backgroundSections = [
 function App() {
   return (
     <Router>
-      <DynamicBackground sections={backgroundSections} currentSection={0} />
+           <DynamicBackground sections={backgroundSections} currentSection={0} />
+       
       <Routes>
         <Route path="/" element={
           <AppLayout>
-          
+
             <div className="relative z-10">
               <div className="relative z-10 mt-20">
                 <Hero />
@@ -50,11 +51,14 @@ function App() {
             </div>
           </AppLayout>
         } />
-        
-        <Route  path="/:type/:symbol" element={<TransactionPage />} />
-        
+
+        <Route path="/:type/:symbol" element={<TransactionPage />} />
+       
+        <Route path="/portfolio" element={<PortfolioDashboard />} />
+        <Route path="/portfolio/add" element={<StockForm />} />
+        <Route path="/portfolio/edit/:id" element={<StockForm />} />
       </Routes>
-    
+
     </Router>
   );
 }

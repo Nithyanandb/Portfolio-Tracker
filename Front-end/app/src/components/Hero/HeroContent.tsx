@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import AuthModal from "../Auth/AuthModal";
-import { MarketWatch } from "./MarketWatch";
 import { fetchMarketData } from "../Service/marketApi";
 import type { MarketData } from "../types/market";
 import { defaultCompanies } from "./marketData";
+import MarketWatch from "./MarketWatch";
 
 const HeroContent: React.FC = React.memo(() => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -38,7 +39,7 @@ const HeroContent: React.FC = React.memo(() => {
   }, []);
 
   return (
-    <div className="relative lg:px-4 sm:px-8 xs:p-0 md:px-12 lg:px-20 lg:py-8 -mt-[110px]">
+    <div className="relative lg:px-0 sm:px-8 xs:p-0 md:px-0 lg:px-20 lg:py-8 -mt-[110px]">
       <main className="mt-12 sm:mt-20 md:mt-28 lg:mt-32 xs:p-0 xs:w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -78,11 +79,14 @@ const HeroContent: React.FC = React.memo(() => {
               </motion.a>
             </div>
           </div>
-<div className="xs:p-0">
+<div className="xs:p-0 ">
+
+
           {/* Market Watch Component */}
-          <MarketWatch marketData={[]} marketStats={undefined} isLoading={false} error={null} onRefresh={function (): void {
-              throw new Error("Function not implemented.");
-            } }/>
+  
+            {/* <MarketWatch /> */}
+  
+  
           </div>
         </motion.div>
       </main>

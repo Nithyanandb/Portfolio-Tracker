@@ -1,41 +1,55 @@
 package Portfolio.Tracker.Entity;
 
-
 import jakarta.persistence.*;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Size;
 
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
+
 
 @Entity
+@Table(name = "users")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Email
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String email;
 
-    @Size(min = 8, message = "Password must be at least 8 characters long")
-    @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private String authType;
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+
+    private String providerId;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles = new HashSet<>();
 
     public User() {
+
     }
 
-    public User(String email, String password, String authType) {
+    public enum AuthProvider {
+        LOCAL, GOOGLE, GITHUB
+    }
+
+    public enum Role {
+        ROLE_USER, ROLE_ADMIN
+    }
+
+    public User(Long id, String email, String password, String name, AuthProvider provider, String providerId, Set<Role> roles) {
+        this.id = id;
         this.email = email;
         this.password = password;
-        this.authType = authType;
+        this.name = name;
+        this.provider = provider;
+        this.providerId = providerId;
+        this.roles = roles;
     }
-
-    // Getters and Setters
 
     public Long getId() {
         return id;
@@ -61,24 +75,35 @@ public class User {
         this.password = password;
     }
 
-    public String getAuthType() {
-        return authType;
+    public String getName() {
+        return name;
     }
 
-    public void setAuthType(String authType) {
-        this.authType = authType;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(email, user.email);
+    public AuthProvider getProvider() {
+        return provider;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(email);
+    public void setProvider(AuthProvider provider) {
+        this.provider = provider;
+    }
+
+    public String getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(String providerId) {
+        this.providerId = providerId;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

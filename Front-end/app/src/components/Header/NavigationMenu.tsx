@@ -1,7 +1,7 @@
 import React from 'react';
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
 import { motion } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown} from 'lucide-react';
 
 interface NavigationMenuProps {
   className?: string;
@@ -39,6 +39,8 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
         </NavItem>
 
         <SimpleNavLink href="/about">About</SimpleNavLink>
+
+       
       </NavigationMenuPrimitive.List>
     </NavigationMenuPrimitive.Root>
   );
@@ -95,3 +97,6 @@ const SimpleNavLink: React.FC<{
     </NavigationMenuPrimitive.Link>
   </NavigationMenuPrimitive.Item>
 );
+
+
+export default NavigationMenu;

@@ -8,8 +8,8 @@ interface StockDashboardProps {
 
 const StockDashboard: React.FC<StockDashboardProps> = ({ recommendations }) => {
   return (
-    <div className="min-screen p-0 bg-gray-1000 container ml-0 py-4">
-      <div className="bg-gray-1000 backdrop-blur-md rounded-xl">
+    <div className="min-screen p-0 ml-0 mt-10 bg-none">
+      <div className="bg-gray-1000 backdrop-blur-md bg-none p-0">
         <h2 className="text-xl ml-0 p-0 font-bold mb-0 text-white">Market Recommendations</h2>
         <StockRecommendations recommendations={recommendations} />
       </div>

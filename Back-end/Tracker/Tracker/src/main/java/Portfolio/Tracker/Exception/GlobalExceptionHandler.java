@@ -1,4 +1,4 @@
-package com.example.stockmanagement.exception;
+package Portfolio.Tracker.Exception;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

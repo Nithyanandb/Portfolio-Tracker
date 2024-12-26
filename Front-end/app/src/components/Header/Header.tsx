@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
-import { NavigationMenu } from './NavLinks';
+import { NavigationMenu } from './NavigationMenu';
 import { SearchPopover } from '../Header/SearchPopover';
 
 import { Logo } from './Logo';
@@ -15,7 +15,7 @@ interface HeaderProps {
     avatar?: string;
   } | null;
   onLogout: () => void;
-  onLogin: (user: any) => void;
+  onLogin: (user: unknown) => void;
 }
 
 const Header: React.FC<HeaderProps> = ({  }) => {
@@ -45,11 +45,7 @@ const Header: React.FC<HeaderProps> = ({  }) => {
 
           <div className="flex items-center gap-6 mt-10 ">
             <SearchPopover />
-            <UserMenu username={''} onLogout={function (): void {
-              throw new Error('Function not implemented.');
-            } } onProfile={function (): void {
-              throw new Error('Function not implemented.');
-            } } />
+            <UserMenu/>
             
          
             <motion.button
