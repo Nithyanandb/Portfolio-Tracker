@@ -4,12 +4,12 @@ import { Activity } from 'lucide-react';
 // Define the Transaction type
 interface Transaction {
   id: string;
-  type: 'buy' | 'sell';
-  symbol: string;
-  companyName: string;
+  type: 'Buy' | 'Sell';
+  stockSymbol: string;
+  stockName: '';
   quantity: string;
   price: string;
-  date: string;
+  timestamp: string;
 }
 
 export const AllStocks: React.FC = () => {
@@ -80,13 +80,13 @@ export const AllStocks: React.FC = () => {
             <div className="bg-gray-800/50 rounded-xl p-4">
               <h3 className="text-gray-400 text-sm">Buy Orders</h3>
               <p className="text-2xl font-bold mt-1 text-green-400">
-                {transactions.filter(t => t.type === 'buy').length}
+                {transactions.filter(t => t.type === 'Buy').length}
               </p>
             </div>
             <div className="bg-gray-800/50 rounded-xl p-4">
               <h3 className="text-gray-400 text-sm">Sell Orders</h3>
               <p className="text-2xl font-bold mt-1 text-red-400">
-                {transactions.filter(t => t.type === 'sell').length}
+                {transactions.filter(t => t.type === 'Sell').length}
               </p>
             </div>
           </div>
@@ -122,11 +122,11 @@ const TransactionTable: React.FC<TransactionTableProps> = ({ transactions }) => 
             <tr key={transaction.id} className="text-sm text-gray-300">
               <td className="px-6 py-3">{transaction.id}</td>
               <td className="px-6 py-3">{transaction.type}</td>
-              <td className="px-6 py-3">{transaction.symbol}</td>
-              <td className="px-6 py-3">{transaction.companyName}</td>
+              <td className="px-6 py-3">{transaction.stockSymbol}</td>
+              <td className="px-6 py-3">{transaction.stockName}</td>
               <td className="px-6 py-3">{transaction.quantity}</td>
               <td className="px-6 py-3">{transaction.price}</td>
-              <td className="px-6 py-3">{transaction.date}</td>
+              <td className="px-6 py-3">{transaction.timestamp}</td>
             </tr>
           ))}
         </tbody>

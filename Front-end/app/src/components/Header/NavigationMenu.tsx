@@ -16,7 +16,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
             <NavLink href="/stock/all">Stocks</NavLink>
             <NavLink href="/stock/buy">Buy Stocks</NavLink>
             <NavLink href="/stock/forex">Sell Stocks</NavLink>
-            <NavLink href="/markets/commodities">Commodities</NavLink>
+            <NavLink href="/stock/all">Transaction History</NavLink>
           </div>
         </NavItem>
 

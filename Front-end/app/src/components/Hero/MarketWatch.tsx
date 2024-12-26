@@ -9,20 +9,21 @@ import MarketSummary from './MarketSummary';
 import TrendingStocks from './TrendingStocks';
 
 const WATCHED_SYMBOLS = ['AAPL', 'TSLA', 'MSFT', 'GOOGL', 'AMZN', 'META'];
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: 1,
-    },
-  },
-});
+
 export const MarketWatch: React.FC = () => {
-  const { data: marketData, refetch, isRefetching } = useQuery({
+  const { data: marketData, refetch, isRefetching, isLoading } = useQuery({
     queryKey: ['market-status'],
     queryFn: () => fetch(API_CONFIG.getEndpointUrl('QUOTE')).then(res => res.json()),
     refetchInterval: API_CONFIG.CACHE_DURATION,
   });
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-64 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="grid lg:grid-cols-12 gap-4">

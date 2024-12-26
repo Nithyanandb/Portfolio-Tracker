@@ -10,10 +10,10 @@ import PortfolioDashboard from './components/portfolio/PortfolioDashboard';
 import StockForm from './components/portfolio/StockForm';
 import { QueryClient } from '@tanstack/react-query';
 import AllStocks from './components/pages/AllStocks';
-import BuyStocks from './components/pages/BuyStocks';
-import Commodities from './components/pages/Commodities';
 import SellStocks from './components/pages/SellStocks';
 import StockEditPage from './components/pages/AllStocks';
+import BuyStocks from './components/BuyStocks/BuyStocks';
+import { MarketProvider } from './context/MarketContext';
 
 const backgroundSections = [
   {
@@ -40,15 +40,35 @@ const ScrollToTop = () => {
   const location = useLocation();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   }, [location]);
 
   return null;
 };
 
 function App() {
+  useEffect(() => {
+    // Add smooth scroll behavior to html element
+    document.documentElement.style.scrollBehavior = 'smooth';
+    
+    // Optional: Add better scroll performance
+    document.body.style.cssText = `
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    `;
+    
+    return () => {
+      document.documentElement.style.scrollBehavior = '';
+      document.body.style.cssText = '';
+    };
+  }, []);
+
   return (
-    <Router>
+    <MarketProvider>
+      <Router>
       {/* Scroll to top on route change */}
       <ScrollToTop />
 
@@ -84,9 +104,9 @@ function App() {
         <Route path="/stock/all" element={<AllStocks />} />
         <Route path="/stock/buy" element={<BuyStocks />} />
         <Route path="/stock/sell" element={<SellStocks />} />
-        <Route path="/markets/commodities" element={<Commodities />} />
       </Routes>
     </Router>
+    </MarketProvider>
   );
 }
 

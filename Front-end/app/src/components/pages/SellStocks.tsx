@@ -1,141 +1,142 @@
-import React, { useState, useEffect } from 'react';
-import { TrendingDown } from 'lucide-react';
+import React, { useState } from 'react';
+import { TrendingDown, DollarSign, BarChart2, AlertCircle } from 'lucide-react';
 
-interface UserStock {
-  id: number;
+interface StockFormData {
   symbol: string;
-  quantity: number;
-  averagePrice: number;
+  quantity: string;
+  price: string;
 }
 
-function SellStocks() {
-  const [userStocks, setUserStocks] = useState<UserStock[]>([]);
-  const [selectedStock, setSelectedStock] = useState<string>('');
-  const [quantity, setQuantity] = useState<number>(0);
+export const SellStocks: React.FC = () => {
+  const [formData, setFormData] = useState<StockFormData>({
+    symbol: '',
+    quantity: '',
+    price: '',
+  });
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  useEffect(() => {
-    fetchUserStocks();
-  }, []);
-
-  const fetchUserStocks = async () => {
-    try {
-      const response = await fetch('/api/stocks/user');
-      const data = await response.json();
-      setUserStocks(data);
-    } catch (error) {
-      console.error('Error fetching user stocks:', error);
-    }
-  };
-
-  const handleSell = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await fetch('/api/stocks/sell', {
+      const response = await fetch('http://localhost:2000/transaction/sell', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          symbol: selectedStock,
-          quantity,
-        }),
+        body: JSON.stringify(formData),
       });
-      const data = await response.json();
-      setMessage(data.message);
-      if (response.ok) {
-        fetchUserStocks();
-      }
+
+      if (!response.ok) throw new Error('Failed to process sell order');
+      
+      setMessage({ type: 'success', text: 'Stock sold successfully!' });
+      setFormData({ symbol: '', quantity: '', price: '' });
     } catch (error) {
-      setMessage('Error processing sale');
+      setMessage({ type: 'error', text: 'Failed to process sell order. Please try again.' });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Sell Stocks</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold mb-4">Your Portfolio</h2>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Symbol</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Quantity</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Avg Price</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {userStocks.map((stock) => (
-                  <tr key={stock.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{stock.symbol}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{stock.quantity}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${stock.averagePrice.toFixed(2)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white p-8">
+      <div className="max-w-4xl mx-auto">
+        <div className="mb-12 text-center">
+          <h1 className="text-4xl font-bold mb-4 flex items-center justify-center gap-3">
+            <TrendingDown className="text-red-400" />
+            Sell Stocks
+          </h1>
+          <p className="text-gray-400 text-lg">Execute your exit strategy with precision</p>
+        </div>
+
+        {/* Market Overview Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700/50">
+            <DollarSign className="text-red-400 mb-2" />
+            <h3 className="text-lg font-semibold">Portfolio Value</h3>
+            <p className="text-2xl font-bold text-red-400">$1.2M</p>
+          </div>
+          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700/50">
+            <BarChart2 className="text-blue-400 mb-2" />
+            <h3 className="text-lg font-semibold">Holdings</h3>
+            <p className="text-2xl font-bold text-blue-400">15</p>
+          </div>
+          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700/50">
+            <AlertCircle className="text-purple-400 mb-2" />
+            <h3 className="text-lg font-semibold">Market Status</h3>
+            <p className="text-2xl font-bold text-purple-400">Open</p>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold mb-4">Sell Order</h2>
-          <form onSubmit={handleSell}>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="stock">
-                Select Stock
-              </label>
-              <select
-                id="stock"
-                className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                value={selectedStock}
-                onChange={(e) => setSelectedStock(e.target.value)}
-                required
-              >
-                <option value="">Select a stock</option>
-                {userStocks.map((stock) => (
-                  <option key={stock.id} value={stock.symbol}>
-                    {stock.symbol} ({stock.quantity} shares)
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="mb-6">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="quantity">
-                Quantity to Sell
+        {/* Sell Form */}
+        <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 border border-gray-700/50">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Stock Symbol
               </label>
               <input
-                type="number"
-                id="quantity"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                value={quantity}
-                onChange={(e) => setQuantity(parseInt(e.target.value))}
+                type="text"
+                value={formData.symbol}
+                onChange={(e) => setFormData({ ...formData, symbol: e.target.value })}
+                className="w-full bg-gray-900/50 border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                placeholder="e.g., TSLA"
                 required
-                min="1"
               />
             </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Quantity
+                </label>
+                <input
+                  type="number"
+                  value={formData.quantity}
+                  onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
+                  className="w-full bg-gray-900/50 border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  placeholder="Enter quantity"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Price per Share
+                </label>
+                <input
+                  type="number"
+                  value={formData.price}
+                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                  className="w-full bg-gray-900/50 border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  placeholder="Enter price"
+                  required
+                />
+              </div>
+            </div>
+
+            {message && (
+              <div className={`p-4 rounded-lg ${
+                message.type === 'success' ? 'bg-green-900/50 text-green-400' : 'bg-red-900/50 text-red-400'
+              }`}>
+                {message.text}
+              </div>
+            )}
+
             <button
               type="submit"
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               disabled={loading}
+              className={`w-full bg-gradient-to-r from-red-500 to-red-600 text-white py-4 px-6 rounded-lg font-semibold text-lg transition-all duration-200 hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-900 ${
+                loading ? 'opacity-75 cursor-not-allowed' : ''
+              }`}
             >
-              {loading ? 'Processing...' : 'Sell Stocks'}
+              {loading ? 'Processing...' : 'Place Sell Order'}
             </button>
           </form>
-          {message && (
-            <div className="mt-4 p-4 rounded bg-gray-100">
-              <p className="text-sm text-gray-700">{message}</p>
-            </div>
-          )}
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default SellStocks;

@@ -52,10 +52,10 @@
           price: stock.price * quantity,
         };
 
-        if (type === 'buy') {
+        if (type === 'Buy') {
           await buyStock(transaction);
           showPopup(`Successfully purchased ${quantity} shares of ${symbol}`, 'success');
-        } else if (type === 'sell') {
+        } else if (type === 'Sell') {
           await sellStock(transaction);
           showPopup(`Successfully sold ${quantity} shares of ${symbol}`, 'success');
         }
@@ -116,9 +116,9 @@
               />
             </div>
 
-            {/* <Link to={`/AllStocks`} className="bg-gray-1000 glass-button text-white p-2 rounded mt-4 ml-20 inline-block">
+        <Link to={`/stock/all`} className="bg-gray-1000 glass-button text-white p-2 rounded mt-4 ml-20 inline-block">
   Edit Stock Details
-</Link> */}
+</Link> 
           </motion.div>
 
           {/* Sidebar */}
