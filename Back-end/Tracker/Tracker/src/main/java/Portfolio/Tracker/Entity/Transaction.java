@@ -21,15 +21,6 @@ public class Transaction {
     private double price;
     private LocalDateTime timestamp;
 
-    public Transaction(Long id, String type, String stockSymbol, String stockName, int quantity, double price, LocalDateTime timestamp) {
-        this.id = id;
-        this.type = type;
-        this.stockSymbol = stockSymbol;
-        this.stockName = stockName;
-        this.quantity = quantity;
-        this.price = price;
-        this.timestamp = timestamp;
-    }
 
     public Transaction() {
 

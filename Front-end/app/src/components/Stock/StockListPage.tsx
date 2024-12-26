@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Stock } from '../types/Stock';
 import { stockApi } from '../Service/api';
-import { StockTable } from '../Stock/StockTable';
+import { StockTable } from './TransactionTable';
 
 export const StockListPage: React.FC = () => {
   const [stocks, setStocks] = useState<Stock[]>([]);

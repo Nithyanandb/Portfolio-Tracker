@@ -2,11 +2,12 @@ package Portfolio.Tracker.Service;
 
 import Portfolio.Tracker.Entity.Transaction;
 import Portfolio.Tracker.Repository.TransactionRepository;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class TransactionService {
@@ -32,5 +33,9 @@ public class TransactionService {
 
 
         return transactionRepository.save(transaction);
+    }
+
+    public List<Transaction> getAllTransactions() {
+        return transactionRepository.findAll(); // Returns the list of transactions
     }
 }

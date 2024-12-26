@@ -13,6 +13,7 @@ import AllStocks from './components/pages/AllStocks';
 import BuyStocks from './components/pages/BuyStocks';
 import Commodities from './components/pages/Commodities';
 import SellStocks from './components/pages/SellStocks';
+import StockEditPage from './components/pages/AllStocks';
 
 const backgroundSections = [
   {
@@ -78,9 +79,11 @@ function App() {
         <Route path="/portfolio" element={<PortfolioDashboard />} />
         <Route path="/portfolio/add" element={<StockForm />} />
         <Route path="/portfolio/edit/:id" element={<StockForm />} />
+     
+
         <Route path="/stock/all" element={<AllStocks />} />
         <Route path="/stock/buy" element={<BuyStocks />} />
-        <Route path="/stock/forex" element={<SellStocks />} />
+        <Route path="/stock/sell" element={<SellStocks />} />
         <Route path="/markets/commodities" element={<Commodities />} />
       </Routes>
     </Router>
