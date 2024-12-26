@@ -11,11 +11,11 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
   return (
     <NavigationMenuPrimitive.Root className={className}>
       <NavigationMenuPrimitive.List className="flex items-center gap-6">
-        <NavItem href="/markets" label="Markets">
+        <NavItem href="/" label="Markets">
           <div className="grid grid-cols-1 gap-4 p-4 w-[200px]">
-            <NavLink href="/markets/stocks">Stocks</NavLink>
-            <NavLink href="/markets/crypto">Crypto</NavLink>
-            <NavLink href="/markets/forex">Forex</NavLink>
+            <NavLink href="/stock/all">Stocks</NavLink>
+            <NavLink href="/stock/buy">Buy Stocks</NavLink>
+            <NavLink href="/stock/forex">Sell Stocks</NavLink>
             <NavLink href="/markets/commodities">Commodities</NavLink>
           </div>
         </NavItem>

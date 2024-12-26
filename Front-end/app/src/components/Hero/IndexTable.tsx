@@ -53,3 +53,4 @@ export const IndexTable: React.FC<IndexTableProps> = ({ indices }) => {
     </div>
   );
 };
+

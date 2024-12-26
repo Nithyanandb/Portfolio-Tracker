@@ -8,7 +8,7 @@ interface AppLayoutProps {
 
 const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   return (
-    <div className="relative min-h-screen w-full overflow-hidden">
+    <div className="min-h-screen flex flex-col">
       <Header user={null} onLogout={function (): void {
         throw new Error('Function not implemented.');
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

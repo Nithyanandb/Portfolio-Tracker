@@ -1,107 +1,150 @@
-import React, { useEffect, useState } from 'react';
-import { AnimatePresence } from 'framer-motion';
-import { useThrottledCallback } from '../hooks/useThrottledCallback';
-import type { BackgroundSection } from '../types/background';
-import GradientOverlay from './GradientOverlay';
-import ImageBackground from './ImageBackground';
-import MarketEffects from './MarketEffects';
-import VideoBackground from './VideoBackground';
+import React from 'react';
+import Particles from 'react-tsparticles';
+import { loadFull } from 'tsparticles';
+import type { Engine } from 'tsparticles-engine';
 
-interface DynamicBackgroundProps {
-  sections: BackgroundSection[];
-  currentSection: number;
-  marketTrend?: 'up' | 'down' | 'neutral';
+interface BackgroundSection {
+  type: 'image' | 'video';
+  content: {
+    src: string;
+  };
+  effects: {
+    gradient?: {
+      colors: string[];
+      opacity: number;
+    };
+    overlay?: {
+      type: string;
+      opacity: number;
+    };
+    particles?: boolean;
+  };
 }
 
-const DynamicBackground: React.FC<DynamicBackgroundProps> = ({
-  sections,
-  currentSection,
-  marketTrend = 'neutral'
-}) => {
-  const [isReducedMotion, setIsReducedMotion] = useState(false);
+interface Props {
+  sections: BackgroundSection[];
+  currentSection: number;
+}
+const DynamicBackground: React.FC<Props> = ({ sections, currentSection }) => {
+  const section = sections[currentSection];
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setIsReducedMotion(mediaQuery.matches);
+  if (!section) {
+    console.error("Invalid section or currentSection index:", { sections, currentSection });
+    return null; // Render nothing if section is undefined
+  }
 
-    const handleChange = (e: MediaQueryListEvent) => {
-      setIsReducedMotion(e.matches);
-    };
-
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
-
-  const handleScroll = useThrottledCallback(() => {
-    // Market data-driven parallax effects could be added here
-  }, 100);
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
+  const particlesInit = async (engine: Engine) => {
+    await loadFull(engine);
+  };
 
   return (
-    <div className="fixed inset-0 -z-1">
-      <AnimatePresence mode="wait">
-        {sections.map((section, index) => (
-          <div
-            key={index}
-            className="absolute inset-0"
-            style={{ pointerEvents: 'none' }}
-          >
-            {section.type === 'video' ? (
-              <VideoBackground
-                src={section.content.src}
-                fallback={section.content.fallback || ''}
-                isActive={currentSection === index}
-                marketTrend={marketTrend}
-              />
-            ) : (
-              <ImageBackground
-                src={section.content.src}
-                isActive={currentSection === index}
-                marketTrend={marketTrend}
-              />
-            )}
+    <div className="fixed inset-0 w-full h-full -z-10">
+      {/* Background Media */}
+      {section.type === 'image' ? (
+        <img
+          src={section.content.src}
+          alt="Background"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      ) : (
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src={section.content.src} type="video/mp4" />
+        </video>
+      )}
 
-            <GradientOverlay
-              colors={getMarketTrendColors(marketTrend)}
-              opacity={currentSection === index ? 0.7 : 0}
-            />
+      {/* Gradient Overlay */}
+      {section.effects.gradient && (
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(${section.effects.gradient.colors.join(', ')})`,
+            opacity: section.effects.gradient.opacity,
+          }}
+        />
+      )}
 
-            <MarketEffects
-              type={getMarketEffectType(marketTrend)}
-              intensity={currentSection === index ? 1 : 0}
-              isReducedMotion={isReducedMotion}
-            />
-          </div>
-        ))}
-      </AnimatePresence>
+      {/* Grid Overlay */}
+      {section.effects.overlay?.type === 'grid' && (
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
+            backgroundSize: '20px 20px',
+            opacity: section.effects.overlay.opacity,
+          }}
+        />
+      )}
+
+      {/* Particles */}
+      {section.effects.particles && (
+        <Particles
+          init={particlesInit}
+          options={{
+            particles: {
+              number: {
+                value: 100,
+                density: {
+                  enable: true,
+                  value_area: 800,
+                },
+              },
+              color: {
+                value: "#ffffff",
+              },
+              opacity: {
+                value: 0.5,
+                random: true,
+              },
+              size: {
+                value: 2,
+                random: true,
+              },
+              move: {
+                enable: true,
+                speed: 1,
+                direction: "none",
+                random: true,
+                straight: false,
+                outModes: {
+                  default: "out",
+                },
+              },
+              links: {
+                enable: true,
+                distance: 150,
+                color: "#ffffff",
+                opacity: 0.4,
+                width: 1,
+              },
+            },
+            interactivity: {
+              events: {
+                onHover: {
+                  enable: true,
+                  mode: "grab",
+                },
+              },
+              modes: {
+                grab: {
+                  distance: 140,
+                  links: {
+                    opacity: 1,
+                  },
+                },
+              },
+            },
+            detectRetina: true,
+          }}
+        />
+      )}
     </div>
   );
-};
-
-const getMarketTrendColors = (trend: 'up' | 'down' | 'neutral') => {
-  switch (trend) {
-    case 'up':
-      return ['rgba(16, 185, 129, 0.1)', 'rgba(59, 130, 246, 0.05)'];
-    case 'down':
-      return ['rgba(239, 68, 68, 0.1)', 'rgba(139, 92, 246, 0.05)'];
-    default:
-      return ['rgba(255, 255, 255, 0.05)', 'rgba(0, 0, 0, 0.1)'];
-  }
-};
-
-const getMarketEffectType = (trend: 'up' | 'down' | 'neutral') => {
-  switch (trend) {
-    case 'up':
-      return 'bullish';
-    case 'down':
-      return 'bearish';
-    default:
-      return 'neutral';
-  }
 };
 
 export default DynamicBackground;

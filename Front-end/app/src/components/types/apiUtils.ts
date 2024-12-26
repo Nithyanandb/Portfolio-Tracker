@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { API_CONFIG } from '../config/apiConfig';
+import { API_CONFIG } from '../config/API_CONFIG';
 
 // Cache implementation
-const cache = new Map<string, { data: any; timestamp: number }>();
+const cache = new Map<string, { data: unknown; timestamp: number }>();
 
 export const fetchWithCache = async (url: string, params: any) => {
   const cacheKey = JSON.stringify({ url, params });

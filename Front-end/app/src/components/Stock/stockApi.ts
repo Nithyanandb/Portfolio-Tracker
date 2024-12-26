@@ -1,51 +1,49 @@
-import axios from 'axios';
+import { API_CONFIG, StockQuote } from '../config/API_CONFIG';
 
-const API_KEY = 'demo'; // Replace with your Alpha Vantage API key
-const BASE_URL = 'https://www.alphavantage.co/query';
+export const stockApi = {
+  async getQuote(symbol: string) {
+    try {
+      const response = await fetch(API_CONFIG.getEndpointUrl('QUOTE', symbol));
+      const data: StockQuote = await response.json();
+      
+      // Transform the data to match our app's format
+      const quote = data['Global Quote'];
+      return {
+        symbol: quote['01. symbol'],
+        price: parseFloat(quote['05. price']),
+        change: parseFloat(quote['09. change']),
+        changePercent: parseFloat(quote['10. change percent'].replace('%', '')),
+        volume: parseInt(quote['06. volume']),
+        high: parseFloat(quote['03. high']),
+        low: parseFloat(quote['04. low']),
+        previousClose: parseFloat(quote['08. previous close']),
+        lastUpdated: quote['07. latest trading day']
+      };
+    } catch (error) {
+      console.error('Error fetching stock quote:', error);
+      throw error;
+    }
+  },
 
-export interface StockData {
-  date: string;
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-  volume: number;
-}
+  async getNews() {
+    try {
+      const response = await fetch(API_CONFIG.getEndpointUrl('NEWS'));
+      const data = await response.json();
+      return data.feed?.slice(0, 10) || []; // Return latest 10 news items
+    } catch (error) {
+      console.error('Error fetching market news:', error);
+      throw error;
+    }
+  },
 
-export const fetchStockData = async (symbol: string): Promise<StockData[]> => {
-  try {
-    const response = await axios.get(BASE_URL, {
-      params: {
-        function: 'TIME_SERIES_DAILY',
-        symbol,
-        apikey: API_KEY,
-      },
-    });
-
-    const timeSeriesData = response.data['Time Series (Daily)'];
-    return Object.entries(timeSeriesData).map(([date, values]: [string, unknown]) => ({
-      date,
-      open: parseFloat(values['1. open']),
-      high: parseFloat(values['2. high']),
-      low: parseFloat(values['3. low']),
-      close: parseFloat(values['4. close']),
-      volume: parseFloat(values['5. volume']),
-    })).slice(0, 30); // Get last 30 days of data
-  } catch (error) {
-    console.error('Error fetching stock data:', error);
-    return [];
+  async searchSymbols(query: string) {
+    try {
+      const response = await fetch(API_CONFIG.getEndpointUrl('SEARCH', query));
+      const data = await response.json();
+      return data.bestMatches || [];
+    } catch (error) {
+      console.error('Error searching symbols:', error);
+      throw error;
+    }
   }
-};
-
-export const fetchMarketData = async () => {
-  // For demo purposes, returning mock data
-  // In production, replace with actual API calls
-  return [
-    { symbol: 'AAPL', price: 173.50, changePercent: 1.2 },
-    { symbol: 'TSLA', price: 202.64, changePercent: -1.2 },
-    { symbol: 'MSFT', price: 378.85, changePercent: 3.02 },
-    { symbol: 'GOOGL', price: 141.80, changePercent: 0.5 },
-    { symbol: 'AMZN', price: 175.35, changePercent: -0.8 },
-    { symbol: 'META', price: 484.10, changePercent: 2.1 }
-  ];
 };

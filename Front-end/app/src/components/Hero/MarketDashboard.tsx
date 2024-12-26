@@ -74,9 +74,9 @@ const MarketDashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-screen">
+      <div className=" -mt-[900px] min-screen">
         <div className="flex justify-center items-center h-screen">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white"></div>
         </div>
       </div>
     );

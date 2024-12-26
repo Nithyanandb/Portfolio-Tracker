@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { API_CONFIG } from '../config/apiConfig';
+import { API_CONFIG } from '../config/API_CONFIG';
 import { fetchWithCache } from '../types/apiUtils';
 import type { StockData } from '../types/stockTypes';
 

@@ -44,7 +44,7 @@ const UserMenu = () => {
       {({ open }) => (
         <>
           <Popover.Button className="flex items-center text-gray-300 hover:text-white transition-colors">
-            <User className="h-5 w-5 bg-black" />
+            <User className="h-5 w-5 " />
           </Popover.Button>
           <Transition
             show={open}
