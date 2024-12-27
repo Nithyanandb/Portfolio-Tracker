@@ -4,7 +4,6 @@ import { RefreshCw, TrendingUp } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { API_CONFIG } from '../config/API_CONFIG';
 import StockTicker from './MarketTicker';
-import MarketNews from './MarketNews';
 import MarketSummary from './MarketSummary';
 import TrendingStocks from './TrendingStocks';
 
@@ -59,7 +58,7 @@ export const MarketWatch: React.FC = () => {
       {/* Sidebar Content */}
       <div className="lg:col-span-4 space-y-4">
         <TrendingStocks />
-        <MarketNews />
+       
       </div>
     </div>
   );

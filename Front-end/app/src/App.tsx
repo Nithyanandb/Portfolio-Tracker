@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import AppLayout from './components/Layout/AppLayout';
 import Hero from './components/Hero/Hero';
@@ -7,36 +7,14 @@ import Security from './components/Security/Security';
 import DynamicBackground from './components/background/DynamicBackground';
 import TransactionPage from './components/pages/TransactionPage';
 import PortfolioDashboard from './components/portfolio/PortfolioDashboard';
-import StockForm from './components/portfolio/StockForm';
-import { QueryClient } from '@tanstack/react-query';
 import AllStocks from './components/pages/AllStocks';
 import SellStocks from './components/pages/SellStocks';
-import StockEditPage from './components/pages/AllStocks';
 import BuyStocks from './components/BuyStocks/BuyStocks';
-import { MarketProvider } from './context/MarketContext';
+import StockForm from './components/portfolio/StockForm';
 
-const backgroundSections = [
-  {
-    type: 'image',
-    content: {
-      src: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80',
-    },
-    effects: {
-      gradient: {
-        colors: ['rgba(0,0,0,0.7)', 'rgba(0,0,0,0.5)'],
-        opacity: 0.8,
-      },
-      overlay: {
-        type: 'grid',
-        opacity: 0.1,
-      },
-      particles: true,
-    },
-  },
-];
 
-// Component for managing scroll on route changes
-const ScrollToTop = () => {
+// ScrollToTop component with section detection
+const ScrollToTop = ({ onSectionChange }: { onSectionChange: (section: number) => void }) => {
   const location = useLocation();
 
   useEffect(() => {
@@ -46,15 +24,33 @@ const ScrollToTop = () => {
     });
   }, [location]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const windowHeight = window.innerHeight;
+      
+      // Determine which section is currently in view
+      if (scrollPosition < windowHeight * 0.5) {
+        onSectionChange(0); // Hero section
+      } else if (scrollPosition < windowHeight * 1.5) {
+        onSectionChange(1); // Features section
+      } else {
+        onSectionChange(2); // Security section
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [onSectionChange]);
+
   return null;
 };
 
 function App() {
+  const [currentSection, setCurrentSection] = useState(0);
+
   useEffect(() => {
-    // Add smooth scroll behavior to html element
     document.documentElement.style.scrollBehavior = 'smooth';
-    
-    // Optional: Add better scroll performance
     document.body.style.cssText = `
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -67,16 +63,16 @@ function App() {
   }, []);
 
   return (
-    <MarketProvider>
-      <Router>
-      {/* Scroll to top on route change */}
-      <ScrollToTop />
-
-      <DynamicBackground sections={backgroundSections} currentSection={0} />
+    <Router>
+      <ScrollToTop onSectionChange={setCurrentSection} />
+      
+      <DynamicBackground 
+        currentSection={currentSection}
+      />
 
       <Routes>
-        <Route
-          path="/"
+        <Route 
+          path="/" 
           element={
             <AppLayout>
               <div className="relative z-10">
@@ -91,22 +87,18 @@ function App() {
                 </div>
               </div>
             </AppLayout>
-          }
+          } 
         />
-
+        
         <Route path="/:type/:symbol" element={<TransactionPage />} />
-
         <Route path="/portfolio" element={<PortfolioDashboard />} />
         <Route path="/portfolio/add" element={<StockForm />} />
         <Route path="/portfolio/edit/:id" element={<StockForm />} />
-     
-
         <Route path="/stock/all" element={<AllStocks />} />
         <Route path="/stock/buy" element={<BuyStocks />} />
         <Route path="/stock/sell" element={<SellStocks />} />
       </Routes>
     </Router>
-    </MarketProvider>
   );
 }
 

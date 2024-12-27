@@ -1,20 +1,21 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { useScrollEffect } from '../hooks/useScrollEffect';
 
-interface GradientOverlayProps {
+interface Props {
   colors: string[];
   opacity: number;
 }
 
-const GradientOverlay: React.FC<GradientOverlayProps> = ({ colors, opacity }) => {
+const GradientOverlay: React.FC<Props> = ({ colors, opacity }) => {
+  const { scrollY } = useScrollEffect();
+  const dynamicOpacity = Math.min(opacity + (scrollY * 0.001), 1);
+
   return (
-    <motion.div
-      className="absolute inset-0 mix-blend-overlay"
-      initial={{ opacity: 0 }}
-      animate={{ opacity }}
-      transition={{ duration: 1 }}
+    <div
+      className="absolute inset-0 transition-opacity duration-200"
       style={{
-        background: `linear-gradient(45deg, ${colors.join(', ')})`
+        background: `linear-gradient(${colors.join(', ')})`,
+        opacity: dynamicOpacity,
       }}
     />
   );
