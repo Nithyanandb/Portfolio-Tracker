@@ -28,7 +28,7 @@ export const MarketWatch: React.FC = () => {
     <div className="grid lg:grid-cols-12 gap-4">
       {/* Market Summary Section */}
       <div className="lg:col-span-8 space-y-4">
-        <div className="bg-gray-900 rounded-xl border border-white/10">
+        <div className="bg-gray-900 rounded-xl ">
           <div className="flex items-center justify-between p-4 border-b border-white/10">
             <div className="flex items-center gap-2">
               <TrendingUp className="w-6 h-6 text-blue-400" />

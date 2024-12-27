@@ -68,7 +68,7 @@ export const BuyStocks: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 z-10 via-gray-800 to-black text-white p-4 md:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header Section */}
         <div className="text-center space-y-4">

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, useLocation } from 'react-router-dom';
 import AppLayout from './components/Layout/AppLayout';
 import Hero from './components/Hero/Hero';
 import Features from './components/Features/Features';
@@ -11,8 +11,27 @@ import AllStocks from './components/pages/AllStocks';
 import SellStocks from './components/pages/SellStocks';
 import BuyStocks from './components/BuyStocks/BuyStocks';
 import StockForm from './components/portfolio/StockForm';
+import AuthWindow from './components/Auth/AuthWindow';
+import { AuthProvider } from './context/AuthContext';
+import OAuthCallback from './context/OAuthCallback';
+import { ErrorBoundary, RouteErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
+import NotFound from './components/ErrorBoundary/NotFound';
 
-
+const routes = [
+  {
+    path: '/auth/callback',
+    element: <OAuthCallback />,
+    errorElement: <ErrorBoundary />
+  },
+  {
+    path: '/',
+    element: <div>Home Page</div>
+  },
+  {
+    path: '*',
+    element: <NotFound />
+  }
+];
 // ScrollToTop component with section detection
 const ScrollToTop = ({ onSectionChange }: { onSectionChange: (section: number) => void }) => {
   const location = useLocation();
@@ -62,44 +81,49 @@ function App() {
     };
   }, []);
 
-  return (
-    <Router>
-      <ScrollToTop onSectionChange={setCurrentSection} />
-      
-      <DynamicBackground 
-        currentSection={currentSection}
-      />
+  // Update your Router setup
+  const router = createBrowserRouter(
+    [
+      {
+        path: "/",
+        element: <AppLayout>
+          <div className="relative z-10">
+            <div className="relative z-10 mt-20">
+              <Hero />
+            </div>
+            <div className="relative z-10 mt-20">
+              <Features />
+            </div>
+            <div className="relative z-10 mt-20">
+              <Security />
+            </div>
+          </div>
+        </AppLayout>,
+      },
+      { path: "/authWindow", element: <AuthWindow /> },
+      { path: "/:type/:symbol", element: <TransactionPage /> },
+      { path: "/portfolio", element: <PortfolioDashboard /> },
+      { path: "/portfolio/add", element: <StockForm /> },
+      { path: "/portfolio/edit/:id", element: <StockForm /> },
+      { path: "/stock/all", element: <AllStocks /> },
+      { path: "/stock/buy", element: <BuyStocks /> },
+      { path: "/stock/sell", element: <SellStocks /> },
+    ],
+    {
+      future: {
+        v7_startTransition: true,
+        v7_relativeSplatPath: true
+      }
+    }
+  );
 
-      <Routes>
-        <Route 
-          path="/" 
-          element={
-            <AppLayout>
-              <div className="relative z-10">
-                <div className="relative z-10 mt-20">
-                  <Hero />
-                </div>
-                <div className="relative z-10 mt-20">
-                  <Features />
-                </div>
-                <div className="relative z-10 mt-20">
-                  <Security />
-                </div>
-              </div>
-            </AppLayout>
-          } 
-        />
-        
-        <Route path="/:type/:symbol" element={<TransactionPage />} />
-        <Route path="/portfolio" element={<PortfolioDashboard />} />
-        <Route path="/portfolio/add" element={<StockForm />} />
-        <Route path="/portfolio/edit/:id" element={<StockForm />} />
-        <Route path="/stock/all" element={<AllStocks />} />
-        <Route path="/stock/buy" element={<BuyStocks />} />
-        <Route path="/stock/sell" element={<SellStocks />} />
-      </Routes>
-    </Router>
+  return (
+    <ErrorBoundary>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 
-export default App;
+export  default App;

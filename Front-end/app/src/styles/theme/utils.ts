@@ -31,3 +31,8 @@ export const hexToRgb = (hex: string): { r: number; g: number; b: number } | nul
 export const mediaQuery = (breakpoint: keyof Theme['breakpoints']): string => {
   return \`@media (min-width: \${theme.breakpoints[breakpoint]})\`;
 };
+
+export const getRGBA = (color: string, opacity: number) => {
+  const rgb = color.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+  return rgb ? `rgba(${rgb[1]}, ${rgb[2]}, ${rgb[3]}, ${opacity})` : color;
+};

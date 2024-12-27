@@ -1,68 +1,144 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
-import AuthModal from "../Auth/AuthModal";
-import MarketWatch from "./MarketWatch";
-import { MarketProvider } from "../../context/MarketContext";
+import { motion } from 'framer-motion';
+import { TrendingUp } from 'lucide-react';
+import { cn } from '../../utils/cn';
 
-const HeroContent: React.FC = React.memo(() => {
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-
+export const HeroContent = () => {
   return (
-    <MarketProvider>
-      <div className="relative lg:px-0 sm:px-8 xs:p-0 md:px-0 lg:px-20 lg:py-8 -mt-[110px]">
-        <main className="mt-12 sm:mt-20 md:mt-28 lg:mt-32 xs:p-0 xs:w-full">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="flex flex-col lg:grid lg:grid-cols-1 lg:items-center lg:gap-12 xs:p-0 xl:gap-16"
-          >
-            {/* Hero Content */}
-            <div className="flex flex-col items-center lg:items-start text-center lg:text-left lg:justify-center xs:py-20 space-y-4">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
-                <span className="block">Trade Global Markets</span>
-                <span className="block bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-200 xs:py-1">
-                  Without Borders
-                </span>
-              </h1>
-              <p className="mt-4 text-sm sm:text-base md:text-lg text-gray-200 max-w-md lg:max-w-lg xs:py-1">
-                Access international markets, trade stocks, ETFs, and more with
-                our advanced trading platform. Join millions of traders worldwide.
-              </p>
-              <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-6 ml-0 sm:ml-[100px]">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setIsAuthModalOpen(true)}
-                  className="glass-button bg-gradient-to-r border-none from-blue-600 to-purple-600 text-white px-6 py-3 rounded-md shadow-md w-full sm:w-auto"
-                >
-                  Start Trading
-                </motion.button>
-                <motion.a
-                  href="#markets"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="glass-button px-6 py-3 rounded-md shadow-md flex items-center justify-center text-gray-200 border-none bg-gray-700 w-full sm:w-auto"
-                >
-                  View Markets
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </motion.a>
-              </div>
-            </div>
+    <div className="relative min-h-screen w-full bg-black overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0">
+        {/* Gradient Orbs */}
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-blue-500/20 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-purple-500/20 rounded-full blur-[100px] animate-pulse delay-1000" />
+        
+        {/* Animated Lines */}
+        <div className="absolute inset-0">
+          {[...Array(5)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute h-px w-full bg-gradient-to-r from-transparent via-blue-500/20 to-transparent"
+              initial={{ left: '-100%', top: `${20 + i * 15}%` }}
+              animate={{ left: '100%' }}
+              transition={{
+                duration: 7,
+                repeat: Infinity,
+                delay: i * 0.5,
+                ease: 'linear',
+              }}
+            />
+          ))}
+        </div>
 
-            {/* Market Watch Section */}
-            <div className="mt-8 w-full">
-              <MarketWatch />
-            </div>
-          </motion.div>
-        </main>
-
-        <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+        {/* Grid Pattern */}
+        <div 
+          className="absolute inset-0 opacity-[0.15]"
+          style={{
+            backgroundImage: `
+              radial-gradient(circle at center, rgba(59,130,246,0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '30px 30px'
+          }}
+        />
       </div>
-    </MarketProvider>
+
+      {/* Content */}
+      <div className="relative z-10">
+  
+        {/* Main Hero Content */}
+        <div className="container mx-auto px-0">
+          <div className="min-h-[90vh] flex flex-col justify-center items-center text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="max-w-3xl space-y-8"
+            >
+              <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-12"
+        >
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+            Track Your Portfolio
+            <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+              {" "}Like Never Before
+            </span>
+          </h1>
+          <p className="text-lg text-gray-400 max-w-xl mx-auto leading-relaxed">
+            Real-time market data, advanced analytics, and powerful tools to help you make informed investment decisions.
+          </p>
+        </motion.div>
+              
+       
+              {/* Action Buttons */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8"
+              >
+                <button className=" group relative w-full sm:w-[260px] h-[56px] bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white rounded-[4px] transition-all duration-300 overflow-hidden">
+                  <span className="relative  z-10 text-sm font-medium tracking-wider uppercase">
+                    Get Started
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/5 to-white/0 transform translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                </button>
+
+                <button className="group relative w-full sm:w-[260px] h-[56px] bg-white hover:bg-white/90 text-black rounded-[4px] transition-all duration-300 overflow-hidden">
+                  <span className="relative z-10 text-sm font-medium tracking-wider uppercase">
+                    View Demo
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/0 via-black/5 to-black/0 transform translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                </button>
+              </motion.div>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Bottom Stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="absolute bottom-0 left-0 right-0 bg-black/40 backdrop-blur-sm border-t border-gray-800/50"
+        >
+          <div className="container mx-auto px-4 py-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              <Stat label="Active Users" value="2M+" />
+              <Stat label="Daily Trades" value="5M+" />
+              <Stat label="Market Coverage" value="50+" />
+              <Stat label="Success Rate" value="99.9%" />
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </div>
   );
-});
+};
+
+const MarketStat = ({ label, value, change }: { label: string; value: string; change: string }) => {
+  const isPositive = change.startsWith('+');
+  return (
+    <div className="flex items-center gap-3">
+      <span className="text-gray-400">{label}</span>
+      <span className="text-white font-medium">{value}</span>
+      <span className={cn(
+        "flex items-center gap-1",
+        isPositive ? "text-green-400" : "text-red-400"
+      )}>
+        <TrendingUp className={cn("w-3 h-3", !isPositive && "rotate-180")} />
+        {change}
+      </span>
+    </div>
+  );
+};
+
+const Stat = ({ label, value }: { label: string; value: string }) => (
+  <div className="text-center">
+    <div className="text-2xl font-medium text-white">{value}</div>
+    <div className="text-sm text-gray-400 mt-1">{label}</div>
+  </div>
+);
 
 export default HeroContent;

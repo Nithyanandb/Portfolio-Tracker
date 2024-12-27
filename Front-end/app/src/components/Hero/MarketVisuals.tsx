@@ -1,47 +1,84 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { cn } from '../../utils/cn';
 
-const MarketVisuals = () => {
+interface MarketData {
+  symbol: string;
+  price: number;
+  change: number;
+  volume?: string;
+  marketCap?: string;
+}
+
+export const MarketVisuals = () => {
+  const [marketData, setMarketData] = useState<MarketData[]>([
+    { 
+      symbol: 'NIFTY 50', 
+      price: 22431.50, 
+      change: 1.2,
+      volume: '234.5M',
+      marketCap: '₹120.5T'
+    },
+    { 
+      symbol: 'SENSEX', 
+      price: 73967.75, 
+      change: 0.8,
+      volume: '156.8M',
+      marketCap: '₹145.2T'
+    },
+    { 
+      symbol: 'BANK NIFTY', 
+      price: 47521.25, 
+      change: -0.3,
+      volume: '89.2M',
+      marketCap: '₹45.8T'
+    }
+  ]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMarketData(prev => prev.map(item => ({
+        ...item,
+        price: item.price + (Math.random() - 0.5) * 10,
+        change: parseFloat((item.change + (Math.random() - 0.5) * 0.1).toFixed(2))
+      })));
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="bg-black/80 rounded-2xl p-6">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Market Chart */}
-        <div className="lg:col-span-2 rounded-xl p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-white">S&P 500</h3>
-            <span className="text-green-500 font-medium">+1.2%</span>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
+      {marketData.map((item, index) => (
+        <motion.div
+          key={item.symbol}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.1 }}
+          className="bg-black/40 backdrop-blur-sm rounded-lg border border-gray-800 p-4"
+        >
+          <div className="flex justify-between items-start mb-2">
+            <h3 className="text-lg font-semibold text-white">{item.symbol}</h3>
+            <span className={cn(
+              "px-2 py-1 rounded text-sm font-medium",
+              item.change > 0 ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"
+            )}>
+              {item.change > 0 ? '+' : ''}{item.change}%
+            </span>
           </div>
-          <div className="relative h-48">
-            <svg className="w-full h-full" viewBox="0 0 100 40">
-              <path
-                d="M0,20 Q25,5 50,25 T100,20"
-                fill="none"
-                stroke="#3B82F6"
-                strokeWidth="2"
-              />
-            </svg>
+          
+          <div className="text-2xl font-bold text-white mb-2">
+            ₹{item.price.toFixed(2)}
           </div>
-        </div>
-
-        {/* Market Stats */}
-        <div className="space-y-6">
-          <div className="bg-white/5 rounded-xl p-4">
-            <h4 className="text-sm font-medium text-gray-400">Global Volume</h4>
-            <div className="mt-2 flex items-baseline">
-              <p className="text-2xl font-semibold text-white">$4.2T</p>
-              <p className="ml-2 text-sm font-medium text-green-500">+12%</p>
-            </div>
+          
+          <div className="flex justify-between text-sm text-gray-400">
+            <span>Vol: {item.volume}</span>
+            <span>MCap: {item.marketCap}</span>
           </div>
-          <div className="bg-white/5 rounded-xl p-4">
-            <h4 className="text-sm font-medium text-gray-400">Active Traders</h4>
-            <div className="mt-2 flex items-baseline">
-              <p className="text-2xl font-semibold text-white">2.8M</p>
-              <p className="ml-2 text-sm font-medium text-green-500">+3.4%</p>
-            </div>
-          </div>
-        </div>
-      </div>
+        </motion.div>
+      ))}
     </div>
   );
 };
 
-export default MarketVisuals;
+export default MarketVisuals; 

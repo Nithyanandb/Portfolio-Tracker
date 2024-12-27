@@ -43,9 +43,9 @@ const StockRecommendation: React.FC<StockRecommendationsProps> = ({ recommendati
   };
 
   return (
-    <div className="bg-gray-1000 backdrop-blur-xl rounded-xl space-y-0 p-0 " style={{ width: '100%' }}>
+    <div className="static bg-gray-1000  rounded-xl space-y-0 p-0 " style={{ width: '100%' }}>
       <h3 className="text-lg font-semibold text-white mb-6"></h3>
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-4">
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-4">
         {recommendations.map((stock, index) => (
           <motion.div
             key={stock.symbol}

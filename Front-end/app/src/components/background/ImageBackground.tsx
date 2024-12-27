@@ -13,7 +13,7 @@ const ImageBackground: React.FC<ImageBackgroundProps> = ({ src, isActive }) => {
       initial={{ opacity: 0, scale: 1.1 }}
       animate={{ 
         opacity: isActive ? 1 : 0,
-        scale: isActive ? 1 : 1.1
+        scale: isActive ? 1 : 3
       }}
       transition={{ duration: 2, ease: 'easeInOut'}}
       className="absolute inset-0"

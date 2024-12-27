@@ -6,7 +6,10 @@ import Portfolio.Tracker.Entity.User;
 import Portfolio.Tracker.Repository.UserRepository;
 import Portfolio.Tracker.Security.JwtTokenProvider;
 import Portfolio.Tracker.Service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,8 +21,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
+@Transactional
+@Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -64,7 +71,18 @@ public class UserServiceImpl implements UserService {
             .orElseThrow(() -> new RuntimeException("User not found"));
             
         String token = tokenProvider.generateToken(user.getEmail());
-        return new AuthResponse(token, user.getEmail(), user.getName());
+        
+        Set<String> roles = user.getRoles().stream()
+            .map(Enum::name)
+            .collect(Collectors.toSet());
+        
+        return new AuthResponse(
+            token,
+            user.getEmail(),
+            user.getName(),
+            roles,
+            user.getProvider()
+        );
     }
 
     @Override
@@ -86,7 +104,18 @@ public class UserServiceImpl implements UserService {
             });
 
         String jwtToken = tokenProvider.generateToken(user.getEmail());
-        return new AuthResponse(jwtToken, user.getEmail(), user.getName());
+        
+        Set<String> roles = user.getRoles().stream()
+            .map(Enum::name)
+            .collect(Collectors.toSet());
+        
+        return new AuthResponse(
+            jwtToken,
+            user.getEmail(),
+            user.getName(),
+            roles,
+            user.getProvider()
+        );
     }
 
     @Override
@@ -94,5 +123,37 @@ public class UserServiceImpl implements UserService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("Current user not found"));
+    }
+
+    @Override
+    public void logout(String token, HttpServletRequest request) {
+        try {
+            // Validate token
+            if (!tokenProvider.validateToken(token)) {
+                throw new RuntimeException("Invalid token");
+            }
+
+            // Get username from token
+            String username = tokenProvider.getUsernameFromToken(token);
+            
+            // Clear security context
+            SecurityContextHolder.clearContext();
+            
+            // Invalidate session if exists
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                session.invalidate();
+            }
+
+            // Invalidate the token
+            tokenProvider.invalidateToken(token);
+
+            // Log the logout event
+            log.info("User {} logged out successfully", username);
+            
+        } catch (Exception e) {
+            log.error("Logout failed", e);
+            throw new RuntimeException("Logout failed: " + e.getMessage());
+        }
     }
 }

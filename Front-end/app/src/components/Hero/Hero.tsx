@@ -5,12 +5,13 @@ import HeroContent from "./HeroContent";
 import MarketDashboard from "./MarketDashboard";
 import MarketMetrics from "./MarketMetrics";
 import MarketVisuals from "./MarketVisuals";
-import StockTicker from "./StockTicker";
 import { heroSections } from "./HeroData";
+import { motion, useMotionValue } from 'framer-motion';
 
 const Hero = () => {
   const [currentSection, setCurrentSection] = useState(0);
   const { scrollY } = useScroll();
+  const value = useMotionValue(0);
 
   useEffect(() => {
     const handleScroll = (latest: number) => {
@@ -21,17 +22,17 @@ const Hero = () => {
       }
     };
 
-    return scrollY.onChange(handleScroll);
-  }, [scrollY, currentSection]);
+    const unsubscribe = value.on('change', handleScroll);
+
+    return () => unsubscribe();
+  }, [value, currentSection]);
 
   return (
     <div className="relatives lg:p-0 xs:pt-20">
       {/* Fixed Background */}
       <DynamicBackground sections={[]} currentSection={0} />
       {/* Stock Ticker */}
-      <div className="fixed top-0 left-0 w-full z-20 bg-black/50 backdrop-blur-sm py-3">
-        <StockTicker />
-      </div>
+ 
 
       {/* Main Content Grid */}
       <div className="container lg:mx-auto xs:p-1 xs:w-full xs:px-0 lg:px-12 ">

@@ -12,7 +12,7 @@ const TrendingStocks: React.FC = () => {
   });
 
   return (
-    <div className="bg-gray-900 rounded-xl border border-white/10">
+    <div className="bg-gray-900 rounded-xl ">
       <div className="flex items-center gap-2 p-4 border-b border-white/10">
         <Flame className="w-5 h-5 text-orange-400" />
         <h2 className="text-lg font-semibold text-white">Trending</h2>

@@ -1,42 +1,37 @@
 import React from 'react';
-import { BackgroundSection } from '../types/background';
-import { useScrollEffect } from '../hooks/useScrollEffect';
+import { motion } from 'framer-motion';
+import { BackgroundSection } from '../../types/background';
 
 interface Props {
   section: BackgroundSection;
 }
 
 const BackgroundMedia: React.FC<Props> = ({ section }) => {
-  const { calculateParallax } = useScrollEffect();
-  const parallaxOffset = calculateParallax(0.15);
-
-  const commonStyle = {
-    transform: `translate3d(0, ${parallaxOffset}px, 0)`,
-    transition: 'transform 0.1s ease-out',
-  };
-
-  if (section.type === 'image') {
-    return (
-      <img
-        src={section.content.src}
-        alt="Background"
-        className="absolute inset-0 w-full h-full object-cover"
-        style={commonStyle}
-      />
-    );
-  }
+  if (!section) return null;
 
   return (
-    <video
-      autoPlay
-      loop
-      muted
-      playsInline
-      className="absolute inset-0 w-full h-full object-cover"
-      style={commonStyle}
-    >
-      <source src={section.content.src} type="video/mp4" />
-    </video>
+    <div className="absolute inset-0">
+      {section.type === 'video' ? (
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="object-cover w-full h-full"
+          src={section.content.src}
+          poster={section.content.fallback}
+        />
+      ) : (
+        <motion.img
+          src={section.content.src}
+          alt="background"
+          className="object-cover w-full h-full"
+          initial={{ scale: 1.1 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 1.5 }}
+        />
+      )}
+    </div>
   );
 };
 

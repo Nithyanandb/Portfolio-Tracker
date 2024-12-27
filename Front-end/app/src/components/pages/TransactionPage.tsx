@@ -54,16 +54,22 @@
 
         if (type === 'Buy') {
           await buyStock(transaction);
+          setTimeout(() => {
+            navigate('/');
+          }, 6000);
           showPopup(`Successfully purchased ${quantity} shares of ${symbol}`, 'success');
         } else if (type === 'Sell') {
           await sellStock(transaction);
+          setTimeout(() => {
+            navigate('/');
+          }, 6000);
           showPopup(`Successfully sold ${quantity} shares of ${symbol}`, 'success');
         }
 
         // Navigate after popup closes
         setTimeout(() => {
           navigate('/');
-        }, 5000);
+        }, 1000);
       } catch (error) {
         showPopup(`Failed to ${type} ${symbol}. Please try again.`, 'error');
       }

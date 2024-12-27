@@ -30,4 +30,4 @@ $enable-gradients: false; // Disable gradients
 $enable-responsive-font-sizes: true; // Enable responsive font sizes
 
 // Import Bootstrap
-@import "bootstrap/scss/bootstrap";
+@use "bootstrap/scss/bootstrap";

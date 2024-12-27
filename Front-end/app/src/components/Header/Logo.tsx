@@ -5,7 +5,7 @@ import { TrendingUp } from 'lucide-react';
 export const Logo = () => (
   <motion.a
     href="/"
-    className="flex items-center gap-2 text-white mt-10"
+    className="flex items-center gap-2 text-white mt-0"
     whileHover={{ scale: 1.05 }}
     whileTap={{ scale: 0.95 }}
   >

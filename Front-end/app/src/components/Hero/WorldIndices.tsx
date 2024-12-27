@@ -12,7 +12,10 @@ export const WorldIndices: React.FC<WorldIndicesProps> = ({ indices, isLoading }
   const regions = {
     americas: indices.filter(index => index.region === 'Americas'),
     europe: indices.filter(index => index.region === 'Europe'),
-    asiaPacific: indices.filter(index => index.region === 'Asia-Pacific')
+    asiaPacific: indices.filter(index => index.region === 'Asia-Pacific'),
+    china: indices.filter(index => index.region === 'China'),
+    india: indices.filter(index => index.region === 'India'),
+    japan: indices.filter(index => index.region === 'Japan'),
   };
 
   return (
@@ -35,7 +38,7 @@ export const WorldIndices: React.FC<WorldIndicesProps> = ({ indices, isLoading }
               <h3 className="text-lg font-semibold text-white mb-4">Americas</h3>
               <IndexTable indices={regions.americas} />
             </section>
-
+            
             <section>
               <h3 className="text-lg font-semibold text-white mb-4">Europe</h3>
               <IndexTable indices={regions.europe} />
@@ -44,6 +47,22 @@ export const WorldIndices: React.FC<WorldIndicesProps> = ({ indices, isLoading }
             <section>
               <h3 className="text-lg font-semibold text-white mb-4">Asia-Pacific</h3>
               <IndexTable indices={regions.asiaPacific} />
+            </section>
+
+
+            <section>
+              <h3 className="text-lg font-semibold text-white mb-4">China</h3>
+              <IndexTable indices={regions.china} />
+            </section>
+
+            <section>
+              <h3 className="text-lg font-semibold text-white mb-4">India</h3>
+              <IndexTable indices={regions.india} />
+            </section>
+
+            <section>
+              <h3 className="text-lg font-semibold text-white mb-4">Japan</h3>
+              <IndexTable indices={regions.japan} />
             </section>
           </div>
         )}

@@ -1,16 +1,16 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { API_ENDPOINTS } from '../types/Stock';
 
-const columnHelper = createColumnHelper<Transaction>();
+const columnHelper = createColumnHelper<any>();
 
 export const columns = [
   columnHelper.accessor('type', {
     header: 'Type',
     cell: info => (
-      <span className={info.getValue() === 'buy' ? 'text-green-400' : 'text-red-400'}>
+      <div className={`${info.getValue() === 'buy' ? 'text-green-400' : 'text-red-400'}`}>
         {info.getValue().toUpperCase()}
-      </span>
-    ),
+      </div>
+    )
   }),
   columnHelper.accessor('stockSymbol', {
     header: 'Symbol',

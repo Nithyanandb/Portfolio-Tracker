@@ -1,11 +1,15 @@
 package Portfolio.Tracker.DTO;
 
+import Portfolio.Tracker.Entity.User.AuthProvider;
+import java.util.Set;
 
 public class AuthResponse {
     private String token;
     private String type = "Bearer";
     private String email;
     private String name;
+    private Set<String> roles;
+    private AuthProvider provider;
 
     public AuthResponse(String token, String email, String name) {
         this.token = token;
@@ -13,13 +17,13 @@ public class AuthResponse {
         this.name = name;
     }
 
-    public AuthResponse(String token, String type, String email, String name) {
+    public AuthResponse(String token, String email, String name, Set<String> roles, AuthProvider provider) {
         this.token = token;
-        this.type = type;
         this.email = email;
         this.name = name;
+        this.roles = roles;
+        this.provider = provider;
     }
-
 
     public String getToken() {
         return token;
@@ -51,5 +55,21 @@ public class AuthResponse {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
+    }
+
+    public AuthProvider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(AuthProvider provider) {
+        this.provider = provider;
     }
 }

@@ -8,7 +8,7 @@ interface Props {
 
 const GradientOverlay: React.FC<Props> = ({ colors, opacity }) => {
   const { scrollY } = useScrollEffect();
-  const dynamicOpacity = Math.min(opacity + (scrollY * 0.001), 1);
+  const dynamicOpacity = Math.min(opacity + (scrollY * 0.209), 1);
 
   return (
     <div

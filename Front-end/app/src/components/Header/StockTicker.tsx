@@ -29,26 +29,26 @@ const stocks = [
 
 const StockTicker = () => {
   return (
-    <div className="overflow-hidden" style={{marginTop:'-10px'}}>
+    <div className="z-4 h-5">
       <div className="flex space-x-12">
         <motion.div
-          animate={{ x: [0, -2000] }}
+          animate={{ x: [0, -700] }}
           transition={{
             duration: 30,
             repeat: Infinity,
             ease: "linear"
           }}
-          className="flex space-x-12 whitespace-nowrap"
+          className="flex space-x-12 whitespace-nowrap items-center"
         >
           {[...stocks, ...stocks].map((stock, index) => (
             <div key={index} className="flex items-center space-x-3">
-              <span className="text-white font-medium">{stock.symbol}</span>
-              <span className="text-gray-400">${stock.price}</span>
-              <span className={`flex items-center ${stock.trending ? 'text-green-500' : 'text-red-500'}`}>
+              <span className="text-sm font-medium text-white">{stock.symbol}</span>
+              <span className="text-sm text-gray-400">${stock.price}</span>
+              <span className={`flex items-center text-xs ${stock.trending ? 'text-green-500' : 'text-red-500'}`}>
                 {stock.trending ? (
-                  <TrendingUp className="h-4 w-4 mr-1" />
+                  <TrendingUp className="h-3 w-3 mr-1" />
                 ) : (
-                  <TrendingDown className="h-4 w-4 mr-1" />
+                  <TrendingDown className="h-3 w-3 mr-1" />
                 )}
                 {stock.change}
               </span>

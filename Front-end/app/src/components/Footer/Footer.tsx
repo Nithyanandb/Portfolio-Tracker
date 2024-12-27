@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer = () => (
  
-    <div className=" text-white-100 py-60  from-black to-white-500 max-w-6xl mx-auto px-6 ">
+    <div className=" text-white-100 py-60 z-10 from-black to-white-500 max-w-6xl mx-auto px-6 ">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
         <div>
           <img src="/capx-logo.svg" alt="Company Logo" className="h-8 w-auto mb-6" />

@@ -83,7 +83,7 @@ const MarketDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-screen p-0 bg-gray-1000 lg:mt-0" style={{width:'480px'}}>
+    <div className="min-screen static h-auto top-0 p-0 bg-gray-1000 lg:mt-0" style={{width:'480px'}}>
     <main className="  px-0 py-8">
       <div className="grid gap-0">
         {/* Market Overview */}
