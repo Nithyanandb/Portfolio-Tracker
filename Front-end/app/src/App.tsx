@@ -16,6 +16,7 @@ import { AuthProvider } from './context/AuthContext';
 import OAuthCallback from './context/OAuthCallback';
 import { ErrorBoundary, RouteErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
 import NotFound from './components/ErrorBoundary/NotFound';
+import { Toaster } from 'react-hot-toast';
 
 const routes = [
   {
@@ -118,11 +119,14 @@ function App() {
   );
 
   return (
-    <ErrorBoundary>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
-    </ErrorBoundary>
+    <>
+      <Toaster />
+      <ErrorBoundary>
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
+      </ErrorBoundary>
+    </>
   );
 }
 

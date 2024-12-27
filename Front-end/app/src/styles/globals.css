@@ -17,7 +17,7 @@
 
 .nav-item:hover::after {
   width: 100%;
-} 
+}   
 
 @keyframes gradient {
   0% {
@@ -34,4 +34,25 @@
 .animate-gradient {
   animation: gradient 15s ease infinite;
   background-size: 400% 400%;
+} 
+
+.tesla-loader {
+  width: 48px;
+  height: 48px;
+  position: relative;
+}
+
+.tesla-loader-circle {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border: 4px solid transparent;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: tesla-loader-rotate 1s linear infinite;
+}
+
+@keyframes tesla-loader-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 } 

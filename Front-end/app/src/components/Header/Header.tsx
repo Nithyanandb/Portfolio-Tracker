@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, User, LogOut } from 'lucide-react';
 import { SearchPopover } from '../Header/SearchPopover';
@@ -24,14 +24,15 @@ import {
   Mail, 
   X as CloseIcon 
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onGithubLogin: () => void;
 }
 
-const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
+const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onGithubLogin }) => {
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -42,7 +43,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     loginWithGithub, 
     isLoading, 
     isAuthenticating,
-    error 
+    error,
+    user
   } = useAuth();
 
   const handleTraditionalAuth = async (e: React.FormEvent) => {
@@ -59,6 +61,13 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       console.error('Authentication error:', error);
     }
   };
+
+  useEffect(() => {
+    // Close modal when authentication is successful
+    if (user) {
+      onClose();
+    }
+  }, [user, onClose]);
 
   if (!isOpen) return null;
 
@@ -77,9 +86,15 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       >
         {isAuthenticating ? (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-white">Authenticating...</h3>
-            <p className="text-gray-400 mt-2">Please wait while we verify your credentials</p>
+            <div className="tesla-loader mx-auto mb-6">
+              <div className="tesla-loader-circle"></div>
+            </div>
+            <h3 className="text-xl font-semibold text-white mb-2">
+              Authenticating...
+            </h3>
+            <p className="text-gray-400">
+              Please wait while we verify your credentials
+            </p>
           </div>
         ) : (
           <>
@@ -178,11 +193,42 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
 export function Header() {
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const { user, logout, isLoading } = useAuth();
+  const { user, logout, isLoading, loginWithGithub, isAuthenticating } = useAuth();
   const isScrolled = useScrollPosition();
   const [activeTab, setActiveTab] = useState('markets');
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Handle auth modal visibility
+  useEffect(() => {
+    // Close auth modal when authentication starts or when user is logged in
+    if (isAuthenticating || user) {
+      setShowAuthModal(false);
+    }
+  }, [isAuthenticating, user]);
+
+  // Store the current path when opening auth modal
+  const handleAuthClick = () => {
+    sessionStorage.setItem('auth_redirect', location.pathname + location.search);
+    setShowAuthModal(true);
+  };
+
+  // Handle GitHub login with return path
+  const handleGithubLogin = () => {
+    sessionStorage.setItem('auth_redirect', location.pathname + location.search);
+    setShowAuthModal(false); // Close modal before starting auth
+    loginWithGithub();
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      // Redirect and cleanup handled in AuthContext
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
 
   const navItems = [
     { 
@@ -313,15 +359,6 @@ export function Header() {
     }
   ];
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-      // Redirect and state cleanup is handled in the AuthContext
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
-
   return (
     <>
       <header className="w-full fixed top-0 left-0 right-0 z-20">
@@ -429,7 +466,7 @@ export function Header() {
                   </div>
                 ) : (
                   <button
-                    onClick={() => setShowAuthModal(true)}
+                    onClick={handleAuthClick}
                     className={cn(
                       "px-4 py-1.5 text-sm font-medium rounded-full",
                       "bg-gradient-to-r from-blue-600 to-blue-500",
@@ -469,10 +506,11 @@ export function Header() {
       </header>
 
       <AnimatePresence>
-        {showAuthModal && (
+        {showAuthModal && !isAuthenticating && (
           <AuthModal
             isOpen={showAuthModal}
             onClose={() => setShowAuthModal(false)}
+            onGithubLogin={handleGithubLogin}
           />
         )}
       </AnimatePresence>
