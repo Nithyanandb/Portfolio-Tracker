@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { TrendingUp, TrendingDown } from 'lucide-react';
 import type { MarketData } from '../types/markets';
 
 interface MarketOverviewProps {
@@ -13,9 +14,15 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({
 }) => {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 animate-pulse">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {[...Array(6)].map((_, i) => (
-          <div key={i} className="bg-gray-800 rounded-xl p-4 h-24" />
+          <motion.div
+            key={i}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0.1, 0.2, 0.1] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            className="bg-white/5 backdrop-blur-xl h-24"
+          />
         ))}
       </div>
     );
@@ -23,27 +30,39 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {marketData.map((item) => (
+      {marketData.map((item, index) => (
         <motion.div
           key={item.symbol}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gray-800 rounded-xl p-4"
+          transition={{ delay: index * 0.1 }}
+          className="bg-white/5 backdrop-blur-xl hover:bg-white/10 transition-all duration-300"
         >
-          <div className="flex justify-between items-start">
-            <div>
-              <h3 className="text-lg font-medium text-white">{item.symbol}</h3>
-              <p className="text-sm text-gray-400">{item.name}</p>
+          <div className="p-4 space-y-3">
+            <div className="flex justify-between items-start">
+              <div>
+                <h3 className="text-white tracking-[0.2em] font-light">{item.symbol}</h3>
+                <p className="text-sm text-gray-400 tracking-wider">{item.name}</p>
+              </div>
+              <div className={`flex items-center gap-2 ${item.changePercent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                {item.changePercent >= 0 ? (
+                  <TrendingUp className="w-4 h-4" />
+                ) : (
+                  <TrendingDown className="w-4 h-4" />
+                )}
+                <span className="tracking-wider">
+                  {item.changePercent.toFixed(2)}%
+                </span>
+              </div>
             </div>
-            <div className={`text-sm ${item.changePercent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-              {item.changePercent.toFixed(2)}%
+            <div className="flex justify-between items-end">
+              <p className="text-2xl text-white font-light tracking-wider">
+                ${item.price.toFixed(2)}
+              </p>
+              <p className="text-sm text-gray-400 tracking-wider">
+                Vol: {(item.volume / 1000000).toFixed(1)}M
+              </p>
             </div>
-          </div>
-          <div className="mt-2">
-            <p className="text-xl font-bold text-white">${item.price.toFixed(2)}</p>
-            <p className="text-sm text-gray-400">
-              Vol: {(item.volume / 1000000).toFixed(1)}M
-            </p>
           </div>
         </motion.div>
       ))}

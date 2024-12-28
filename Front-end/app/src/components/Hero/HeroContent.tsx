@@ -1,144 +1,92 @@
 import { motion } from 'framer-motion';
 import { TrendingUp } from 'lucide-react';
 import { cn } from '../../utils/cn';
+import DynamicBackground from '../background/DynamicBackground';
 
 export const HeroContent = () => {
   return (
-    <div className="relative min-h-screen w-full bg-black overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0">
-        {/* Gradient Orbs */}
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-blue-500/20 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-purple-500/20 rounded-full blur-[100px] animate-pulse delay-1000" />
-        
-        {/* Animated Lines */}
-        <div className="absolute inset-0">
-          {[...Array(5)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute h-px w-full bg-gradient-to-r from-transparent via-blue-500/20 to-transparent"
-              initial={{ left: '-100%', top: `${20 + i * 15}%` }}
-              animate={{ left: '100%' }}
-              transition={{
-                duration: 7,
-                repeat: Infinity,
-                delay: i * 0.5,
-                ease: 'linear',
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Grid Pattern */}
+    <div className="relative w-full min-h-[600px] flex items-center">
+      {/* SpaceX-style minimal background */}
+      <DynamicBackground />
+      
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Subtle star-like dots */}
         <div 
           className="absolute inset-0 opacity-[0.15]"
           style={{
-            backgroundImage: `
-              radial-gradient(circle at center, rgba(59,130,246,0.1) 1px, transparent 1px)
-            `,
-            backgroundSize: '30px 30px'
+            backgroundImage: `radial-gradient(circle at center, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+            backgroundSize: '24px 24px'
           }}
         />
+        
+        {/* Minimal gradient accent */}
+        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[180px]" />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10">
-  
-        {/* Main Hero Content */}
-        <div className="container mx-auto px-0">
-          <div className="min-h-[90vh] flex flex-col justify-center items-center text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="max-w-3xl space-y-8"
-            >
-              <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12"
-        >
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            Track Your Portfolio
-            <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
-              {" "}Like Never Before
-            </span>
-          </h1>
-          <p className="text-lg text-gray-400 max-w-xl mx-auto leading-relaxed">
-            Real-time market data, advanced analytics, and powerful tools to help you make informed investment decisions.
-          </p>
-        </motion.div>
-              
-       
-              {/* Action Buttons */}
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8"
-              >
-                <button className=" group relative w-full sm:w-[260px] h-[56px] bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white rounded-[4px] transition-all duration-300 overflow-hidden">
-                  <span className="relative  z-10 text-sm font-medium tracking-wider uppercase">
-                    Get Started
-                  </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/5 to-white/0 transform translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-                </button>
+      {/* Content with SpaceX-style typography */}
+      <div className="relative z-10 w-full py-20">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className="space-y-8"
+          >
+            <h1 className="text-5xl md:text-7xl font-normal text-white tracking-tight">
+              NEXT GENERATION
+              <br />
+              <span className="text-4xl md:text-6xl text-gray-400">
+                TRADING PLATFORM
+              </span>
+            </h1>
+            <p className="text-lg text-gray-500 font-200 tracking-wide max-w-2xl">
+              Real-time market data and advanced analytics for informed investment decisions.
+            </p>
+          </motion.div>
 
-                <button className="group relative w-full sm:w-[260px] h-[56px] bg-white hover:bg-white/90 text-black rounded-[4px] transition-all duration-300 overflow-hidden">
-                  <span className="relative z-10 text-sm font-medium tracking-wider uppercase">
-                    View Demo
-                  </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/0 via-black/5 to-black/0 transform translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-                </button>
-              </motion.div>
-            </motion.div>
-          </div>
+          {/* SpaceX-style buttons */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="flex flex-col sm:flex-row gap-6 pt-12"
+          >
+            <button className="group relative w-full sm:w-[280px] h-[60px] bg-white text-black rounded-none hover:bg-white/90 transition-all duration-300">
+              <span className="relative z-10 text-sm tracking-[0.2em] uppercase font-medium">
+                GET STARTED
+              </span>
+            </button>
+
+            <button className="group relative w-full sm:w-[280px] h-[60px] bg-transparent border-2 border-white/20 text-white rounded-none hover:border-white/40 transition-all duration-300">
+              <span className="relative z-10 text-sm tracking-[0.2em] uppercase font-medium">
+                LEARN MORE
+              </span>
+            </button>
+          </motion.div>
         </div>
 
-        {/* Bottom Stats */}
+        {/* Stats with SpaceX styling */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="absolute bottom-0 left-0 right-0 bg-black/40 backdrop-blur-sm border-t border-gray-800/50"
+          className="max-w-4xl mx-auto mt-20 grid grid-cols-2 md:grid-cols-4 gap-12"
         >
-          <div className="container mx-auto px-4 py-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              <Stat label="Active Users" value="2M+" />
-              <Stat label="Daily Trades" value="5M+" />
-              <Stat label="Market Coverage" value="50+" />
-              <Stat label="Success Rate" value="99.9%" />
+          {[
+            { label: "ACTIVE USERS", value: "2M+" },
+            { label: "DAILY TRADES", value: "5M+" },
+            { label: "MARKETS", value: "50+" },
+            { label: "UPTIME", value: "99.9%" }
+          ].map((stat, index) => (
+            <div key={index} className="text-left">
+              <div className="text-3xl font-light text-white mb-2">{stat.value}</div>
+              <div className="text-sm text-gray-500 tracking-[0.2em]">{stat.label}</div>
             </div>
-          </div>
+          ))}
         </motion.div>
       </div>
     </div>
   );
 };
-
-const MarketStat = ({ label, value, change }: { label: string; value: string; change: string }) => {
-  const isPositive = change.startsWith('+');
-  return (
-    <div className="flex items-center gap-3">
-      <span className="text-gray-400">{label}</span>
-      <span className="text-white font-medium">{value}</span>
-      <span className={cn(
-        "flex items-center gap-1",
-        isPositive ? "text-green-400" : "text-red-400"
-      )}>
-        <TrendingUp className={cn("w-3 h-3", !isPositive && "rotate-180")} />
-        {change}
-      </span>
-    </div>
-  );
-};
-
-const Stat = ({ label, value }: { label: string; value: string }) => (
-  <div className="text-center">
-    <div className="text-2xl font-medium text-white">{value}</div>
-    <div className="text-sm text-gray-400 mt-1">{label}</div>
-  </div>
-);
 
 export default HeroContent;

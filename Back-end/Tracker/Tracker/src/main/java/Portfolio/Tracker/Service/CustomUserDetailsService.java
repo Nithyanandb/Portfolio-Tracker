@@ -2,7 +2,6 @@ package Portfolio.Tracker.Service;
 
 import Portfolio.Tracker.Entity.User;
 import Portfolio.Tracker.Repository.UserRepository;
-import Portfolio.Tracker.Security.CustomUserDetails;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

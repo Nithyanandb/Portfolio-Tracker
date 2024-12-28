@@ -1,41 +1,14 @@
 package Portfolio.Tracker.Service;
 
-import Portfolio.Tracker.Entity.Transaction;
-import Portfolio.Tracker.Repository.TransactionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import Portfolio.Tracker.DTO.PortfolioResponse;
+import Portfolio.Tracker.DTO.TransactionRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-@Service
-public class TransactionService {
-
-    @Autowired
-    private TransactionRepository transactionRepository;
-
-    public TransactionService(TransactionRepository transactionRepository) {
-        this.transactionRepository = transactionRepository;
-    }
-
-
-    public Transaction saveTransaction(String type, String stockSymbol, String stockName, int quantity, double price) {
-        Transaction transaction = new Transaction();
-        transaction.setType(type);
-        transaction.setStockSymbol(stockSymbol);
-        transaction.setStockName(stockName);
-        transaction.setQuantity(quantity);
-        transaction.setPrice(price);
-        transaction.setTimestamp(LocalDateTime.now());
-
-        System.out.println("Saving transaction: " + transaction);
-
-
-        return transactionRepository.save(transaction);
-    }
-
-    public List<Transaction> getAllTransactions() {
-        return transactionRepository.findAll(); // Returns the list of transactions
-    }
+public interface TransactionService {
+    ResponseEntity<?> executeBuyOrder(TransactionRequest request);
+    ResponseEntity<?> executeSellOrder(TransactionRequest request);
+    ResponseEntity<?> getTransactionHistory(String symbol, int page, int size);
+    PortfolioResponse getCurrentPortfolio();
+    ResponseEntity<?> getPortfolioPerformance(int days);
 }

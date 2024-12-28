@@ -31,7 +31,7 @@ const DynamicBackground: React.FC = () => {
               opacity: [0, 1, 1, 0]
             }}
             transition={{
-              duration: Math.random() * 3 + 2,
+              duration: Math.random() * 300 + 2,
               repeat: Infinity,
               delay: Math.random() * 2
             }}
@@ -44,17 +44,17 @@ const DynamicBackground: React.FC = () => {
         {[...Array(8)].map((_, i) => (
           <motion.div
             key={`line-${i}`}
-            className="absolute h-[1px] w-full"
+            className="absolute h-[0.9px] w-full"
             style={{
-              background: 'linear-gradient(90deg, transparent 0%, rgba(59,130,246,0.2) 50%, transparent 100%)',
-              top: `${10 + i * 10}%`
+              background: 'linear-gradient(90deg, transparent 0%, rgba(209,230,246,0.2) 100%)',
+              top: `${10 + i * 100}%`
             }}
             initial={{ x: '-100%' }}
             animate={{ x: '100%' }}
             transition={{
-              duration: 8,
+              duration: 100,
               repeat: Infinity,
-              delay: i * 0.5,
+              delay: i * 1,
               ease: 'linear'
             }}
           />
@@ -71,10 +71,10 @@ const DynamicBackground: React.FC = () => {
           }}
           animate={{
             x: ['-25%', '25%', '-25%'],
-            y: ['-25%', '25%', '-25%']
+            y: ['-25%', '25%', '-95%']
           }}
           transition={{
-            duration: 20,
+            duration: 100,
             repeat: Infinity,
             ease: 'linear'
           }}
@@ -90,7 +90,7 @@ const DynamicBackground: React.FC = () => {
             y: ['25%', '-25%', '25%']
           }}
           transition={{
-            duration: 15,
+            duration: 150,
             repeat: Infinity,
             ease: 'linear'
           }}

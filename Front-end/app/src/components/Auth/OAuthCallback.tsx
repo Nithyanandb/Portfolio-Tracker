@@ -1,78 +1,76 @@
 import { useEffect } from 'react';
-import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { useAuth } from '../../hooks/useAuth';
 
 export const OAuthCallback = () => {
-  const { handleAuthCallback } = useAuth();
   const navigate = useNavigate();
+  const { handleOAuthCallback } = useAuth();
 
   useEffect(() => {
     const processAuth = async () => {
       try {
         const params = new URLSearchParams(window.location.search);
         const token = params.get('token');
-        const error = params.get('error');
         const auth_success = params.get('auth_success') === 'true';
 
         if (auth_success && token) {
           const authData = {
-            token,
-            email: params.get('email') || '',
-            name: params.get('name') || '',
-            provider: params.get('provider') as 'GOOGLE' | 'GITHUB',
-            roles: params.get('roles')?.split(',') || []
+            type: 'AUTH_SUCCESS',
+            data: {
+              token,
+              email: params.get('email'),
+              name: params.get('name'),
+              provider: params.get('provider'),
+              roles: params.get('roles')?.split(',') || []
+            }
           };
 
-          // Store auth data
-          localStorage.setItem('auth', JSON.stringify({
-            token: authData.token,
-            user: {
-              email: authData.email,
-              name: authData.name,
-              roles: authData.roles,
-              provider: authData.provider
-            },
-            expiresAt: new Date().getTime() + (3600 * 1000)
-          }));
-
-          // Handle popup vs direct navigation
           if (window.opener) {
-            window.opener.postMessage({
-              type: 'AUTH_SUCCESS',
-              data: authData
-            }, window.location.origin);
-            window.close();
+            // Send message to parent window
+            window.opener.postMessage(authData, window.location.origin);
+            // Close popup after a short delay to ensure message is sent
+            setTimeout(() => window.close(), 100);
           } else {
+            // If no opener, handle the auth directly
+            handleOAuthCallback(authData);
             navigate('/');
           }
-        } else if (error) {
-          const errorMessage = params.get('message') || 'Authentication failed';
-          throw new Error(errorMessage);
+        } else {
+          throw new Error(params.get('message') || 'Authentication failed');
         }
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Authentication failed';
-        
+        const errorData = {
+          type: 'AUTH_ERROR',
+          error: error instanceof Error ? error.message : 'Authentication failed'
+        };
+
         if (window.opener) {
-          window.opener.postMessage({
-            type: 'AUTH_ERROR',
-            error: errorMessage
-          }, window.location.origin);
-          window.close();
+          window.opener.postMessage(errorData, window.location.origin);
+          setTimeout(() => window.close(), 100);
         } else {
-          navigate(`/login?error=${encodeURIComponent(errorMessage)}`);
+          navigate('/login');
         }
       }
     };
 
     processAuth();
-  }, [handleAuthCallback, navigate]);
+  }, [navigate, handleOAuthCallback]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-900">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4" />
-        <h3 className="text-xl font-semibold text-white">Processing authentication...</h3>
-        <p className="text-gray-400 mt-2">Please wait while we complete your sign-in</p>
+    <div className="fixed inset-0 flex items-center justify-center bg-black/95">
+      <div className="text-center space-y-6">
+        <motion.div
+          animate={{ 
+            rotate: 360,
+            transition: { duration: 1, repeat: Infinity, ease: "linear" }
+          }}
+          className="w-16 h-16 border-t-2 border-blue-500 rounded-full mx-auto"
+        />
+        <div className="space-y-2">
+          <h3 className="text-2xl font-medium text-white">Authenticating...</h3>
+          <p className="text-white/60">Please wait while we complete the process</p>
+        </div>
       </div>
     </div>
   );

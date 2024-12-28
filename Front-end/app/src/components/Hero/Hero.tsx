@@ -1,71 +1,118 @@
-import React, { useState, useEffect } from "react";
-import { useScroll } from "framer-motion";
-import DynamicBackground from "../background/DynamicBackground";
-import HeroContent from "./HeroContent";
-import MarketDashboard from "./MarketDashboard";
-import MarketMetrics from "./MarketMetrics";
-import MarketVisuals from "./MarketVisuals";
-import { heroSections } from "./HeroData";
-import { motion, useMotionValue } from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
+import MarketWatch from './MarketWatch';
+import TrendingStocks from './TrendingStocks';
+import WorldIndices from './WorldIndices';
+import WatchlistManager from './WatchlistManager';
+import HeroContent from './HeroContent';
+import MarketMetrics from './MarketMetrics';
+import MarketDashboard from './MarketDashboard';
 
-const Hero = () => {
-  const [currentSection, setCurrentSection] = useState(0);
-  const { scrollY } = useScroll();
-  const value = useMotionValue(0);
-
-  useEffect(() => {
-    const handleScroll = (latest: number) => {
-      const sectionHeight = window.innerHeight;
-      const currentIndex = Math.floor(latest / sectionHeight);
-      if (currentIndex !== currentSection && currentIndex < heroSections.length) {
-        setCurrentSection(currentIndex);
-      }
-    };
-
-    const unsubscribe = value.on('change', handleScroll);
-
-    return () => unsubscribe();
-  }, [value, currentSection]);
-
+const Hero: React.FC = () => {
   return (
-    <div className="relatives lg:p-0 xs:pt-20">
-      {/* Fixed Background */}
-      <DynamicBackground sections={[]} currentSection={0} />
-      {/* Stock Ticker */}
- 
+    <div className="relative min-h-screen bg-black">
+      {/* Grid Background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0" style={{
+          backgroundImage: 'radial-gradient(circle at center, rgba(255,255,255,0.03) 1px, transparent 1px)',
+          backgroundSize: '24px 24px'
+        }} />
+      </div>
 
-      {/* Main Content Grid */}
-      <div className="container lg:mx-auto xs:p-1 xs:w-full xs:px-0 lg:px-12 ">
-        <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-8 xs:gap-30">
-          <div className="lg:col-span-8">
-            <div className="min-h-screen lg:pt-20 xs:p-0">
-              <div className="mb-12">
-                <HeroContent />
-              </div>
-
-              {/* Market Metrics */}
-              <div className="mb-12 xs:mb-0 xs:p-0">
+      {/* Main Content Container */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="relative z-10"
+      >
+        {/* Top Section with Hero Content and Aside */}
+        <div className="container mx-auto px-4 lg:px-8 pt-32">
+          <div className="grid lg:grid-cols-12 gap-8">
+            {/* Left Column - Hero Content */}
+            <div className="lg:col-span-8">
+              <HeroContent />
+              
+              {/* Market Metrics Below Hero */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                className="mt-12"
+              >
                 <MarketMetrics />
+              </motion.div>
+
+              {/* Market Watch Section */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+                className="mt-12"
+              >
+                <MarketWatch />
+              </motion.div>
+
+              {/* World Indices Section */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1 }}
+                className="mt-8"
+              >
+                <WorldIndices 
+                  indices={[]} 
+                  isLoading={false}
+                />
+              </motion.div>
+            </div>
+
+            {/* Right Column - Aside Content */}
+            <div className="lg:col-span-4">
+              <div className="sticky top-24 space-y-8">
+                {/* Market Dashboard */}
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  <MarketDashboard />
+                </motion.div>
+
+                {/* Trending Stocks */}
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.6 }}
+                >
+                  <TrendingStocks />
+                </motion.div>
+
+                {/* Watchlist Manager */}
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.8 }}
+                >
+                  <WatchlistManager 
+                    watchlist={[]}
+                    onRemove={async () => {}}
+                    onUpdate={async () => {}}
+                    onAdd={async () => {}}
+                  />
+                </motion.div>
               </div>
             </div>
-      
-            {/* Market Visuals */}
-            <div>
-              <MarketVisuals />
-            </div>
-          
-            {/* Right Sidebar - Market Dashboard */}
           </div>
-            <div className="lg:col-span-4 mr-0 mt-28">
-              <div className="sticky top-20">
-                <MarketDashboard />
-              </div>
-            </div>
         </div>
+      </motion.div>
+
+      {/* Gradient Overlays */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent" />
       </div>
-      </div>
-      
-      );
+    </div>
+  );
 };
 
-      export default Hero;
+export default Hero;

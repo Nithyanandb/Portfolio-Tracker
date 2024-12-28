@@ -33,7 +33,7 @@ const GridOverlay: React.FC<Props> = ({ opacity, animate }) => (
           initial={{ x: '-100%', top: `${15 + i * 10}%` }}
           animate={{ x: '100%' }}
           transition={{
-            duration: 8,
+            duration: 800,
             repeat: Infinity,
             delay: i * 0.8,
             ease: 'linear'
@@ -51,7 +51,7 @@ const GridOverlay: React.FC<Props> = ({ opacity, animate }) => (
           initial={{ y: '-100%', left: `${20 + i * 15}%` }}
           animate={{ y: '100%' }}
           transition={{
-            duration: 10,
+            duration: 100,
             repeat: Infinity,
             delay: i * 1.2,
             ease: 'linear'
@@ -76,7 +76,7 @@ const GridOverlay: React.FC<Props> = ({ opacity, animate }) => (
             scale: [0, 1, 1, 0]
           }}
           transition={{
-            duration: 5,
+            duration: 500,
             repeat: Infinity,
             delay: i * 2,
             ease: 'linear'

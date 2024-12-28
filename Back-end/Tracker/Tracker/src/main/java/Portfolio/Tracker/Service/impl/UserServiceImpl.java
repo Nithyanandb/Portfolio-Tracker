@@ -2,158 +2,185 @@ package Portfolio.Tracker.Service.impl;
 
 import Portfolio.Tracker.DTO.AuthRequest;
 import Portfolio.Tracker.DTO.AuthResponse;
+import Portfolio.Tracker.Entity.AuthProvider;
+import Portfolio.Tracker.Entity.Role;
 import Portfolio.Tracker.Entity.User;
 import Portfolio.Tracker.Repository.UserRepository;
 import Portfolio.Tracker.Security.JwtTokenProvider;
 import Portfolio.Tracker.Service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
-@Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider tokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
 
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenProvider tokenProvider, AuthenticationManager authenticationManager) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.tokenProvider = tokenProvider;
-        this.authenticationManager = authenticationManager;
-    }
-
     @Override
-    @Transactional
-    public AuthResponse register(@Valid AuthRequest request) {
+    public AuthResponse register(AuthRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already registered");
         }
 
-        User user = new User();
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setProvider(User.AuthProvider.LOCAL);
-        user.setRoles(Collections.singleton(User.Role.ROLE_USER));
+        User user = User.builder()
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .roles(Collections.singleton(Role.ROLE_USER))
+                .provider(AuthProvider.LOCAL)
+                .build();
         
-        user = userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+            savedUser.getEmail(), null, savedUser.getAuthorities());
+        String token = jwtTokenProvider.generateToken(auth);
         
-        String token = tokenProvider.generateToken(user.getEmail());
-        return new AuthResponse(token, user.getEmail(), user.getName());
+        return AuthResponse.builder()
+            .token(token)
+            .email(savedUser.getEmail())
+            .name(savedUser.getName())
+            .provider(AuthProvider.LOCAL.toString())
+            .roles(savedUser.getRoles().stream()
+                .map(Role::name)
+                .toList())
+            .build();
     }
 
     @Override
     public AuthResponse login(AuthRequest request) {
-        authenticationManager.authenticate(
+        Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
-
-        User user = userRepository.findByEmail(request.getEmail())
-            .orElseThrow(() -> new RuntimeException("User not found"));
-            
-        String token = tokenProvider.generateToken(user.getEmail());
         
-        Set<String> roles = user.getRoles().stream()
-            .map(Enum::name)
-            .collect(Collectors.toSet());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        User user = getCurrentUser();
+        String token = jwtTokenProvider.generateToken(authentication);
         
-        return new AuthResponse(
-            token,
-            user.getEmail(),
-            user.getName(),
-            roles,
-            user.getProvider()
-        );
+        return AuthResponse.builder()
+            .token(token)
+            .email(user.getEmail())
+            .name(user.getName())
+            .provider(user.getProvider().toString())
+            .roles(user.getRoles().stream()
+                .map(Role::name)
+                .toList())
+            .build();
     }
 
     @Override
-    @Transactional
     public AuthResponse processOAuthPostLogin(OAuth2AuthenticationToken token) {
-        Map<String, Object> attributes = token.getPrincipal().getAttributes();
-        String email = (String) attributes.get("email");
-        String name = (String) attributes.get("name");
-        User.AuthProvider provider = User.AuthProvider.valueOf(token.getAuthorizedClientRegistrationId().toUpperCase());
-
+        OAuth2User oauth2User = token.getPrincipal();
+        Map<String, Object> attributes = oauth2User.getAttributes();
+        
+        String email = extractEmail(attributes);
+        String name = extractName(attributes);
+        AuthProvider provider = AuthProvider.valueOf(token.getAuthorizedClientRegistrationId().toUpperCase());
+        
         User user = userRepository.findByEmail(email)
-            .orElseGet(() -> {
-                User newUser = new User();
-                newUser.setEmail(email);
-                newUser.setName(name);
-                newUser.setProvider(provider);
-                newUser.setRoles(Collections.singleton(User.Role.ROLE_USER));
-                return userRepository.save(newUser);
-            });
+            .orElseGet(() -> createOAuthUser(email, name, provider));
+        
+        // Update user information if needed
+        if (name != null && !name.equals(user.getName())) {
+            user.setName(name);
+            user = userRepository.save(user);
+        }
 
-        String jwtToken = tokenProvider.generateToken(user.getEmail());
-        
-        Set<String> roles = user.getRoles().stream()
-            .map(Enum::name)
-            .collect(Collectors.toSet());
-        
-        return new AuthResponse(
-            jwtToken,
-            user.getEmail(),
-            user.getName(),
-            roles,
-            user.getProvider()
+        String jwtToken = jwtTokenProvider.generateTokenForOAuth2(
+            email, 
+            token.getAuthorities()
         );
+
+        return AuthResponse.builder()
+            .token(jwtToken)
+            .email(user.getEmail())
+            .name(user.getName())
+            .provider(user.getProvider().toString())
+            .roles(user.getRoles().stream()
+                .map(Role::name)
+                .toList())
+            .build();
     }
 
-    @Override
-    public User getCurrentUser() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findByEmail(email)
-            .orElseThrow(() -> new RuntimeException("Current user not found"));
+    private String extractEmail(Map<String, Object> attributes) {
+        String email = (String) attributes.get("email");
+        if (email != null && !email.isEmpty()) {
+            return email;
+        }
+        
+        // GitHub fallback
+        String login = (String) attributes.get("login");
+        if (login != null) {
+            return login + "@github.com";
+        }
+        
+        throw new RuntimeException("Could not extract email from OAuth2 attributes");
+    }
+
+    private String extractName(Map<String, Object> attributes) {
+        String name = (String) attributes.get("name");
+        if (name != null && !name.isEmpty()) {
+            return name;
+        }
+        
+        // GitHub fallback
+        String login = (String) attributes.get("login");
+        if (login != null) {
+            return login;
+        }
+        
+        return "User"; // Default fallback
+    }
+
+    private User createOAuthUser(String email, String name, AuthProvider provider) {
+        User user = User.builder()
+            .email(email)
+            .name(name)
+            .provider(provider)
+            .roles(Collections.singleton(Role.ROLE_USER))
+            .build();
+        
+        return userRepository.save(user);
     }
 
     @Override
     public void logout(String token, HttpServletRequest request) {
-        try {
-            // Validate token
-            if (!tokenProvider.validateToken(token)) {
-                throw new RuntimeException("Invalid token");
-            }
-
-            // Get username from token
-            String username = tokenProvider.getUsernameFromToken(token);
-            
-            // Clear security context
+        if (token != null && jwtTokenProvider.validateToken(token)) {
+            jwtTokenProvider.invalidateToken(token);
             SecurityContextHolder.clearContext();
-            
-            // Invalidate session if exists
             HttpSession session = request.getSession(false);
             if (session != null) {
                 session.invalidate();
             }
-
-            // Invalidate the token
-            tokenProvider.invalidateToken(token);
-
-            // Log the logout event
-            log.info("User {} logged out successfully", username);
-            
-        } catch (Exception e) {
-            log.error("Logout failed", e);
-            throw new RuntimeException("Logout failed: " + e.getMessage());
         }
+    }
+
+    @Override
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new RuntimeException("No authentication found");
+        }
+        
+        return userRepository.findByEmail(authentication.getName())
+            .orElseThrow(() -> new RuntimeException("User not found"));
     }
 }

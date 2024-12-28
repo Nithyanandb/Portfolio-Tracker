@@ -1,4 +1,4 @@
-package Portfolio.Tracker.Security;
+package Portfolio.Tracker.Service;
 
 import Portfolio.Tracker.Entity.User;
 import org.springframework.security.core.GrantedAuthority;

@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { IndexTable } from './IndexTable';
 import type { MarketIndex } from '../types/market';
+import { Globe } from 'lucide-react';
 
 interface WorldIndicesProps {
   indices: MarketIndex[];
@@ -19,57 +20,53 @@ export const WorldIndices: React.FC<WorldIndicesProps> = ({ indices, isLoading }
   };
 
   return (
-    <div className="space-y-6 xs:max-h-[1100px] xs:max-w-full xs:p-0">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="bg-black/80 backdrop-blur-xl rounded-2xl lg:p-4 xs:p-0 md:p-1"
-      >
-        <h2 className="text-xl sm:text-2xl font-bold text-white mb-6">World Market Indices</h2>
-        
+    <div className="relative bg-black/40 backdrop-blur-xl">
+      {/* SpaceX-style grid background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0" style={{
+          backgroundImage: 'radial-gradient(circle at center, rgba(255,255,255,0.05) 1px, transparent 1px)',
+          backgroundSize: '20px 20px'
+        }} />
+      </div>
+
+      <div className="relative p-6 space-y-8">
+        <div className="flex items-center gap-3">
+          <Globe className="w-5 h-5 text-white" />
+          <h2 className="text-xl text-white tracking-[0.2em] font-light">
+            GLOBAL MARKETS
+          </h2>
+        </div>
+
         {isLoading ? (
-          <div className="flex justify-center items-center h-40">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+          <div className="h-48 flex items-center justify-center">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              className="w-8 h-8 border-2 border-white border-t-transparent"
+            />
           </div>
         ) : (
           <div className="space-y-8">
-            <section>
-              <h3 className="text-lg font-semibold text-white mb-4">Americas</h3>
-              <IndexTable indices={regions.americas} />
-            </section>
-            
-            <section>
-              <h3 className="text-lg font-semibold text-white mb-4">Europe</h3>
-              <IndexTable indices={regions.europe} />
-            </section>
-
-            <section>
-              <h3 className="text-lg font-semibold text-white mb-4">Asia-Pacific</h3>
-              <IndexTable indices={regions.asiaPacific} />
-            </section>
-
-
-            <section>
-              <h3 className="text-lg font-semibold text-white mb-4">China</h3>
-              <IndexTable indices={regions.china} />
-            </section>
-
-            <section>
-              <h3 className="text-lg font-semibold text-white mb-4">India</h3>
-              <IndexTable indices={regions.india} />
-            </section>
-
-            <section>
-              <h3 className="text-lg font-semibold text-white mb-4">Japan</h3>
-              <IndexTable indices={regions.japan} />
-            </section>
+            {Object.entries(regions).map(([region, indices]) => (
+              <motion.section
+                key={region}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-4"
+              >
+                <h3 className="text-white tracking-[0.2em] font-light uppercase">
+                  {region.replace(/([A-Z])/g, ' $1').trim()}
+                </h3>
+                <div className="bg-white/5 backdrop-blur-xl">
+                  <IndexTable indices={indices} />
+                </div>
+              </motion.section>
+            ))}
           </div>
         )}
-      </motion.div>
+      </div>
     </div>
   );
 };
-
 
 export default WorldIndices;

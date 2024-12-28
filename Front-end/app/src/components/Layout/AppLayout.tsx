@@ -11,7 +11,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col">
       <ErrorBoundary>
-        <Header user={null} onLogout={() => {}} onLogin={() => {}} />
+        <Header />
       </ErrorBoundary>
       <main className="relative">
         <ErrorBoundary>

@@ -3,56 +3,79 @@ import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 
 export const OAuthCallback = () => {
-  const { handleAuthCallback } = useAuth();
   const navigate = useNavigate();
+  const { setUser, setToken } = useAuth();
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('token');
-    const error = params.get('error');
+    const handleCallback = async () => {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get('token');
+      const error = params.get('error');
 
-    if (token) {
-      // Store the token and user info
-      const email = params.get('email');
-      const name = params.get('name');
-      const provider = params.get('provider');
-      const roles = params.get('roles')?.split(',') || [];
-      const auth_success = params.get('auth_success') === 'true';
+      if (token) {
+        try {
+          // Get user data from URL parameters
+          const userData = {
+            email: params.get('email') || '',
+            name: params.get('name') || '',
+            provider: params.get('provider') || '',
+            roles: params.get('roles')?.split(',') || [],
+            emailVerified: params.get('emailVerified') === 'true'
+          };
 
-      if (auth_success) {
-        localStorage.setItem('auth', JSON.stringify({
-          token,
-          user: { email, name, roles, provider },
-          expiresAt: new Date().getTime() + (3600 * 1000) // 1 hour
-        }));
-        
-        // Close popup and redirect if in popup
-        if (window.opener) {
-          window.opener.postMessage({ type: 'AUTH_SUCCESS' }, window.origin);
-          window.close();
-        } else {
-          navigate('/dashboard');
+          // Store auth data in localStorage
+          const authData = {
+            token,
+            user: userData,
+            expiresAt: new Date().getTime() + (3600 * 1000) // 1 hour
+          };
+          
+          localStorage.setItem('auth', JSON.stringify(authData));
+
+          // Update context
+          setToken(token);
+          setUser(userData);
+
+          // Handle window closing/redirect
+          if (window.opener) {
+            window.opener.postMessage({
+              type: 'AUTH_SUCCESS',
+              data: authData
+            }, window.location.origin);
+            window.close();
+          } else {
+            navigate('/dashboard');
+          }
+        } catch (err) {
+          const errorMessage = err instanceof Error ? err.message : 'Authentication failed';
+          handleError(errorMessage);
         }
+      } else if (error) {
+        handleError(params.get('message') || 'Authentication failed');
       }
-    } else if (error) {
-      const errorMessage = params.get('message');
+    };
+
+    const handleError = (errorMessage: string) => {
       if (window.opener) {
-        window.opener.postMessage({ 
-          type: 'AUTH_ERROR', 
-          error: errorMessage 
-        }, window.origin);
+        window.opener.postMessage({
+          type: 'AUTH_ERROR',
+          error: errorMessage
+        }, window.location.origin);
         window.close();
       } else {
-        navigate('/login?error=' + encodeURIComponent(errorMessage || 'Authentication failed'));
+        navigate(`/login?error=${encodeURIComponent(errorMessage)}`);
       }
-    }
-  }, [handleAuthCallback, navigate]);
+    };
+
+    handleCallback();
+  }, [navigate, setUser, setToken]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-900">
       <div className="text-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4" />
         <h3 className="text-xl font-semibold text-white">Processing authentication...</h3>
+        <p className="text-gray-400 mt-2">Please wait while we complete the process...</p>
       </div>
     </div>
   );

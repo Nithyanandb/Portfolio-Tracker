@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { RefreshCw, TrendingUp } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { API_CONFIG } from '../config/API_CONFIG';
-import StockTicker from './MarketTicker';
+import MarketTicker from './MarketTicker';
 import MarketSummary from './MarketSummary';
 import TrendingStocks from './TrendingStocks';
 
@@ -16,41 +16,60 @@ export const MarketWatch: React.FC = () => {
     refetchInterval: API_CONFIG.CACHE_DURATION,
   });
 
-  if (isLoading) {
-    return (
-      <div className="w-full h-64 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
-      </div>
-    );
-  }
-
   return (
-    <div className="grid lg:grid-cols-12 gap-4">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="grid lg:grid-cols-12 gap-4"
+    >
       {/* Market Summary Section */}
       <div className="lg:col-span-8 space-y-4">
-        <div className="bg-gray-900 rounded-xl ">
-          <div className="flex items-center justify-between p-4 border-b border-white/10">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="w-6 h-6 text-blue-400" />
-              <h2 className="text-xl font-bold text-white">Market Watch</h2>
-            </div>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => refetch()}
-              disabled={isRefetching}
-              className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-            >
-              <RefreshCw className={`w-5 h-5 text-blue-400 ${isRefetching ? 'animate-spin' : ''}`} />
-            </motion.button>
+        <div className="relative bg-black/40 backdrop-blur-xl">
+          {/* SpaceX-style grid background */}
+          <div className="absolute inset-0">
+            <div className="absolute inset-0" style={{
+              backgroundImage: 'radial-gradient(circle at center, rgba(255,255,255,0.05) 1px, transparent 1px)',
+              backgroundSize: '20px 20px'
+            }} />
           </div>
-          
-          <MarketSummary data={marketData?.summary} />
-          
-          <div className="p-4 grid gap-4">
-            {WATCHED_SYMBOLS.map((symbol) => (
-              <StockTicker key={symbol} symbol={symbol} />
-            ))}
+
+          <div className="relative">
+            <div className="flex items-center justify-between p-6 border-b border-white/10">
+              <div className="flex items-center gap-3">
+                <TrendingUp className="w-6 h-6 text-white" />
+                <h2 className="text-xl tracking-[0.2em] text-white font-light">
+                  MARKET WATCH
+                </h2>
+              </div>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => refetch()}
+                disabled={isRefetching}
+                className="p-2 bg-white/5 hover:bg-white/10 transition-all duration-300"
+              >
+                <RefreshCw className={`w-5 h-5 text-white ${isRefetching ? 'animate-spin' : ''}`} />
+              </motion.button>
+            </div>
+            
+            {isLoading ? (
+              <div className="p-6 flex justify-center">
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  className="w-8 h-8 border-2 border-white border-t-transparent rounded-full"
+                />
+              </div>
+            ) : (
+              <>
+                <MarketSummary data={marketData?.summary} />
+                <div className="p-6 grid gap-4">
+                  {WATCHED_SYMBOLS.map((symbol) => (
+                    <MarketTicker key={symbol} symbol={symbol} />
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -58,9 +77,8 @@ export const MarketWatch: React.FC = () => {
       {/* Sidebar Content */}
       <div className="lg:col-span-4 space-y-4">
         <TrendingStocks />
-       
       </div>
-    </div>
+    </motion.div>
   );
 };
 

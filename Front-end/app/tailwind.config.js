@@ -51,6 +51,9 @@ export default {
       backgroundImage: {
         unsplashImage: "url('https://images.unsplash.com/photo-1639322537228-f710d846310a')",
       },
+      backdropBlur: {
+        '3xl': '64px',
+      },
     },
   },
   plugins: [],

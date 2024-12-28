@@ -1,8 +1,6 @@
 package Portfolio.Tracker.DTO;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 public class TransactionRequest {
     @NotBlank(message = "Stock symbol cannot be blank")
@@ -14,8 +12,10 @@ public class TransactionRequest {
     @Min(value = 1, message = "Quantity must be at least 1")
     private int quantity;
 
-    @Min(value = 0, message = "Price must be non-negative")
+    @DecimalMin(value = "0.01", message = "Price must be greater than 0")
     private double price;
+
+    private String notes;
 
     // Getters and Setters
     public String getStockSymbol() {

@@ -1,53 +1,38 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { fetchMarketData } from '../Service/marketApi';
 import StockDashboard from '../Stock/StockDashboard';
 import { MarketData } from '../types/markets';
+import { Rocket, BarChart2, TrendingUp } from 'lucide-react';
 
-const MarketDashboardtx: React.FC = () => {
+const MarketDashboard: React.FC = () => {
   const [marketData, setMarketData] = useState<MarketData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState({
-    name: 'John Doe',
-    email: 'john@example.com',
-    avatar: 'https://demo-source.imgix.net/snowboard.jpg'
-  });
+  const [activeTab, setActiveTab] = useState('overview');
 
-  // Mock recommendations data with buy/sell information
-  const recommendations = [
-    {
-      symbol: 'AAPL',
-      name: 'Apple Inc.',
-      price: 173.50,
-      change: 1.2,
-      recommendation: 'buy',
-      reason: 'Strong earnings growth and upcoming product launches',
-      targetPrice: 190.00,
-      riskLevel: 'low'
-    },
-    {
-      symbol: 'TSLA',
-      name: 'Tesla Inc.',
-      price: 202.64,
-      change: -1.2,
-      recommendation: 'sell',
-      reason: 'Increasing competition and margin pressure',
-      targetPrice: 180.00,
-      riskLevel: 'high'
-    },
-    {
-      symbol: 'MSFT',
-      name: 'Microsoft',
-      price: 378.85,
-      change: 3.02,
-      recommendation: 'hold',
-      reason: 'Solid financials, but limited upside in the short term',
-      targetPrice: 385.00,
-      riskLevel: 'medium'
-    },
-    // Add more recommendations as needed
-  ];
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 15
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,63 +52,127 @@ const MarketDashboardtx: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleLogout = () => {
-    // Implement logout logic
-    console.log('Logging out...');
-  };
-
   if (loading) {
     return (
-      <div className="min-screen ">
-        <div className="flex justify-center items-center h-screen">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-        </div>
+      <div className="h-screen flex items-center justify-center bg-black">
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            rotate: [0, 360],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="relative w-16 h-16"
+        >
+          <div className="absolute inset-0 rounded-full border-t-2 border-blue-500 animate-glow"></div>
+          <div className="absolute inset-0 rounded-full border-r-2 border-purple-500 animate-glow" style={{ animationDelay: "0.5s" }}></div>
+          <div className="absolute inset-0 rounded-full border-b-2 border-pink-500 animate-glow" style={{ animationDelay: "1s" }}></div>
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-screen  bg-gray-1000 lg:mt-20 " style={{width:'480px'}}>
-    <main className="container px-0 py-8">
-      <div className="grid gap-0">
-        {/* Market Overview */}
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+      className="min-h-screen bg-black p-6 overflow-hidden"
+    >
+      {/* Header */}
+      <motion.div variants={itemVariants} className="mb-12">
+        <h1 className="text-4xl font-bold text-gradient mb-4">Market Intelligence</h1>
+        <p className="text-gray-400">Real-time market insights and AI-powered recommendations</p>
+      </motion.div>
+
+      {/* Navigation Tabs */}
+      <motion.div variants={itemVariants} className="flex gap-6 mb-8">
+        {[
+          { id: 'overview', icon: BarChart2, label: 'Market Overview' },
+          { id: 'recommendations', icon: Rocket, label: 'Smart Recommendations' },
+          { id: 'trends', icon: TrendingUp, label: 'Market Trends' }
+        ].map(tab => (
+          <motion.button
+            key={tab.id}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setActiveTab(tab.id)}
+            className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${
+              activeTab === tab.id
+                ? 'glass-effect text-blue-400'
+                : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            <tab.icon className="w-5 h-5" />
+            <span>{tab.label}</span>
+          </motion.button>
+        ))}
+      </motion.div>
+
+      {/* Content */}
+      <AnimatePresence mode="wait">
         <motion.div
+          key={activeTab}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-black/10 backdrop-blur-xl ml-0 rounded-xl"
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
         >
-          <div className="grid xs:grid-cols-2 lg:grid-cols-3 gap-2">
-            {marketData.map((item) => (
-              <div key={item.symbol} className="bg-white/5 rounded-2 glass-card border-none p-2">
-                <div className="flex justify-between items-start ">
-                  <div>
-                    <p className="text-sm text-gray-400">{item.symbol}</p>
-                    <p className="text-lg font-medium text-white">${item.price.toFixed(2)}</p>
+          {activeTab === 'overview' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {marketData.slice(0, 6).map((item, index) => (
+                <motion.div
+                  key={item.symbol}
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.02, y: -5 }}
+                  className="glass-card p-6 animate-glow"
+                >
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="text-xl font-bold mb-2">{item.symbol}</h3>
+                      <p className="text-3xl font-medium text-gradient">
+                        ${item.price.toFixed(2)}
+                      </p>
+                    </div>
+                    <motion.div
+                      animate={{
+                        y: [0, -5, 0],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        delay: index * 0.2,
+                      }}
+                      className={`text-lg font-medium ${
+                        item.changePercent >= 0 ? 'text-green-400' : 'text-red-400'
+                      }`}
+                    >
+                      {item.changePercent >= 0 ? '+' : ''}{item.changePercent.toFixed(2)}%
+                    </motion.div>
                   </div>
-                  <div className={`text-sm ${item.changePercent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                    {item.changePercent.toFixed(2)}%
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
+          
+          {activeTab === 'recommendations' && <StockDashboard recommendations={recommendations} />}
+          
+          {activeTab === 'trends' && (
+            <motion.div
+              variants={itemVariants}
+              className="glass-card p-6"
+            >
+              <h3 className="text-xl font-bold mb-4 text-gradient">Market Trends</h3>
+              <p className="text-gray-400">Market trend analysis coming soon...</p>
+            </motion.div>
+          )}
         </motion.div>
-  
-        {/* Trading Recommendations */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="py-0 mt-0 bg-none "
-        >
-          <StockDashboard recommendations={recommendations} />
-        </motion.div>
-      </div>
-    </main>
-  </div>
-  
+      </AnimatePresence>
+    </motion.div>
   );
 };
 
-export default MarketDashboardtx;
-
+export default MarketDashboard;
