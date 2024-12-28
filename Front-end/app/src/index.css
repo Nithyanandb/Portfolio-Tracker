@@ -122,13 +122,77 @@ html {
 }
 
 body {
-  min-height: 100vh;
+  @apply bg-black text-white;
   overflow-x: hidden;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
 /* Optional: Add this if you want even smoother transitions */
 * {
   transition: all 0.25s ease-out;
+}
+
+/* Add these styles to your CSS */
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.scroll-smooth {
+  scroll-behavior: smooth;
+}
+
+/* Smooth scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.3);
+}
+
+/* Remove snap scrolling */
+.space-y-32 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(12rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(12rem * var(--tw-space-y-reverse));
+}
+
+/* Custom slow scroll behavior */
+.scroll-container {
+  scroll-behavior: smooth;
+  transition: scroll-behavior 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Smooth scrollbar with slower tracking */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.2);
+  border-radius: 3px;
+  transition: background-color 0.5s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.3);
+}
+
+/* Add smooth transition for all animations */
+* {
+  transition-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
 }

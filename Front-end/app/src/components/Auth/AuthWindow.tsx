@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 
 const AuthWindow = () => {
@@ -17,14 +16,17 @@ const AuthWindow = () => {
         const userData = {
           token,
           user: {
-            email: params.get('email'),
-            name: params.get('name'),
-            provider: params.get('provider'),
+            email: params.get('email') || '',
+            name: params.get('name') || '',
+            provider: params.get('provider') || '',
             roles: params.get('roles')?.split(',') || []
           }
         };
 
-        // Store auth data
+        if (!userData.user.email || !userData.user.name) {
+          throw new Error('Missing required user data');
+        }
+
         localStorage.setItem('auth', JSON.stringify(userData));
 
         if (window.opener) {
@@ -38,10 +40,8 @@ const AuthWindow = () => {
           navigate('/');
         }
       } catch (error) {
-        console.error('Auth window error:', error);
-        const errorMessage = error instanceof Error ? error.message : 'Authentication failed';
         window.opener?.postMessage(
-          { type: 'AUTH_ERROR', error: errorMessage },
+          { type: 'AUTH_ERROR', error: 'Authentication failed' },
           window.location.origin
         );
         window.close();
@@ -51,9 +51,8 @@ const AuthWindow = () => {
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center">
-      <div className="text-center">
-        <Loader2 className="w-12 h-12 animate-spin text-white mx-auto mb-4" />
-        <h2 className="text-xl text-white font-light tracking-wider">Processing login...</h2>
+      <div className="text-center space-y-8">
+        {/* Same loading animation as AuthModal */}
       </div>
     </div>
   );

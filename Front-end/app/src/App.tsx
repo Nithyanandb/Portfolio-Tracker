@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './components/Auth/AuthContext';
 import { MarketProvider } from './context/MarketContext';
 import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
-import { Toaster } from 'react-hot-toast';
+import DynamicBackground from './components/background/DynamicBackground';
 
 // Page Components
 import AppLayout from './components/Layout/AppLayout';
@@ -35,23 +35,42 @@ const queryClient = new QueryClient({
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <AppLayout d={undefined} children={undefined}>
-      <div className="relative z-10">
-        <div className="relative z-10 mt-20">
-          <Hero />
+    element: (
+      <AppLayout>
+        <div className="relative">
+          <DynamicBackground />
+          <div className="relative z-10 overflow-auto scroll-container">
+            <div className="space-y-32 pb-32">
+              <section className="min-h-screen flex items-center justify-center transition-all duration-1000">
+                <Hero />
+              </section>
+              <section className="min-h-screen flex items-center justify-center transition-all duration-1000">
+                <Features />
+              </section>
+              <section className="min-h-screen flex items-center justify-center transition-all duration-1000">
+                <Security />
+              </section>
+            </div>
+          </div>
         </div>
-        <div className="relative z-10 mt-20">
-          <Features />
+      </AppLayout>
+    ),
+  },
+  {
+    path: "/portfolio",
+    element: (
+      <AppLayout>
+        <div className="relative">
+          <DynamicBackground />
+          <div className="relative z-10">
+            <PortfolioDashboard />
+          </div>
         </div>
-        <div className="relative z-10 mt-20">
-          <Security />
-        </div>
-      </div>
-    </AppLayout>,
+      </AppLayout>
+    ),
   },
   { path: "/auth/callback", element: <OAuthCallback /> },
   { path: "/:type/:symbol", element: <TransactionPage /> },
-  { path: "/portfolio", element: <PortfolioDashboard /> },
   { path: "/portfolio/add", element: <StockForm /> },
   { path: "/portfolio/edit/:id", element: <StockForm /> },
   { path: "/stock/all", element: <AllStocks /> },
@@ -67,10 +86,9 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <MarketProvider>
-            <>
-              <Toaster />
+            <div className="relative min-h-screen bg-black">
               <RouterProvider router={router} />
-            </>
+            </div>
           </MarketProvider>
         </AuthProvider>
       </QueryClientProvider>

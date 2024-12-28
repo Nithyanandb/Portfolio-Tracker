@@ -1,5 +1,4 @@
 import React, { createContext, useState, useCallback, useEffect } from 'react';
-import { toast } from 'react-hot-toast';
 
 interface UserProfile {
   email: string;
@@ -115,9 +114,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     // Store in localStorage
     localStorage.setItem('auth', JSON.stringify({ token, user }));
-    
-    // Show success message
-    toast.success(`Welcome ${user.name}!`);
   }, []);
 
   const logout = useCallback(async () => {
@@ -134,10 +130,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(null);
       setToken(null);
       localStorage.removeItem('auth');
-      toast.success('Successfully signed out!');
     } catch (error) {
       console.error('Logout error:', error);
-      toast.error('Failed to sign out');
     }
   }, [token]);
 

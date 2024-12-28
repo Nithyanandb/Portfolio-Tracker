@@ -1,37 +1,58 @@
 import React, { useState } from 'react';
-import { useAuth } from '../hooks/useAuth'; // Adjust the path to where your useAuth hook is located
+import { useAuth } from '../hooks/useAuth';
+import { toast } from 'react-hot-toast';
 
 interface AuthFormProps {
   mode: 'login' | 'register';
   onSuccess?: () => void;
+  onModeChange: (mode: 'login' | 'register') => void;
 }
 
-export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSuccess }) => {
+export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSuccess, onModeChange }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login, register, loginWithGithub, loginWithGoogle, isAuthenticating: loading, error } = useAuth();
+  const [name, setName] = useState('');
+  const { login, register, isAuthenticating, error } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       if (mode === 'login') {
-        // Call login method from useAuth
         await login({ email, password });
+        onSuccess?.();
       } else {
-        // Call register method from useAuth
-        await register({ email, password, name: email }); // Add name field required by register
+        await register({ email, password, name });
+        toast.success('Registration successful! Please login to continue.');
+        onModeChange('login');
+        setEmail('');
+        setPassword('');
+        setName('');
       }
-      
-      onSuccess?.(); // Callback to handle success (e.g., redirect, message)
     } catch (err) {
-      console.error('Auth error:', err);
+      toast.error(err instanceof Error ? err.message : 'Authentication failed');
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {mode === 'register' && (
+        <div>
+          <label htmlFor="name" className="block text-sm font-medium text-white/60 mb-1.5">
+            Full Name
+          </label>
+          <input
+            type="text"
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white"
+            required
+          />
+        </div>
+      )}
+
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="email" className="block text-sm font-medium text-white/60 mb-1.5">
           Email
         </label>
         <input
@@ -39,13 +60,13 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSuccess }) => {
           id="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 block w-full rounded-md border text-black border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+          className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white"
           required
         />
       </div>
 
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="password" className="block text-sm font-medium text-white/60 mb-1.5">
           Password
         </label>
         <input
@@ -53,21 +74,23 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSuccess }) => {
           id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="mt-1 block w-full rounded-md border text-black border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+          className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white"
           required
         />
       </div>
 
       {error && (
-        <div className="text-red-500 text-sm bg-red-50 p-2 rounded">{error}</div>
+        <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-500 text-sm">
+          {error}
+        </div>
       )}
 
       <button
         type="submit"
-        disabled={loading}
-        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+        disabled={isAuthenticating}
+        className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-2.5 rounded-lg"
       >
-        {loading ? 'Processing...' : mode === 'login' ? 'Sign In' : 'Sign Up'}
+        {isAuthenticating ? 'Processing...' : mode === 'login' ? 'Sign In' : 'Create Account'}
       </button>
     </form>
   );
