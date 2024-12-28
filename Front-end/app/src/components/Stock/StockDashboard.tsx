@@ -40,7 +40,7 @@ const StockDashboard: React.FC = () => {
   ];
 
   return (
-    <div className="relative bg-black/40 backdrop-blur-xl border border-white/10">
+    <div className="relative bg-black/40 backdrop-blur-xl ">
       <div className="absolute inset-0">
         <div className="absolute inset-0" style={{
           backgroundImage: 'radial-gradient(circle at center, rgba(255,255,255,0.03) 1px, transparent 1px)',

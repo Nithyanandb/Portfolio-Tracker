@@ -1,166 +1,139 @@
-import { useState, useContext } from 'react';
-import { AuthContext } from '../../context/AuthContext';
+import { useContext, useState, useCallback, useEffect } from 'react';
+import { AuthContext } from '../Auth/AuthContext';
+import { toast } from 'react-hot-toast';
 
-const width = 500;
-const height = 500;
-const left = (window.innerWidth / 2) - (width / 2);
-const top = (window.innerHeight / 2) - (height / 2);
-
-const AUTH_WINDOW_FEATURES = `width=${width},height=${height},left=${left},top=${top}`;
-
-interface LoginCredentials {
+interface UserProfile {
   email: string;
-  password: string;
+  name: string;
+  provider?: string;
+  roles?: string[];
+  emailVerified?: boolean;
 }
 
-interface RegisterCredentials extends LoginCredentials {
-  name?: string;
+interface AuthData {
+  token: string;
+  user: UserProfile;
+  expiresAt: number;
 }
 
 export const useAuth = () => {
-  const auth = useContext(AuthContext);
-  const [isLoading, setIsLoading] = useState(false);
+  const context = useContext(AuthContext);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const handleAuthResponse = async (response: Response) => {
-    const data = await response.json();
-    
-    if (!response.ok) {
-      throw new Error(data.message || 'Authentication failed');
-    }
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
 
-    return data;
-  };
+  const { setUser, setToken } = context;
+
+  // Check token expiration periodically
+  useEffect(() => {
+    const checkAuth = () => {
+      const authData = localStorage.getItem('auth');
+      if (authData) {
+        try {
+          const { expiresAt } = JSON.parse(authData) as AuthData;
+          if (expiresAt && new Date().getTime() > expiresAt) {
+            logout();
+            toast.error('Session expired. Please sign in again.');
+          }
+        } catch (error) {
+          console.error('Error checking auth:', error);
+        }
+      }
+    };
+
+    const interval = setInterval(checkAuth, 60000); // Check every minute
+    return () => clearInterval(interval);
+  }, []);
 
   const handleOAuthPopup = (url: string) => {
-    const authWindow = window.open(url, 'Auth', AUTH_WINDOW_FEATURES);
+    setIsAuthenticating(true);
+    const width = 500;
+    const height = 600;
+    const left = window.screenX + (window.outerWidth - width) / 2;
+    const top = window.screenY + (window.outerHeight - height) / 2;
 
-    if (authWindow) {
-      setIsAuthenticating(true);
-      const checkWindow = setInterval(() => {
-        try {
-          if (authWindow.closed) {
-            clearInterval(checkWindow);
+    const popup = window.open(
+      url,
+      'OAuth2',
+      `width=${width},height=${height},left=${left},top=${top}`
+    );
+
+    if (popup) {
+      const checkPopup = setInterval(() => {
+        if (!popup || popup.closed) {
+          clearInterval(checkPopup);
+          setIsAuthenticating(false);
+        }
+      }, 1000);
+
+      const handleMessage = (event: MessageEvent) => {
+        if (event.origin === window.location.origin) {
+          if (event.data.type === 'AUTH_SUCCESS') {
+            const { token, user } = event.data.data;
+            setUser(user);
+            setToken(token);
+            localStorage.setItem('auth', JSON.stringify({
+              token,
+              user,
+              expiresAt: new Date().getTime() + (3600 * 1000) // 1 hour
+            }));
             setIsAuthenticating(false);
-          } else if (authWindow.location.href.includes('success')) {
-            authWindow.close();
+            popup.close();
+            toast.success(`Welcome back, ${user.name}!`);
+          } else if (event.data.type === 'AUTH_ERROR') {
+            toast.error(event.data.error);
             setIsAuthenticating(false);
           }
-        } catch (e) {
-          // Cross-origin errors are expected
         }
-      }, 500);
-    }
-  };
+      };
 
-  const login = async ({ email, password }: LoginCredentials) => {
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      const response = await fetch('http://localhost:2000/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-        credentials: 'include'
-      });
-
-      const data = await handleAuthResponse(response);
-      setIsAuthenticating(true);
-
-      // Store authentication data
-      localStorage.setItem('auth', JSON.stringify({
-        token: data.token,
-        user: data.user
-      }));
-
-      // Update auth context
-      auth?.login(data);
-
-      return data;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Login failed';
-      setError(message);
-      throw new Error(message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const register = async ({ email, password, name }: RegisterCredentials) => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch('http://localhost:2000/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, name }),
-        credentials: 'include'
-      });
-
-      const data = await handleAuthResponse(response);
-      setIsAuthenticating(true);
-
-      // Store authentication data
-      localStorage.setItem('auth', JSON.stringify({
-        token: data.token,
-        user: data.user
-      }));
-
-      // Update auth context
-      auth?.login(data);
-
-      return data;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Registration failed';
-      setError(message);
-      throw new Error(message);
-    } finally {
-      setIsLoading(false);
+      window.addEventListener('message', handleMessage);
+      return () => {
+        window.removeEventListener('message', handleMessage);
+        clearInterval(checkPopup);
+      };
     }
   };
 
   const loginWithGoogle = () => {
-    setIsAuthenticating(true);
-    setError(null);
     handleOAuthPopup('http://localhost:2000/oauth2/authorization/google');
   };
 
   const loginWithGithub = () => {
-    setIsAuthenticating(true);
-    setError(null);
     handleOAuthPopup('http://localhost:2000/oauth2/authorization/github');
   };
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
-      await fetch('http://localhost:2000/auth/logout', {
-        method: 'POST',
-        credentials: 'include'
-      });
-    } catch (err) {
-      console.error('Logout error:', err);
-    } finally {
+      const authData = localStorage.getItem('auth');
+      if (authData) {
+        const { token } = JSON.parse(authData);
+        await fetch('http://localhost:2000/auth/logout', {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+      }
+      
+      setUser(null);
+      setToken(null);
       localStorage.removeItem('auth');
-      auth?.logout();
+      toast.success('Successfully signed out!');
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error('Failed to sign out');
     }
-  };
+  }, [setUser, setToken]);
 
   return {
-    login,
-    register,
+    ...context,
+    isAuthenticating,
     loginWithGoogle,
     loginWithGithub,
-    logout,
-    isLoading,
-    isAuthenticating,
-    error,
-    user: auth?.user,
-    isAuthenticated: !!auth?.user,
-    clearError: () => setError(null)
+    logout
   };
-};
-
-export default useAuth; 
+}; 

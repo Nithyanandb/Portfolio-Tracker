@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { User, Bell, Settings } from 'lucide-react';
 import { Popover, Transition } from '@headlessui/react';
 import { motion } from 'framer-motion';
-import { useAuth } from '../hooks/useAuth'; // Assuming this is the correct path
+import { useAuth } from '../Hero/useAuth'; // Assuming this is the correct path
 import SocialAuth from '../Auth/SocialAuth';
 
 interface UserMenuProps {

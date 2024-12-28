@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../hooks/useAuth';
 import { Github, Mail, Chrome } from 'lucide-react';
 import { cn } from '../../utils/cn';
 

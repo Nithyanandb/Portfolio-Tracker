@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import useAuth from '../hooks/useAuth'; // Adjust the path to where your useAuth hook is located
+import { useAuth } from '../hooks/useAuth'; // Adjust the path to where your useAuth hook is located
 
 interface AuthFormProps {
   mode: 'login' | 'register';
@@ -9,18 +9,17 @@ interface AuthFormProps {
 export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login, register, loading, error } = useAuth();
+  const { login, register, loginWithGithub, loginWithGoogle, isAuthenticating: loading, error } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     try {
       if (mode === 'login') {
         // Call login method from useAuth
-        await login(email, password);
+        await login({ email, password });
       } else {
         // Call register method from useAuth
-        await register(email, password);
+        await register({ email, password, name: email }); // Add name field required by register
       }
       
       onSuccess?.(); // Callback to handle success (e.g., redirect, message)

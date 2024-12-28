@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from './components/Auth/AuthContext';
 import { MarketProvider } from './context/MarketContext';
 import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
 import { Toaster } from 'react-hot-toast';
@@ -35,7 +35,7 @@ const queryClient = new QueryClient({
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <AppLayout>
+    element: <AppLayout d={undefined} children={undefined}>
       <div className="relative z-10">
         <div className="relative z-10 mt-20">
           <Hero />

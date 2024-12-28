@@ -1,6 +1,6 @@
 import { Menu, Transition } from '@headlessui/react';
 import { User, Settings, LogOut } from 'lucide-react';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../hooks/useAuth';
 
 export const UserProfileMenu = () => {
   const { user, logout } = useAuth();
