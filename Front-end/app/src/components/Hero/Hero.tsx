@@ -11,105 +11,77 @@ import MarketDashboard from './MarketDashboard';
 const Hero: React.FC = () => {
   return (
     <div className="relative min-h-screen bg-black">
-      {/* Grid Background */}
+      {/* Premium Dynamic Background */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0" style={{
-          backgroundImage: 'radial-gradient(circle at center, rgba(255,255,255,0.03) 1px, transparent 1px)',
-          backgroundSize: '24px 24px'
-        }} />
+        <div 
+          className="absolute inset-0 opacity-[0.08]" 
+          style={{
+            backgroundImage: `
+              radial-gradient(circle at center, rgba(255,255,255,0.05) 1px, transparent 1px),
+              linear-gradient(to right, rgba(255,255,255,0.02), transparent)
+            `,
+            backgroundSize: '24px 24px, 100% 100%'
+          }} 
+        />
+        
+        {/* Premium Gradient Orbs */}
+        <motion.div 
+          animate={{ 
+            opacity: [0.3, 0.5, 0.3],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{ 
+            duration: 8, 
+            repeat: Infinity,
+            ease: "easeInOut" 
+          }}
+          className="absolute top-20 left-1/4 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[120px]" 
+        />
+        <motion.div 
+          animate={{ 
+            opacity: [0.3, 0.5, 0.3],
+            scale: [1.2, 1, 1.2],
+          }}
+          transition={{ 
+            duration: 8, 
+            repeat: Infinity,
+            ease: "easeInOut" 
+          }}
+          className="absolute bottom-20 right-1/4 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[100px]" 
+        />
       </div>
 
       {/* Main Content Container */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="relative z-10"
-      >
-        {/* Top Section with Hero Content and Aside */}
-        <div className="container mx-auto px-4 lg:px-8 pt-32">
-          <div className="grid lg:grid-cols-12 gap-8">
-            {/* Left Column - Hero Content */}
-            <div className="lg:col-span-8">
-              <HeroContent />
-              
-              {/* Market Metrics Below Hero */}
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="mt-12"
-              >
-                <MarketMetrics />
-              </motion.div>
+      <div className="relative z-10 container mx-auto px-4">
+        <div className="grid grid-cols-12 gap-8 py-20">
+          {/* Left Column - Hero Content */}
+          <div className="col-span-12 lg:col-span-8 space-y-12">
+            <HeroContent />
+            <MarketMetrics />
+            <MarketWatch />
+            <WorldIndices indices={[]} isLoading={false} />
+          </div>
 
-              {/* Market Watch Section */}
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 }}
-                className="mt-12"
-              >
-                <MarketWatch />
-              </motion.div>
-
-              {/* World Indices Section */}
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1 }}
-                className="mt-8"
-              >
-                <WorldIndices 
-                  indices={[]} 
-                  isLoading={false}
-                />
-              </motion.div>
-            </div>
-
-            {/* Right Column - Aside Content */}
-            <div className="lg:col-span-4">
-              <div className="sticky top-24 space-y-8">
-                {/* Market Dashboard */}
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.4 }}
-                >
-                  <MarketDashboard />
-                </motion.div>
-
-                {/* Trending Stocks */}
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.6 }}
-                >
-                  <TrendingStocks />
-                </motion.div>
-
-                {/* Watchlist Manager */}
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.8 }}
-                >
-                  <WatchlistManager 
-                    watchlist={[]}
-                    onRemove={async () => {}}
-                    onUpdate={async () => {}}
-                    onAdd={async () => {}}
-                  />
-                </motion.div>
-              </div>
-            </div>
+          {/* Right Column - Market Dashboard */}
+          <div className="col-span-12 lg:col-span-4 space-y-8">
+            <MarketDashboard />
+            <TrendingStocks />
+            <WatchlistManager 
+              watchlist={[]}
+              onRemove={async () => {}}
+              onUpdate={async () => {}}
+              onAdd={async () => {}}
+            />
           </div>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Gradient Overlays */}
+      {/* Premium Gradient Overlays */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent" />
+        <div className="absolute top-0 left-0 right-0 h-64 bg-gradient-to-b from-black via-black/80 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-black via-black/80 to-transparent" />
+        <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-black to-transparent" />
+        <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-black to-transparent" />
       </div>
     </div>
   );

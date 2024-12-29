@@ -13,7 +13,7 @@ const MarketDashboard: React.FC = () => {
   });
 
   return (
-    <div className="relative bg-black/40 backdrop-blur-xl ">
+    <div className="relative top-20 bg-black/40 backdrop-blur-xl ">
       {/* SpaceX-style grid background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0" style={{

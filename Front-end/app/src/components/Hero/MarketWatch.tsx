@@ -15,6 +15,9 @@ export const MarketWatch: React.FC = () => {
     queryFn: () => fetch(API_CONFIG.getEndpointUrl('QUOTE')).then(res => res.json()),
     refetchInterval: API_CONFIG.CACHE_DURATION,
   });
+  BASE_URL: 'https://twelvedata.com/',
+  api = 1f4b65858bb4480e8758cd897b1acc88
+
 
   return (
     <motion.div 
