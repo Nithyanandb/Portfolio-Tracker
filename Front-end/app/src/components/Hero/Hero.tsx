@@ -38,14 +38,19 @@ const Hero: React.FC = () => {
           <div className="lg:col-span-8">
             <HeroContent />
             <MarketMetrics />
-            <WorldIndices />
+            <WorldIndices indices={[]} isLoading={false} />
           </div>
 
           {/* Right Column - Dashboard */}
           <div className="lg:col-span-4">
             <div className="sticky top-24 space-y-8">
               <MarketDashboard />
-              <WatchlistManager />
+              <WatchlistManager 
+                watchlist={[]}
+                onRemove={() => {}}
+                onUpdate={() => {}}
+                onAdd={() => {}}
+              />
             </div>
           </div>
         </div>
