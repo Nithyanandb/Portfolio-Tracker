@@ -37,7 +37,7 @@ const router = createBrowserRouter([
     path: "/",
     element: (
       <AppLayout>
-        <div className="relative min-h-screen">
+        <div className="relative">
           <DynamicBackground />
           <div className="relative z-10 overflow-auto scroll-container">
             <div className="space-y-32 pb-32">
@@ -60,7 +60,7 @@ const router = createBrowserRouter([
     path: "/portfolio",
     element: (
       <AppLayout>
-        <div className="relative min-h-screen">
+        <div className="relative">
           <DynamicBackground />
           <div className="relative z-10">
             <PortfolioDashboard />
@@ -83,7 +83,6 @@ const router = createBrowserRouter([
 function App() {
   return (
     <ErrorBoundary>
-      
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <MarketProvider>

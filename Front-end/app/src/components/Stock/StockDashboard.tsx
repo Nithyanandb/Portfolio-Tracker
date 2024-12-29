@@ -1,84 +1,52 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { LineChart, RefreshCw } from 'lucide-react';
+import { LineChart, RefreshCw, TrendingUp, TrendingDown, Activity } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { API_CONFIG } from '../../config/API_CONFIG';
 import StockRecommendations from './StockRecommendations';
-import type { StockQuote } from '../../types/stock';
-
-// Mock data for development
-const MOCK_RECOMMENDATIONS: StockQuote[] = [
-  {
-    symbol: 'AAPL',
-    name: 'Apple Inc.',
-    price: '175.84',
-    change: '+2.34',
-    changePercent: 1.35,
-    recommendation: 'BUY',
-    analysis: 'Strong momentum in Technology sector with attractive P/E ratio',
-    metrics: {
-      open: '173.50',
-      high: '176.20',
-      low: '173.20',
-      volume: '64.2M',
-      peRatio: '28.5',
-      marketCap: '2.8T',
-      sector: 'Technology'
-    }
-  },
-  {
-    symbol: 'MSFT',
-    name: 'Microsoft Corporation',
-    price: '338.11',
-    change: '+1.56',
-    changePercent: 0.46,
-    recommendation: 'HOLD',
-    analysis: 'Stable performance with moderate growth potential',
-    metrics: {
-      open: '337.55',
-      high: '339.20',
-      low: '336.80',
-      volume: '22.1M',
-      peRatio: '32.4',
-      marketCap: '2.5T',
-      sector: 'Technology'
-    }
-  }
-];
+import { MarketGraph } from '../Hero/MarketGraph';
 
 const StockDashboard: React.FC = () => {
-  // Use mock data while API is not available
-  const { 
-    data: recommendations = MOCK_RECOMMENDATIONS, 
-    refetch, 
-    isRefetching,
-    isLoading,
-    isError
-  } = useQuery<StockQuote[]>({
+  const { data: recommendations, refetch, isRefetching } = useQuery({
     queryKey: ['stock-recommendations'],
-    queryFn: async () => {
-      // TODO: Replace with actual API call when backend is ready
-      return MOCK_RECOMMENDATIONS;
-    },
+    queryFn: () => fetch(API_CONFIG.getEndpointUrl('RECOMMENDATIONS')).then(res => res.json()),
     refetchInterval: API_CONFIG.CACHE_DURATION,
   });
 
-  return (
-    <div className="relative bg-black/40 backdrop-blur-xl">
-      <div className="absolute inset-0">
-        <div className="absolute inset-0" style={{
-          backgroundImage: 'radial-gradient(circle at center, rgba(255,255,255,0.03) 1px, transparent 1px)',
-          backgroundSize: '20px 20px'
-        }} />
-      </div>
+  const mockRecommendations = [
+    {
+      symbol: 'AAPL',
+      name: 'Apple Inc.',
+      price: '182.63',
+      change: '+1.25%',
+      recommendation: 'BUY',
+      analysis: 'Strong momentum with new product launches'
+    },
+    {
+      symbol: 'MSFT',
+      name: 'Microsoft Corp.',
+      price: '337.22',
+      change: '-0.45%',
+      recommendation: 'HOLD',
+      analysis: 'Stable growth in cloud services'
+    },
+    {
+      symbol: 'GOOGL',
+      name: 'Alphabet Inc.',
+      price: '125.23',
+      change: '+2.1%',
+      recommendation: 'BUY',
+      analysis: 'AI initiatives driving growth'
+    }
+  ];
 
-      <div className="relative">
-        <div className="flex items-center justify-between p-6 border-b border-white/10">
-          <div className="flex items-center gap-3">
-            <LineChart className="w-5 h-5 text-white" />
-            <h2 className="text-white tracking-[0.2em] font-light">
-              RECOMMENDED STOCKS
-            </h2>
+  return (
+    <div className="bg-black/40 backdrop-blur-xl rounded-xl border border-white/10">
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div className="space-y-1">
+            <h2 className="text-xl font-medium text-white">Market Analysis</h2>
+            <p className="text-sm text-gray-400">Real-time AI-powered insights</p>
           </div>
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -91,10 +59,39 @@ const StockDashboard: React.FC = () => {
           </motion.button>
         </div>
 
-        <StockRecommendations 
-          recommendations={recommendations} 
-          isLoading={isLoading}
-        />
+        <div className="mb-8">
+          <div className="bg-white/5 rounded-lg p-4">
+            <h3 className="text-sm text-blue-400 mb-2 tracking-wider">AI MARKET SENTIMENT</h3>
+            <p className="text-white text-sm leading-relaxed">
+              Market showing bullish trends with increasing volume. Key resistance levels at $450.
+              Recommended strategy: Hold with stop-loss at $420.
+            </p>
+          </div>
+        </div>
+
+        <div className="h-[300px] mb-6">
+          <MarketGraph 
+            symbol="AAPL"
+            showVolume={true}
+            showIndicators={['SMA', 'RSI']}
+            timeframe="1D"
+          />
+        </div>
+
+        <div className="grid grid-cols-3 gap-4 mb-6">
+          {[
+            { label: 'RSI', value: '65.4', status: 'neutral' },
+            { label: 'MACD', value: '1.24', status: 'bullish' },
+            { label: 'Stoch', value: '82.3', status: 'overbought' }
+          ].map((indicator) => (
+            <div key={indicator.label} className="bg-white/5 rounded-lg p-3">
+              <div className="text-sm text-gray-400">{indicator.label}</div>
+              <div className="text-lg text-white">{indicator.value}</div>
+            </div>
+          ))}
+        </div>
+
+        <StockRecommendations recommendations={recommendations || mockRecommendations} />
       </div>
     </div>
   );

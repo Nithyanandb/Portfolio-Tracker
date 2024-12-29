@@ -13,32 +13,17 @@ const MarketDashboard: React.FC = () => {
   });
 
   return (
-    <div className="relative top-20 bg-black/40 backdrop-blur-xl ">
-      {/* SpaceX-style grid background */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0" style={{
-          backgroundImage: 'radial-gradient(circle at center, rgba(255,255,255,0.03) 1px, transparent 1px)',
-          backgroundSize: '20px 20px'
-        }} />
-      </div>
-
-      <div className="relative">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-white/10">
-          <div className="flex items-center gap-3">
-            <LineChart className="w-5 h-5 text-white" />
-            <h2 className="text-white tracking-[0.2em] font-light">
-              MARKET OVERVIEW
-            </h2>
-          </div>
+    <div className="bg-white/5 backdrop-blur-md rounded-lg border border-white/10">
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-medium text-white">Market Overview</h2>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => refetch()}
-            disabled={isRefetching}
-            className="p-2 bg-white/5 hover:bg-white/10 transition-all duration-300"
+            className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
           >
-            <RefreshCw className={`w-4 h-4 text-white ${isRefetching ? 'animate-spin' : ''}`} />
+            <RefreshCw className="w-4 h-4 text-white" />
           </motion.button>
         </div>
 
@@ -78,8 +63,21 @@ const MarketDashboard: React.FC = () => {
             </motion.button>
           </div>
         </div>
+
+        {/* Add loading state handling */}
+        {isRefetching ? (
+          <div className="flex items-center justify-center py-12">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            >
+              <RefreshCw className="w-6 h-6 text-white/50" />
+            </motion.div>
+          </div>
+        ) : (
+          <StockDashboard recommendations={dashboard?.recommendations || []} />
+        )}
       </div>
-      <StockDashboard recommendations={[]} />
     </div>
   );
 };

@@ -3,50 +3,47 @@ import { motion } from 'framer-motion';
 import { IndexTable } from './IndexTable';
 import type { MarketIndex } from '../types/market';
 import { Globe } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { API_CONFIG } from '../../config/API_CONFIG';
 
 interface WorldIndicesProps {
-  indices: MarketIndex[];
-  isLoading: boolean;
+  indices?: MarketIndex[];
 }
 
-export const WorldIndices: React.FC<WorldIndicesProps> = ({ indices, isLoading }) => {
+export const WorldIndices: React.FC<WorldIndicesProps> = () => {
+  const { data: indices, isLoading } = useQuery({
+    queryKey: ['world-indices'],
+    queryFn: () => fetch(API_CONFIG.getEndpointUrl('INDICES')).then(res => res.json()),
+    refetchInterval: API_CONFIG.CACHE_DURATION,
+  });
+
   const regions = {
-    americas: indices.filter(index => index.region === 'Americas'),
-    europe: indices.filter(index => index.region === 'Europe'),
-    asiaPacific: indices.filter(index => index.region === 'Asia-Pacific'),
-    china: indices.filter(index => index.region === 'China'),
-    india: indices.filter(index => index.region === 'India'),
-    japan: indices.filter(index => index.region === 'Japan'),
+    americas: indices?.filter((index: { region: string; }) => index?.region === 'Americas') || [],
+    europe: indices?.filter((index: { region: string; }) => index?.region === 'Europe') || [],
+    asiaPacific: indices?.filter((index: { region: string; }) => index?.region === 'Asia-Pacific') || [],
   };
 
   return (
-    <div className="relative bg-black/40 backdrop-blur-xl">
-      {/* SpaceX-style grid background */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0" style={{
-          backgroundImage: 'radial-gradient(circle at center, rgba(255,255,255,0.05) 1px, transparent 1px)',
-          backgroundSize: '20px 20px'
-        }} />
-      </div>
-
-      <div className="relative p-6 space-y-8">
-        <div className="flex items-center gap-3">
-          <Globe className="w-5 h-5 text-white" />
-          <h2 className="text-xl text-white tracking-[0.2em] font-light">
-            GLOBAL MARKETS
-          </h2>
+    <div className="bg-black/40 backdrop-blur-xl rounded-xl border border-white/10">
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <Globe className="w-5 h-5 text-blue-400" />
+            <h2 className="text-xl font-medium text-white">World Markets</h2>
+          </div>
         </div>
 
         {isLoading ? (
-          <div className="h-48 flex items-center justify-center">
+          <div className="flex items-center justify-center py-12">
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-              className="w-8 h-8 border-2 border-white border-t-transparent"
-            />
+            >
+              <Globe className="w-6 h-6 text-white/50" />
+            </motion.div>
           </div>
         ) : (
-          <div className="space-y-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Object.entries(regions).map(([region, indices]) => (
               <motion.section
                 key={region}
@@ -57,7 +54,7 @@ export const WorldIndices: React.FC<WorldIndicesProps> = ({ indices, isLoading }
                 <h3 className="text-white tracking-[0.2em] font-light uppercase">
                   {region.replace(/([A-Z])/g, ' $1').trim()}
                 </h3>
-                <div className="bg-white/5 backdrop-blur-xl">
+                <div className="bg-white/5 backdrop-blur-xl rounded-lg overflow-hidden">
                   <IndexTable indices={indices} />
                 </div>
               </motion.section>

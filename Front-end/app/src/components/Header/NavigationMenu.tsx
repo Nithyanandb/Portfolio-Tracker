@@ -10,10 +10,10 @@ interface NavigationMenuProps {
 
 export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => {
   return (
-    <NavigationMenuPrimitive.Root className={className}>
-      <NavigationMenuPrimitive.List className="flex items-center gap-6">
-        <NavItem href="/" label="Markets">
-          <div className="grid grid-cols-1 p-6 w-[540px] backdrop-blur-xl">
+    <NavigationMenuPrimitive.Root className={cn("hidden md:block", className)}>
+      <NavigationMenuPrimitive.List className="flex items-center gap-4">
+        <NavItem href="/markets" label="Markets">
+          <div className="grid grid-cols-2 gap-6 p-6 w-[480px] bg-white rounded-lg shadow-lg">
             <div className="space-y-6">
               <div>
                 <h3 className="text-sm font-medium text-white/60 uppercase tracking-wider mb-3">
@@ -50,17 +50,17 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
                 Featured
               </h3>
               <div className="space-y-4">
-              <FeaturedCard
+                <FeaturedCard
                   href="/market-analysis"
                   title="Market Analysis"
                   description="Get real-time insights and market trends"
-                  imageSrc="https://i.pinimg.com/736x/d3/f4/1b/d3f41be339f89c1fb7bdad9d33a6fc81.jpg"
+                  imageSrc="/path/to/market-analysis.jpg"
                 />
                 <FeaturedCard
                   href="/top-gainers"
                   title="Top Gainers"
                   description="Discover today's best performing stocks"
-                  imageSrc="https://www.wjtv.com/wp-content/uploads/sites/72/2024/10/66fef94f803b60.79505850.jpeg?w=2560&h=1440&crop=1"
+                  imageSrc="/path/to/top-gainers.jpg"
                 />
               </div>
             </div>
@@ -68,7 +68,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
         </NavItem>
 
         <NavItem href="/trading" label="Trading">
-          <div className="grid grid-cols-2 gap-4 p-2 w-[480px]">
+          <div className="grid grid-cols-2 gap-4 p-4 w-[480px]">
             <div className="space-y-2">
               <h3 className="text-sm font-semibold text-gray-400 mb-3">Basic Trading</h3>
               <NavLink href="/trading/spot">Spot Trading</NavLink>
@@ -135,7 +135,7 @@ const NavItem: React.FC<{
         <span className="text-sm font-medium tracking-wide">{label}</span>
         <ChevronDown
           className={cn(
-            "h-3.5 w-3.5 transition-transform duration-100",
+            "h-3.5 w-3.5 transition-transform duration-300",
             isOpen && "rotate-180"
           )}
           aria-hidden="true"
@@ -144,10 +144,10 @@ const NavItem: React.FC<{
       <AnimatePresence>
         {isOpen && (
           <NavigationMenuPrimitive.Content 
-            className="absolute bg-black/50 backdrop-blur-xl left-0 right-0 top-full z-20"
+            className="absolute left-0 right-0 top-full z-50"
           >
             <motion.div
-              initial={{ opacity: 0, y: 0 }}
+              initial={{ opacity: 0, y: -10 }}
               animate={{ 
                 opacity: 1, 
                 y: 0,

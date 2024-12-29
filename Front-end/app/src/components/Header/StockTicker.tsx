@@ -1,102 +1,116 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { motion, useAnimation } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { motion, useAnimation, AnimatePresence } from 'framer-motion';
+import { TrendingUp, TrendingDown } from 'lucide-react';
 
-interface Stock {
-  symbol: string;
-  price: string;
-  change: string;
-}
-
-// Reduced stock list for better performance
-const stocks: Stock[] = [
-  { symbol: 'NIFTY', price: '21,853.80', change: '+0.42%' },
-  { symbol: 'SENSEX', price: '72,085.63', change: '+0.48%' },
-  { symbol: 'RELIANCE', price: '2,456.75', change: '+1.23%' },
-  { symbol: 'TCS', price: '3,789.20', change: '-0.45%' },
-  { symbol: 'HDFC', price: '1,678.90', change: '+0.75%' },
-  { symbol: 'INFY', price: '1,567.45', change: '+0.89%' },
+// Updated stock data with more tech and space companies
+const stocks = [
+  { symbol: "TSLA", price: "238.45", change: "+3.2%", trending: true },
+  { symbol: "SPCE", price: "1.85", change: "+2.1%", trending: true },
+  { symbol: "RKLB", price: "4.92", change: "+1.8%", trending: true },
+  { symbol: "AAPL", price: "173.50", change: "+1.2%", trending: true },
+  { symbol: "MSFT", price: "378.85", change: "+0.8%", trending: true },
+  { symbol: "NVDA", price: "476.52", change: "+1.8%", trending: true },
+  { symbol: "PLTR", price: "15.87", change: "+4.2%", trending: true },
+  { symbol: "AI", price: "32.45", change: "+2.7%", trending: true },
+  { "symbol": "GOOGL", "price": "138.21", "change": "-0.5%", "trending": false },
+  { "symbol": "META", "price": "342.15", "change": "+2.1%", "trending": true },
+  { "symbol": "AMZN", "price": "145.68", "change": "+0.9%", "trending": true },
+  { "symbol": "NFLX", "price": "412.90", "change": "+2.3%", "trending": true },
+  { "symbol": "BA", "price": "196.22", "change": "-0.9%", "trending": false },
+  { "symbol": "DIS", "price": "91.10", "change": "+0.5%", "trending": false },
+  { "symbol": "AMD", "price": "102.56", "change": "+2.1%", "trending": true },
+  { "symbol": "INTC", "price": "35.84", "change": "-1.5%", "trending": false },
+  { "symbol": "XOM", "price": "115.78", "change": "+0.6%", "trending": true },
+  { "symbol": "CVX", "price": "167.29", "change": "-0.4%", "trending": false },
+  { "symbol": "WMT", "price": "159.34", "change": "+0.3%", "trending": true },
+  { "symbol": "PFE", "price": "34.89", "change": "-1.0%", "trending": false },
+  { "symbol": "JNJ", "price": "160.50", "change": "+1.2%", "trending": true },
+  { "symbol": "V", "price": "244.17", "change": "+0.9%", "trending": true },
+  { "symbol": "MA", "price": "400.23", "change": "+1.7%", "trending": true },
+  { "symbol": "SPOT", "price": "152.62", "change": "-0.7%", "trending": false },
+  { "symbol": "ADBE", "price": "539.29", "change": "+2.5%", "trending": true },
+  { "symbol": "CRM", "price": "211.65", "change": "+1.1%", "trending": true },
+  { "symbol": "BABA", "price": "86.34", "change": "-0.3%", "trending": false },
+  { "symbol": "T", "price": "15.92", "change": "+0.4%", "trending": true },
+  { "symbol": "KO", "price": "58.31", "change": "-0.2%", "trending": false },
+  { "symbol": "PEP", "price": "174.42", "change": "+0.7%", "trending": true }
 ];
 
-export const StockTicker: React.FC = () => {
+const StockTicker = () => {
   const controls = useAnimation();
-  const [isHovered, setIsHovered] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  // Single animation loop
+  
   useEffect(() => {
     const animate = async () => {
-      while (true) {
-        await controls.start({
-          x: '-100%',
-          transition: {
-            duration: 100,
-            ease: 'linear',
-            repeat: Infinity
-          }
-        });
-        await controls.set({ x: '0%' });
-      }
+      await controls.start({
+        x: [0, -2000],
+        transition: {
+          duration: 30,
+          ease: "linear",
+          repeat: Infinity,
+        }
+      });
     };
-    
     animate();
-  }, []);
-
-  // Optimized stock item renderer
-  const StockItem = useCallback(({ stock }: { stock: Stock }) => (
-    <div className="inline-flex items-center px-4 h-full group">
-      <span className="text-xs font-medium text-white/80 group-hover:text-white">
-        {stock.symbol}
-      </span>
-      <span className="text-xs text-white/60 ml-2">
-        ₹{stock.price}
-      </span>
-      <span 
-        className={`text-xs ml-2 ${
-          stock.change.startsWith('+') 
-            ? 'text-green-400/80 group-hover:text-green-400' 
-            : 'text-red-400/80 group-hover:text-red-400'
-        }`}
-      >
-        {stock.change}
-      </span>
-    </div>
-  ), []);
+  }, [controls]);
 
   return (
-    <div 
-      ref={containerRef}
-      className="relative h-8 bg-black/50 backdrop-blur-sm border-b border-white/5 rounded-b-lg overflow-hidden"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      style={{ willChange: 'transform' }}
-    >
-      <div className="relative overflow-hidden h-full">
+    <div className="relative h-5 bg-black/40 backdrop-blur-xl overflow-hidden">
+      {/* SpaceX-style grid background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0" style={{
+          backgroundImage: 'radial-gradient(circle at center, rgba(255,255,255,0.05) 1px, transparent 1px)',
+          backgroundSize: '20px 20px'
+        }} />
+      </div>
+
+      {/* Gradient fade edges */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="absolute left-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-r from-black via-black/80 to-transparent"
+      />
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="absolute right-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-l from-black via-black/80 to-transparent"
+      />
+
+      <div className="flex space-x-12">
         <motion.div
-          className="flex whitespace-nowrap h-full items-center"
           animate={controls}
-          style={{ x: '0%' }}
-          transition={{ duration: 0 }}
+          className="flex space-x-12 items-center px-6"
         >
-          {/* Render stock items twice for seamless loop */}
           {[...stocks, ...stocks].map((stock, index) => (
-            <StockItem key={`${stock.symbol}-${index}`} stock={stock} />
+            <motion.div 
+              key={index}
+              className="flex items-center space-x-3 group"
+              whileHover={{ 
+                scale: 1.05,
+                backgroundColor: 'rgba(255,255,255,0.05)',
+              }}
+            >
+              <span className="text-sm text-white tracking-[0.2em] font-light">
+                {stock.symbol}
+              </span>
+              <span className="text-sm text-gray-400 tracking-wider">
+                ${stock.price}
+              </span>
+              <motion.span 
+                className={`flex items-center text-xs ${stock.trending ? 'text-green-400' : 'text-red-400'}`}
+                animate={{ opacity: [0.7, 1, 0.7] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                {stock.trending ? (
+                  <TrendingUp className="h-3 w-3 mr-1" />
+                ) : (
+                  <TrendingDown className="h-3 w-3 mr-1" />
+                )}
+                {stock.change}
+              </motion.span>
+            </motion.div>
           ))}
         </motion.div>
       </div>
-
-      {/* Optimized gradient overlays */}
-      <div 
-        className="absolute inset-y-0 left-0 w-20 z-10"
-        style={{
-          background: 'linear-gradient(90deg, rgb(0,0,0), transparent)',
-        }}
-      />
-      <div 
-        className="absolute inset-y-0 right-0 w-20 z-10"
-        style={{
-          background: 'linear-gradient(-90deg, rgb(0,0,0), transparent)',
-        }}
-      />
     </div>
   );
 };

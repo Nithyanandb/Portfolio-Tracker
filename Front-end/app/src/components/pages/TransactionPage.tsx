@@ -11,11 +11,10 @@ import Popup from '../ui/Popup';
 import { usePopup } from '../hooks/usePopup';
 import { generateMockChartData, generateMockMetrics } from '../Stock/mockDataGenerators';
 import MarketDashboard from '../Hero/MarketDashboard';
-import Headertx from '../Header/Header';
+import Headertx from '../Stock/Headertx';
 import DynamicBackground from '../background/DynamicBackground';
 import { buyStock, sellStock } from '../Stock/transactionApi';
 import { buttonApi } from '../../services/buttonApi';
-import Header from '../Header/Header';
 
 interface LocationState {
   stock: {
@@ -86,7 +85,11 @@ const TransactionPage: React.FC = () => {
         onClose={hidePopup}
       />
       <DynamicBackground sections={[]} currentSection={0} />
-      <Header/>
+      <Headertx
+        user={null}
+        onLogout={() => {}}
+        onLogin={() => {}}
+      />
       <div className="min-screen bg-black/10 backdrop-blur-xl lg:mt-0 py-0 flex">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -18,7 +18,17 @@ interface StockRecommendationsProps {
   recommendations: Recommendation[];
 }
 
-const StockRecommendations: React.FC<StockRecommendationsProps> = ({ recommendations }) => {
+interface EnhancedRecommendation extends Recommendation {
+  aiConfidence: number;
+  sentiment: 'bullish' | 'bearish' | 'neutral';
+  keyMetrics: {
+    pe: number;
+    marketCap: string;
+    volume: string;
+  };
+}
+
+const StockRecommendations: React.FC<StockRecommendationsProps> = ({ recommendations = [] }) => {
   const navigate = useNavigate();
   const [activeButton, setActiveButton] = useState<string | null>(null);
 
@@ -68,39 +78,50 @@ const StockRecommendations: React.FC<StockRecommendationsProps> = ({ recommendat
   };
 
   return (
-    <div className="p-6 space-y-6">
-      {recommendations.map((stock, index) => (
+    <div className="space-y-4">
+      {recommendations?.map((stock) => (
         <motion.div
           key={stock.symbol}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.1 }}
-          className="bg-white/5 p-4 space-y-4"
+          className="bg-white/5 backdrop-blur-sm rounded-xl p-4 hover:bg-white/10 transition-all duration-300"
         >
-          {/* Stock Info */}
-          <div className="flex justify-between items-start">
-            <div className="space-y-1">
-              <div className="text-white font-light tracking-wider">{stock.symbol}</div>
+          {/* Enhanced Stock Header */}
+          <div className="flex justify-between items-start mb-4">
+            <div>
+              <div className="text-lg font-medium text-white">{stock.symbol}</div>
               <div className="text-sm text-gray-400">{stock.name}</div>
             </div>
             <div className="text-right">
-              <div className="text-white font-light">${stock.price}</div>
-              <div className={`text-sm flex items-center gap-1 ${
-                stock.change.startsWith('+') ? 'text-green-400' : 'text-red-400'
-              }`}>
-                {stock.change.startsWith('+') ? (
-                  <TrendingUp className="w-3 h-3" />
-                ) : (
-                  <TrendingDown className="w-3 h-3" />
-                )}
+              <div className="text-xl font-light text-white">${stock.price}</div>
+              <div className={`text-sm ${stock.change.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
                 {stock.change}
               </div>
             </div>
           </div>
 
-          {/* Analysis */}
-          <div className="text-sm text-gray-400">
-            {stock.analysis}
+          {/* AI Insights Bar */}
+          <div className="mb-4">
+            <div className="flex justify-between items-center text-sm mb-1">
+              <span className="text-gray-400">AI Confidence</span>
+              <span className="text-white">{stock.aiConfidence}%</span>
+            </div>
+            <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-blue-500 rounded-full"
+                style={{ width: `${stock.aiConfidence}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Key Metrics */}
+          <div className="grid grid-cols-3 gap-4 mb-4">
+            {stock.keyMetrics && Object.entries(stock.keyMetrics).map(([key, value]) => (
+              <div key={key} className="text-center">
+                <div className="text-sm text-gray-400">{key.toUpperCase()}</div>
+                <div className="text-white">{value}</div>
+              </div>
+            ))}
           </div>
 
           {/* Action Buttons */}
