@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { motion } from 'framer-motion';
+import { Loader } from 'lucide-react';
 
 const AuthWindow = () => {
   const navigate = useNavigate();
@@ -19,7 +21,8 @@ const AuthWindow = () => {
             email: params.get('email') || '',
             name: params.get('name') || '',
             provider: params.get('provider') || '',
-            roles: params.get('roles')?.split(',') || []
+            roles: params.get('roles')?.split(',') || [],
+            avatar: params.get('avatar') || ''
           }
         };
 
@@ -27,14 +30,16 @@ const AuthWindow = () => {
           throw new Error('Missing required user data');
         }
 
+        // Store auth data
         localStorage.setItem('auth', JSON.stringify(userData));
 
+        // Handle popup window scenario
         if (window.opener) {
           window.opener.postMessage({
             type: 'AUTH_SUCCESS',
             data: userData
           }, window.location.origin);
-          setTimeout(() => window.close(), 100);
+          setTimeout(() => window.close(), 500); // Increased timeout for smooth transition
         } else {
           handleOAuthCallback(userData);
           navigate('/');
@@ -51,9 +56,21 @@ const AuthWindow = () => {
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center">
-      <div className="text-center space-y-8">
-        {/* Same loading animation as AuthModal */}
-      </div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center space-y-4"
+      >
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          className="mx-auto"
+        >
+          <Loader className="w-8 h-8 text-blue-500" />
+        </motion.div>
+        <h2 className="text-xl font-medium text-white">Completing Authentication</h2>
+        <p className="text-sm text-white/60">Please wait while we secure your session...</p>
+      </motion.div>
     </div>
   );
 };

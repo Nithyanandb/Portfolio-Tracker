@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { Loader } from 'lucide-react';
 
 export const OAuthCallback = () => {
   const navigate = useNavigate();
@@ -14,14 +16,14 @@ export const OAuthCallback = () => {
         const auth_success = params.get('auth_success') === 'true';
 
         if (auth_success && token) {
-          // Create user data from URL parameters
           const userData = {
             token,
             user: {
               email: params.get('email') || '',
               name: params.get('name') || '',
               provider: params.get('provider') || '',
-              roles: params.get('roles')?.split(',') || []
+              roles: params.get('roles')?.split(',') || [],
+              avatar: params.get('avatar') || ''
             }
           };
 
@@ -29,12 +31,13 @@ export const OAuthCallback = () => {
             throw new Error('Missing required user data');
           }
 
+          // Handle popup window scenario
           if (window.opener) {
             window.opener.postMessage({
               type: 'AUTH_SUCCESS',
               data: userData
             }, window.location.origin);
-            setTimeout(() => window.close(), 100);
+            setTimeout(() => window.close(), 500);
           } else {
             handleOAuthCallback(userData);
             navigate('/');
@@ -60,12 +63,21 @@ export const OAuthCallback = () => {
   }, [navigate, handleOAuthCallback]);
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-900">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4" />
-        <h3 className="text-xl font-semibold text-white">Processing authentication...</h3>
-        <p className="text-gray-400 mt-2">Please wait while we complete the process...</p>
-      </div>
+    <div className="fixed inset-0 bg-black flex items-center justify-center">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center space-y-4"
+      >
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+        >
+          <Loader className="w-8 h-8 text-blue-500" />
+        </motion.div>
+        <h3 className="text-xl font-medium text-white">Finalizing Authentication</h3>
+        <p className="text-white/60">Almost there! Setting up your secure session...</p>
+      </motion.div>
     </div>
   );
 };
