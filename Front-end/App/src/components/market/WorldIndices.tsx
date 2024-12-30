@@ -7,7 +7,7 @@ interface WorldIndicesProps {
   isLoading: boolean;
 }
 
-const WorldIndices: React.FC<WorldIndicesProps> = ({ isLoading: initialLoading }) => {
+export const WorldIndices: React.FC<WorldIndicesProps> = ({ isLoading: initialLoading }) => {
   const { data: indexData, isLoading } = useWorldIndices();
 
   const loading = isLoading || initialLoading;

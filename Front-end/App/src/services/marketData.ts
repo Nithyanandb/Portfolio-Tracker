@@ -1,11 +1,11 @@
-import type { MarketIndex } from '../types/market';
+import type { MarketIndex } from '../components/Hero/types/market';
 
 export const fetchIndexData = async (symbol: string): Promise<Partial<MarketIndex>> => {
   const response = await fetch(
     `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=demo`
   );
   const data = await response.json();
-  
+  console.log(data);
   if (data['Time Series (Daily)']) {
     const timeSeriesData = data['Time Series (Daily)'];
     const latestDate = Object.keys(timeSeriesData)[0];

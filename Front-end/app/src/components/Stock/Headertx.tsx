@@ -7,7 +7,7 @@ import { SearchPopover } from '../Header/SearchPopover';
 
 import { LogoC } from './LogoC';
 import UserMenu from '../Header/UserMenu';
-import StockTicker from '../Header/StockTicker';
+import StockTicker from '../Header/StockTicker/StockTicker';
 
 interface HeaderProps {
   user: {

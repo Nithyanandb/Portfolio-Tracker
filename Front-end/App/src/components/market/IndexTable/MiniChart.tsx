@@ -1,7 +1,6 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
-import type { MarketIndex } from '../../../types/market';
-
+import type { MarketIndex } from '../../Hero/types/market';
 interface MiniChartProps {
   historicalData: MarketIndex['historicalData'];
   change: number;

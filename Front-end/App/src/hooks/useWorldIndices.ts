@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchIndexData } from '../services/marketData';
 import { MARKET_INDICES } from '../constants/marketIndices';
-import type { MarketIndex } from '../types/market';
+import type { MarketIndex } from '../components/Hero/types/market';
 
 export const useWorldIndices = () => {
   return useQuery({

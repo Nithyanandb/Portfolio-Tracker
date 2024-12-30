@@ -16,3 +16,5 @@ export const TableHeader: React.FC<TableHeaderProps> = ({ showMiniChart }) => (
     <th className="text-right pb-4">Time</th>
   </tr>
 );
+
+export default TableHeader;

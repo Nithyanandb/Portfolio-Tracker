@@ -6,8 +6,9 @@ import { Logo } from './Logo';
 import { NavigationMenu } from './NavigationMenu';
 import { useAuth } from '../hooks/useAuth';
 import AuthModal from '../Auth/AuthModal';
-import StockTicker from './StockTicker';
+import StockTicker from './StockTicker/StockTicker';
 import { SearchPopover } from './SearchPopover';
+import { stocks } from './StockTicker/stockData';
 
 const Header: React.FC = () => {
   const { user, logout, isAuthenticated, isAuthenticating } = useAuth();
@@ -20,8 +21,9 @@ const Header: React.FC = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <Logo />
+            <div className="flex -mr-[60px] items-center gap-0">
             <NavigationMenu />
-            
+            </div>
             <div className="flex items-center gap-0">
               <SearchPopover/>
               {isAuthenticated ? (
@@ -174,8 +176,8 @@ const Header: React.FC = () => {
         )}
       </AnimatePresence>
       <div className="absolute left-0 right-0 text-light text-white text-center">
-      <div className="container mx-auto">
-        <StockTicker />
+      <div className="container mx-auto w-[900px]  ">
+      <StockTicker stocks={stocks} />
       </div>
       </div>
       <AuthModal 

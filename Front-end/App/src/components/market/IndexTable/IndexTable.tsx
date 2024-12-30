@@ -1,5 +1,5 @@
 import React from 'react';
-import type { MarketIndex } from '../../../types/market';
+import type { MarketIndex } from '../../Hero/types/market';
 import { TableHeader } from './TableHeader';
 import { TableRow } from './TableRow';
 
