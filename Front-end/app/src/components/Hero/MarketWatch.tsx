@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Newspaper, TrendingUp, Globe2, AlertTriangle, Filter, ArrowRight } from 'lucide-react';
+import { Newspaper, TrendingUp, Globe2, AlertTriangle, Filter, ArrowRight, Clock } from 'lucide-react';
 
 interface NewsItem {
   id: string;
@@ -10,6 +10,7 @@ interface NewsItem {
   timestamp: string;
   source: string;
   imageUrl: string;
+  impact?: 'high' | 'medium' | 'low';
 }
 
 const MarketWatch: React.FC = () => {
@@ -24,7 +25,8 @@ const MarketWatch: React.FC = () => {
       category: 'market',
       timestamp: '2h ago',
       source: 'Bloomberg',
-      imageUrl: '/images/tesla-news.jpg'
+      imageUrl: '/images/tesla-news.jpg',
+      impact: 'high'
     },
     {
       id: '2',
@@ -33,7 +35,8 @@ const MarketWatch: React.FC = () => {
       category: 'global',
       timestamp: '4h ago',
       source: 'Reuters',
-      imageUrl: '/images/fed-news.jpg'
+      imageUrl: '/images/fed-news.jpg',
+      impact: 'high'
     },
     {
       id: '3',
@@ -42,17 +45,18 @@ const MarketWatch: React.FC = () => {
       category: 'tax',
       timestamp: '6h ago',
       source: 'Financial Times',
-      imageUrl: '/images/crypto-tax.jpg'
+      imageUrl: '/images/crypto-tax.jpg',
+      impact: 'medium'
     },
-
-      {
-      id: '3',
-      title: 'New Tax Regulations for Crypto Trading',
-      description: 'Government announces updated tax guidelines for cryptocurrency transactions',
-      category: 'tax',
-      timestamp: '6h ago',
-      source: 'Financial Times',
-      imageUrl: '/images/crypto-tax.jpg'
+    {
+      id: '4',
+      title: 'Market Alert: Volatility Index Spikes',
+      description: 'VIX jumps 25% as global uncertainties rise',
+      category: 'alert',
+      timestamp: '1h ago',
+      source: 'MarketWatch',
+      imageUrl: '/images/vix-alert.jpg',
+      impact: 'high'
     }
   ];
 
@@ -68,15 +72,19 @@ const MarketWatch: React.FC = () => {
     : newsItems.filter(item => item.category === activeFilter);
 
   return (
-    <div className="relative p-6">
+    <div className="relative p-6 border border-white/10 rounded-xl">
       {/* Premium glass effect background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5" />
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 rounded-xl" />
 
       {/* Header section */}
       <div className="relative flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <Newspaper className="w-5 h-5 text-white/60" />
           <h2 className="text-lg font-light tracking-wider text-white">Market Watch</h2>
+          <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/5">
+            <Clock className="w-3 h-3 text-white/40" />
+            <span className="text-xs text-white/40">Live Updates</span>
+          </div>
         </div>
         <motion.button
           whileHover={{ scale: 1.05 }}
@@ -118,15 +126,21 @@ const MarketWatch: React.FC = () => {
           {filteredNews.map((news, index) => (
             <motion.div
               key={news.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               onHoverStart={() => setHoveredNews(news.id)}
               onHoverEnd={() => setHoveredNews(null)}
               className="group relative overflow-hidden rounded-2xl bg-white/5 hover:bg-white/10 transition-all duration-500"
             >
-              {/* Glow effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500" />
+              {/* Impact indicator */}
+              {news.impact && (
+                <div className={`absolute top-4 right-4 w-2 h-2 rounded-full ${
+                  news.impact === 'high' ? 'bg-red-400' :
+                  news.impact === 'medium' ? 'bg-yellow-400' :
+                  'bg-green-400'
+                }`} />
+              )}
 
               <div className="relative p-6">
                 <div className="flex justify-between items-start mb-4">

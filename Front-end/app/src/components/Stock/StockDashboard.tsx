@@ -72,11 +72,11 @@ const StockDashboard: React.FC = () => {
             whileTap={{ scale: 0.95 }}
             onClick={() => refetch()}
             disabled={isRefetching}
-            className="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all duration-300 relative group"
+            className="p-2 bg-white/5 rounded-lg transition-all duration-300 relative group"
           >
             <RefreshCw className={`w-3 h-3 text-white/90 ${isRefetching ? 'animate-spin' : ''}`} />
             {/* Button glow effect */}
-            <div className="absolute inset-0 bg-white/20 rounded-lg opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300" />
+            <div className="absolute inset-0  rounded-lg opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300" />
           </motion.button>
         </div>
 

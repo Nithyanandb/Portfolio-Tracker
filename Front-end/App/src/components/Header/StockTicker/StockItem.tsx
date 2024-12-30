@@ -1,33 +1,34 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp, TrendingDown } from 'lucide-react';
-import type { StockItemProps } from './stock';
+import type { Stock } from './stock';
+
+interface StockItemProps {
+  stock: Stock;
+}
 
 export const StockItem: React.FC<StockItemProps> = ({ stock }) => {
-  const isPositive = parseFloat(stock.change) >= 0;
+  const isPositive = stock.change.startsWith('+');
 
   return (
     <motion.div
-      className="inline-flex items-center space-x-2.5 py-1 px-2"
+      className="inline-flex items-center gap-1.5 py-0.5 px-1.5 rounded-md hover:bg-white/5 transition-colors duration-300"
       whileHover={{ scale: 1.02 }}
     >
-      {/* Symbol */}
       <span className="text-xs font-medium tracking-wide text-white/90">
         {stock.symbol}
       </span>
 
-      {/* Price */}
-      <span className="text-[11px] font-light tracking-wide text-white/70 tabular-nums">
-        {stock.price}
+      <span className="text-[10px] font-light tracking-wide text-white/70 tabular-nums">
+        ${stock.price}
       </span>
 
-      {/* Change with premium animation */}
       <motion.div
-        className={`flex items-center space-x-0.5 ${
+        className={`flex items-center gap-0.5 ${
           isPositive ? 'text-emerald-400' : 'text-rose-400'
         }`}
         animate={{
-          opacity: [0.85, 1, 0.85],
+          opacity: stock.trending ? [0.7, 1, 0.7] : 1,
         }}
         transition={{
           duration: 2,
@@ -40,13 +41,10 @@ export const StockItem: React.FC<StockItemProps> = ({ stock }) => {
         ) : (
           <TrendingDown className="w-2.5 h-2.5" />
         )}
-        <span className="text-[11px] font-medium tracking-wide tabular-nums">
+        <span className="text-[10px] font-medium tracking-wide tabular-nums">
           {stock.change}
         </span>
       </motion.div>
-
-      {/* Premium separator */}
-      <span className="text-white/10 text-xs font-light">•</span>
     </motion.div>
   );
 };

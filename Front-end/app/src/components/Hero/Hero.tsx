@@ -51,7 +51,7 @@ const Hero: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="backdrop-blur-2xl bg-black/40 rounded-3xl overflow-hidden border border-white/5 hover:border-white/10 transition-all duration-500"
+                className="backdrop-blur-2xl bg-black/40 rounded-3xl overflow-hidden transition-all duration-500"
               >
                 <MarketWatch />
               </motion.div>
@@ -61,7 +61,7 @@ const Hero: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="backdrop-blur-2xl bg-black/40 rounded-3xl overflow-hidden border border-white/5 hover:border-white/10 transition-all duration-500"
+                className="backdrop-blur-2xl bg-black/40 rounded-3xl overflow-hidden transition-all duration-500"
               >
                 <MarketMetrics />
               </motion.div>
@@ -71,7 +71,7 @@ const Hero: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="backdrop-blur-2xl bg-black/40 rounded-3xl overflow-hidden border border-white/5 hover:border-white/10 transition-all duration-500"
+                className="backdrop-blur-2xl bg-black/40 rounded-3xl overflow-hidden transition-all duration-500"
               >
                 <WorldIndices isLoading={false} />
               </motion.div>
@@ -85,7 +85,7 @@ const Hero: React.FC = () => {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.4 }}
-                  className="backdrop-blur-2xl bg-black/40 rounded-3xl overflow-hidden border border-white/5 hover:border-white/10 transition-all duration-500"
+                  className="backdrop-blur-2xl bg-black/40 rounded-3xl overflow-hidden transition-all duration-500"
                 >
                   <MarketDashboard />
                 </motion.div>
@@ -95,7 +95,7 @@ const Hero: React.FC = () => {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.5 }}
-                  className="backdrop-blur-2xl bg-black/40 rounded-3xl overflow-hidden border border-white/5 hover:border-white/10 transition-all duration-500"
+                  className="backdrop-blur-2xl bg-black/40 rounded-3xl overflow-hidden transition-all duration-500"
                 >
                   <StockDashboard />
                 </motion.div>
@@ -105,7 +105,7 @@ const Hero: React.FC = () => {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.6 }}
-                  className="backdrop-blur-2xl bg-black/40 rounded-3xl overflow-hidden border border-white/5 hover:border-white/10 transition-all duration-500"
+                  className="backdrop-blur-2xl bg-black/40 rounded-3xl overflow-hidden transition-all duration-500"
                 >
                   <WatchlistManager
                     watchlist={[]}
