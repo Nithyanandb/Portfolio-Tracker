@@ -40,16 +40,13 @@ const StockDashboard: React.FC = () => {
   ];
 
   return (
-    <div className="relative bg-black/40 backdrop-blur-xl ">
+    <div className="relative w-full bg-black/40 backdrop-blur-xl ">
       <div className="absolute inset-0">
-        <div className="absolute inset-0" style={{
-          backgroundImage: 'radial-gradient(circle at center, rgba(255,255,255,0.03) 1px, transparent 1px)',
-          backgroundSize: '20px 20px'
-        }} />
+        <div className="absolute inset-0" />
       </div>
 
       <div className="relative">
-        <div className="flex items-center justify-between p-6 border-b border-white/10">
+        <div className="flex items-center glass-button border-1 border-white/20 rounded-0 bg-black justify-between p-6 border-b border-white/10">
           <div className="flex items-center gap-3">
             <LineChart className="w-5 h-5 text-white" />
             <h2 className="text-white tracking-[0.2em] font-light">
@@ -61,7 +58,7 @@ const StockDashboard: React.FC = () => {
             whileTap={{ scale: 0.95 }}
             onClick={() => refetch()}
             disabled={isRefetching}
-            className="p-2 bg-white/5 hover:bg-white/10 transition-all duration-300"
+            className="p-2 bg-white/5 glass-button border-0 transition-all duration-300"
           >
             <RefreshCw className={`w-4 h-4 text-white ${isRefetching ? 'animate-spin' : ''}`} />
           </motion.button>

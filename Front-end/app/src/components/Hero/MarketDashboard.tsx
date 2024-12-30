@@ -86,7 +86,7 @@ const MarketDashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className=" -mt-[900px] min-screen">
+      <div className=" -mt-[1000px] min-screen">
         <div className="flex justify-center items-center h-screen">
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white"></div>
         </div>
@@ -95,7 +95,7 @@ const MarketDashboard: React.FC = () => {
   }
 
   return (
-    <div className="relative bg-black/40 backdrop-blur-xl ">
+    <div className="relative bg-black/40 border-0 backdrop-blur-xl ">
       {/* SpaceX-style grid background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0"/>
@@ -103,7 +103,7 @@ const MarketDashboard: React.FC = () => {
 
       <div className="relative">
         {/* Header */}
-        <div className="flex items-center glass-button rounded-0 shadow-md justify-between p-6 bg-black/40 backdrop-blur-xl">
+        <div className="flex items-center glass-button  border-1  rounded-0 shadow-md justify-between p-6 bg-black/40 backdrop-blur-xl">
           <div className="flex items-center gap-3">
             <LineChart className="w-5 h-5 text-white" />
             <h2 className="text-white tracking-[0.2em] font-light">
@@ -112,44 +112,7 @@ const MarketDashboard: React.FC = () => {
           </div>
 
 
-          <div className="min-screen p-0 bg-gray-1000 lg:mt-0" style={{width:'480px'}}>
-            <main className="  px-0 py-8">
-              <div className="grid gap-0">
-                {/* Market Overview */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-black/10 backdrop-blur-xl ml-0 rounded-xl"
-                >
-                  <div className="grid xs:grid-cols-2 lg:grid-cols-3 gap-2">
-                    {marketData.map((item) => (
-                      <div key={item.symbol} className="bg-white/5 rounded-2 glass-card border-none p-2">
-                        <div className="flex justify-between items-start ">
-                          <div>
-                            <p className="text-sm text-gray-400 mb-3">{item.symbol}</p>
-                            <p className="text-lg font-medium text-white">${item.price.toFixed(2)}</p>
-                          </div>
-                          <div className={`text-sm ${item.changePercent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                            {item.changePercent.toFixed(2)}%
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-
-                {/* Trading Recommendations */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className=""
-                >
-                
-                </motion.div>
-              </div>
-            </main>
-          </div>
+        
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -179,6 +142,7 @@ const MarketDashboard: React.FC = () => {
             </div>
           </div>
 
+           
           {/* Quick Actions */}
           <div className="space-y-3">
             <motion.button
@@ -198,7 +162,6 @@ const MarketDashboard: React.FC = () => {
           </div>
         </div>
       </div>
-      <StockDashboard recommendations={recommendations} />
     </div>
   );
 };

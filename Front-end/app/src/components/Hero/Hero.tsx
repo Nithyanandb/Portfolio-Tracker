@@ -7,6 +7,7 @@ import WatchlistManager from './WatchlistManager';
 import HeroContent from './HeroContent';
 import MarketMetrics from './MarketMetrics';
 import MarketDashboard from './MarketDashboard';
+import StockDashboard from '../Stock/StockDashboard';
 
 const Hero: React.FC = () => {
   return (
@@ -77,7 +78,7 @@ const Hero: React.FC = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.4 }}
                 >
-                  {/* <MarketDashboard /> */}
+                  <MarketDashboard />
                 </motion.div>
 
                 {/* Trending Stocks */}
@@ -86,6 +87,7 @@ const Hero: React.FC = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.6 }}
                 >
+                      <StockDashboard/>
                   <TrendingStocks />
                 </motion.div>
 

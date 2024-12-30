@@ -68,7 +68,7 @@ const StockRecommendations: React.FC<StockRecommendationsProps> = ({ recommendat
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 glass-button bg-black border-0">
       {recommendations.map((stock, index) => (
         <motion.div
           key={stock.symbol}
@@ -78,7 +78,7 @@ const StockRecommendations: React.FC<StockRecommendationsProps> = ({ recommendat
           className="bg-white/5 p-4 space-y-4"
         >
           {/* Stock Info */}
-          <div className="flex justify-between items-start">
+          <div className="flex justify-between  items-start">
             <div className="space-y-1">
               <div className="text-white font-light tracking-wider">{stock.symbol}</div>
               <div className="text-sm text-gray-400">{stock.name}</div>

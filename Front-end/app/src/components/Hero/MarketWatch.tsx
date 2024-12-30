@@ -20,10 +20,10 @@ export const MarketWatch: React.FC = () => {
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="grid lg:grid-cols-12 gap-4"
+      className="grid lg:grid-cols-12 gap-4 "
     >
       {/* Market Summary Section */}
-      <div className="lg:col-span-8 space-y-4">
+      <div className="lg:col-span-8 space-y-4  ">
         <div className="relative bg-black/40 backdrop-blur-xl">
           {/* SpaceX-style grid background */}
           <div className="absolute inset-0">
@@ -33,8 +33,8 @@ export const MarketWatch: React.FC = () => {
             }} />
           </div>
 
-          <div className="relative">
-            <div className="flex items-center justify-between p-6 border-b border-white/10">
+          <div className="relative bg-black border-0">
+            <div className="flex items-center justify-between p-6 bg-black border-0">
               <div className="flex items-center gap-3">
                 <TrendingUp className="w-6 h-6 text-white" />
                 <h2 className="text-xl tracking-[0.2em] text-white font-light">
@@ -46,7 +46,7 @@ export const MarketWatch: React.FC = () => {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => refetch()}
                 disabled={isRefetching}
-                className="p-2 bg-white/5 hover:bg-white/10 transition-all duration-300"
+                className="p-2 bg-white/5 bg-black border-0 transition-all duration-300"
               >
                 <RefreshCw className={`w-5 h-5 text-white ${isRefetching ? 'animate-spin' : ''}`} />
               </motion.button>
@@ -57,7 +57,7 @@ export const MarketWatch: React.FC = () => {
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                  className="w-8 h-8 border-2 border-white border-t-transparent rounded-full"
+                  className="w-8 h-8 bg-black border-0 rounded-full"
                 />
               </div>
             ) : (
