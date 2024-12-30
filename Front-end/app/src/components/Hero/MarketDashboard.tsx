@@ -148,60 +148,74 @@ const MarketDashboard: React.FC = () => {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-black">
-      {/* Subtle gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-neutral-950 via-black to-neutral-950" />
+      {/* Premium gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900/90 to-black" />
       
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Market Status Bar */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center space-x-4">
-            <div className={`h-2 w-2 rounded-full ${marketStatus.isOpen ? 'bg-green-400' : 'bg-red-400'} animate-pulse`} />
-            <span className="text-sm text-gray-400">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Market Status Bar with refined styling */}
+        <div className="flex items-center justify-between mb-10">
+          <div className="flex items-center gap-4 backdrop-blur-xl bg-white/[0.02] px-4 py-2 rounded-2xl">
+            <div className={`h-2.5 w-2.5 rounded-full ${marketStatus.isOpen ? 'bg-green-400' : 'bg-red-400'} 
+              shadow-lg shadow-green-500/20 animate-pulse`} 
+            />
+            <span className="text-sm font-medium text-gray-300">
               {marketStatus.isOpen ? 'Market Open' : `Opens ${marketStatus.nextOpen}`}
             </span>
           </div>
-          <div className="flex items-center space-x-2 text-sm text-gray-400">
+          <div className="flex items-center gap-3 text-sm text-gray-400">
             <Clock className="w-4 h-4" />
-            <span>Last updated {marketStatus.lastUpdate}</span>
+            <span className="font-medium">Last updated {marketStatus.lastUpdate}</span>
           </div>
         </div>
 
-        {/* Portfolio Value Section */}
-        <div className="mb-12">
-          <div className="flex items-baseline justify-between">
-            <h1 className="text-4xl font-light tracking-tight">
-              ${portfolioSummary.totalValue.toLocaleString()}
-            </h1>
+        {/* Portfolio Value Section with glass effect */}
+        <div className="mb-12 p-8 rounded-3xl bg-white/[0.02] backdrop-blur-xl">
+          <div className="flex items-baseline justify-between mb-4">
+            <div className="space-y-1">
+              <h2 className="text-sm font-medium text-gray-400">Portfolio Value</h2>
+              <h1 className="text-4xl font-light tracking-tight text-white">
+                ${portfolioSummary.totalValue.toLocaleString()}
+              </h1>
+            </div>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => refetch()}
-              className="p-2 rounded-full hover:bg-white/5 transition-colors"
+              className="p-2.5 rounded-xl hover:bg-white/5 transition-colors"
             >
               <RefreshCw className={`w-5 h-5 text-gray-400 ${isRefetching ? 'animate-spin' : ''}`} />
             </motion.button>
           </div>
           
-          <div className="flex items-center mt-2 space-x-3">
-            <div className={`flex items-center space-x-2 ${portfolioSummary.todayChange > 0 ? 'text-green-400' : 'text-red-400'}`}>
-              {portfolioSummary.todayChange > 0 ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
-              <span className="text-lg">${Math.abs(portfolioSummary.todayChange).toLocaleString()}</span>
+          <div className="flex items-center gap-4">
+            <div className={`flex items-center gap-2 ${
+              portfolioSummary.todayChange > 0 ? 'text-green-400' : 'text-rose-400'
+            }`}>
+              {portfolioSummary.todayChange > 0 ? 
+                <TrendingUp className="w-4 h-4" /> : 
+                <TrendingDown className="w-4 h-4" />
+              }
+              <span className="text-lg font-medium">
+                ${Math.abs(portfolioSummary.todayChange).toLocaleString()}
+              </span>
             </div>
-            <span className={`text-lg ${portfolioSummary.todayChange > 0 ? 'text-green-400' : 'text-red-400'}`}>
+            <span className={`text-lg font-medium ${
+              portfolioSummary.todayChange > 0 ? 'text-green-400' : 'text-rose-400'
+            }`}>
               ({portfolioSummary.todayChangePercent}%)
             </span>
           </div>
         </div>
 
-        {/* Timeframe Selector */}
-        <div className="flex space-x-4 mb-8">
+        {/* Timeframe Selector with premium styling */}
+        <div className="flex gap-2 p-1 bg-white/[0.02] backdrop-blur-xl rounded-xl mb-8 w-fit">
           {timeframes.map((timeframe) => (
             <button
               key={timeframe}
               onClick={() => setSelectedTimeframe(timeframe)}
-              className={`px-4 py-2 rounded-full text-sm transition-all ${
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                 selectedTimeframe === timeframe 
-                ? 'bg-white/10 text-white' 
+                ? 'bg-white text-black shadow-sm' 
                 : 'text-gray-400 hover:text-white'
               }`}
             >
@@ -210,69 +224,89 @@ const MarketDashboard: React.FC = () => {
           ))}
         </div>
 
-        {/* Holdings Grid */}
-        <div className="grid gap-6">
+        {/* Holdings Grid with refined cards */}
+        <div className="grid gap-4">
           {topHoldings.map((holding, index) => (
             <motion.div
               key={holding.symbol}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="group relative backdrop-blur-xl bg-white/5 rounded-3 p-4 hover:bg-white/10 transition-all duration-300"
+              className="group relative backdrop-blur-xl bg-white/[0.02] hover:bg-white/[0.04] 
+                rounded-2xl p-6 transition-all duration-500"
             >
               <div className="flex items-start justify-between">
-                <div>
-                  <div className="flex items-center space-x-3">
-                    <h3 className="text-xl font-medium">{holding.company}</h3>
-                    <span className="text-sm text-gray-400">{holding.symbol}</span>
+                <div className="space-y-3">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-3">
+                      <h3 className="text-xl font-medium text-white">{holding.company}</h3>
+                      <span className="text-sm font-medium text-gray-400">{holding.symbol}</span>
+                      <span className="px-3 py-1 text-xs font-medium text-gray-300 bg-white/[0.05] rounded-full">
+                        {holding.sector}
+                      </span>
+                    </div>
+                    <div className="text-sm text-gray-400">
+                      {holding.shares} shares • Avg ${holding.avgPrice}
+                    </div>
                   </div>
-                  <div className="mt-1 text-sm text-gray-400">
-                    {holding.shares} shares • Avg ${holding.avgPrice}
+
+                  {/* Market Stats */}
+                  <div className="grid grid-cols-3 gap-6 p-4 rounded-xl bg-white/[0.02]">
+                    <div>
+                      <div className="text-sm text-gray-400 mb-1">Market Value</div>
+                      <div className="text-base font-medium text-white">
+                        ${(holding.shares * holding.currentPrice).toLocaleString()}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-400 mb-1">Profit/Loss</div>
+                      <div className={`text-base font-medium ${
+                        holding.profit > 0 ? 'text-green-400' : 'text-rose-400'
+                      }`}>
+                        ${holding.profit.toLocaleString()} ({holding.profitPercent}%)
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-400 mb-1">Volume</div>
+                      <div className="text-base font-medium text-white">{holding.volume}</div>
+                    </div>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-xl">${holding.currentPrice}</div>
-                  <div className={`text-sm ${holding.dayChange > 0 ? 'text-green-400' : 'text-red-400'}`}>
-                    {holding.dayChange > 0 ? '+' : ''}{holding.dayChange}%
+
+                <div className="text-right space-y-2">
+                  <div className="text-2xl font-light text-white">${holding.currentPrice}</div>
+                  <div className={`flex items-center justify-end gap-2 ${
+                    holding.dayChange > 0 ? 'text-green-400' : 'text-rose-400'
+                  }`}>
+                    {holding.dayChange > 0 ? 
+                      <TrendingUp className="w-4 h-4" /> : 
+                      <TrendingDown className="w-4 h-4" />
+                    }
+                    <span className="text-sm font-medium">
+                      {holding.dayChange > 0 ? '+' : ''}{holding.dayChange}%
+                    </span>
                   </div>
                 </div>
               </div>
 
-              {/* Expanded Details */}
-              <div className="mt-6 grid grid-cols-3 gap-6 text-sm">
-                <div>
-                  <div className="text-gray-400">Market Value</div>
-                  <div className="mt-1">${(holding.shares * holding.currentPrice).toLocaleString()}</div>
-                </div>
-                <div>
-                  <div className="text-gray-400">Profit/Loss</div>
-                  <div className={`mt-1 ${holding.profit > 0 ? 'text-green-400' : 'text-red-400'}`}>
-                    ${holding.profit.toLocaleString()} ({holding.profitPercent}%)
-                  </div>
-                </div>
-                <div>
-                  <div className="text-gray-400">Volume</div>
-                  <div className="mt-1">{holding.volume}</div>
-                </div>
-              </div>
-
-              <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="absolute right-6 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <ChevronRight className="w-5 h-5 text-gray-400" />
               </div>
             </motion.div>
           ))}
         </div>
 
-        {/* Quick Actions */}
+        {/* Quick Actions with glass effect */}
         <div className="mt-8 space-y-3">
           {['View All Holdings', 'Trade Now'].map((action, index) => (
             <motion.button
               key={action}
               whileHover={{ x: 4 }}
-              className="w-full flex items-center justify-between p-4 bg-white/5 backdrop-blur-xl rounded-xl transition-all duration-300 group"
+              className="w-full flex items-center justify-between p-4 bg-white/[0.02] hover:bg-white/[0.04] 
+                backdrop-blur-xl rounded-xl transition-all duration-300 group"
             >
-              <span className="text-sm font-medium">{action}</span>
-              <ArrowRight className="w-4 h-4 text-white transform group-hover:translate-x-1 transition-transform" />
+              <span className="text-sm font-medium text-white">{action}</span>
+              <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />
             </motion.button>
           ))}
         </div>
