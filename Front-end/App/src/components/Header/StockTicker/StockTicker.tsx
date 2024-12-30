@@ -42,12 +42,16 @@ export const StockTicker: React.FC<StockTickerProps> = ({ stocks }) => {
     };
   }, [controls, containerWidth]);
 
-  // Triple the stocks for seamless loop
+  useEffect(() => {
+    if (containerRef.current) {
+      setContainerWidth(containerRef.current.offsetWidth);
+    }
+  }, [containerRef]);
   const displayStocks = [...stocks, ...stocks, ...stocks];
 
   return (
-    <div className="relative h-6 bg-black/95 backdrop-blur-xl border-y border-white/5">
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-blue-500/5" />
+    <div className="relative h-6">
+      <div className="absolute inset-0 " />
       
       <motion.div 
         className="relative mx-auto w-[600px] h-full overflow-hidden"

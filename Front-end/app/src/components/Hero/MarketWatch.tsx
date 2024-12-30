@@ -29,7 +29,7 @@ const MarketWatch: React.FC = () => {
       impact: 'high',
       change: '+5.8%',
       price: '$892.54',
-      image: 'https://images.unsplash.com/photo-1642052502780-8ee67e3bf130?q=80&w=1000&auto=format&fit=crop',
+      image: 'https://s.yimg.com/ny/api/res/1.2/_d42m0jLue6vo6zd6l9Jrw--/YXBwaWQ9aGlnaGxhbmRlcjt3PTEyNDI7aD04Mjc-/https://media.zenfs.com/en/quartz.com/ec40acff2e3174cd10b1e7e4210a7b95',
       imageUrl: ''
     },
     {

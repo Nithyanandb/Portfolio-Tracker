@@ -26,10 +26,14 @@ interface NavigationMenuProps {
 }
 
 export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => {
-  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
 
-  const handleMenuClick = (menuId: string) => {
-    setActiveMenu(activeMenu === menuId ? null : menuId);
+  const handleMouseEnter = (menuId: string) => {
+    setHoveredMenu(menuId);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredMenu(hoveredMenu);
   };
 
   return (
@@ -38,8 +42,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
         <NavItem 
           href="/" 
           label="Markets" 
-          isActive={activeMenu === 'markets'}
-          onClick={() => handleMenuClick('markets')}
+          isHovered={hoveredMenu === 'markets'}
+          onMouseEnter={() => handleMouseEnter('markets')}
+          onMouseLeave={handleMouseLeave}
         >
           <div className="container mx-auto grid grid-cols-2 gap-8 p-12">
             {/* Left Side - Markets Content */}
@@ -113,8 +118,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
         <NavItem 
           href="/trading" 
           label="Trading" 
-          isActive={activeMenu === 'trading'}
-          onClick={() => handleMenuClick('trading')}
+          isHovered={hoveredMenu === 'trading'}
+          onMouseEnter={() => handleMouseEnter('trading')}
+          onMouseLeave={handleMouseLeave}
         >
           <div className="container mx-auto grid grid-cols-2 gap-8 p-12">
             {/* Left Side - Trading Image */}
@@ -194,8 +200,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
         <NavItem 
           href="/learn" 
           label="Learn" 
-          isActive={activeMenu === 'learn'}
-          onClick={() => handleMenuClick('learn')}
+          isHovered={hoveredMenu === 'learn'}
+          onMouseEnter={() => handleMouseEnter('learn')}
+          onMouseLeave={handleMouseLeave}
         >
           <div className="container mx-auto grid grid-cols-2 gap-8 p-12">
             {/* Left Side - Learn Image */}
@@ -203,7 +210,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
               <motion.div
                 initial={{ opacity: 0, x: 0 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 }}
+                transition={{ delay: 0 }}
                 className="relative aspect-[16/9] overflow-hidden rounded-lg"
               >
                 <img
@@ -250,53 +257,42 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
   );
 };
 
-// Updated NavItem component
 const NavItem: React.FC<{
   href: string;
   label: string;
   children: React.ReactNode;
-  isActive: boolean;
-  onClick: () => void;
-}> = ({ href, label, children, isActive, onClick }) => {
+  isHovered: boolean;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
+}> = ({ href, label, children, isHovered, onMouseEnter, onMouseLeave }) => {
   return (
-    <NavigationMenuPrimitive.Item>
-      <NavigationMenuPrimitive.Trigger
-        onClick={onClick}
+    <NavigationMenuPrimitive.Item
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
+      <NavigationMenuPrimitive.Trigger 
         className="group flex items-center gap-1.5 text-white/80 hover:text-white transition-colors outline-none"
       >
         <span className="text-sm font-medium tracking-wide">{label}</span>
-        <ChevronDown
-          className={cn(
-            "h-3.5 w-3.5 transition-transform duration-300",
-            isActive && "rotate-180"
-          )}
-          aria-hidden="true"
-        />
+        <motion.div
+          animate={{ rotate: isHovered ? 180 : 0 }}
+          transition={{ duration: 0 }}
+        >
+          <ChevronDown className="h-3.5 w-3.5" />
+        </motion.div>
       </NavigationMenuPrimitive.Trigger>
+
       <AnimatePresence>
-        {isActive && (
-          <NavigationMenuPrimitive.Content
+        {isHovered && (
+          <NavigationMenuPrimitive.Content 
             className="absolute left-0 right-0 top-full z-50 w-screen"
           >
             <motion.div
               initial={{ opacity: 0, y: 0 }}
-              animate={{
-                opacity: 1,
-                y: 0,
-                transition: {
-                  duration: 0.2,
-                  ease: [0.4, 0.0, 0.2, 1]
-                }
-              }}
-              exit={{
-                opacity: 0,
-                y: -10,
-                transition: {
-                  duration: 0.15,
-                  ease: [0.4, 0.0, 0.2, 1]
-                }
-              }}
-              className="bg-black/95 backdrop-blur-xl"
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="bg-black/95 backdrop-blur-xl border-t border-white/10"
             >
               {children}
             </motion.div>
@@ -307,7 +303,6 @@ const NavItem: React.FC<{
   );
 };
 
-// NavLink and SimpleNavLink components remain the same
 const NavLink: React.FC<{
   href: string;
   children: React.ReactNode;

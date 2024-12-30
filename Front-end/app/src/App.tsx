@@ -19,6 +19,12 @@ import BuyStocks from './components/BuyStocks/BuyStocks';
 import StockForm from './components/portfolio/StockForm';
 import OAuthCallback from './components/Auth/OAuthCallback';
 import NotFound from './components/ErrorBoundary/NotFound';
+import CookieConsent from './CookieConsent';
+import { FundamentalAnalysisPage, LearnPage, TechnicalAnalysisPage, TradingStrategiesPage } from './components/Header/Navigation/Learn';
+import FuturesTrading from './components/Header/Navigation/FuturesTrading';
+import MarginTrading from './components/Header/Navigation/MarginTrading';
+import SpotTrading from './components/Header/Navigation/SpotTrading';
+import OptionsTrading from './components/Header/Navigation/trading/OptionsTrading';
 
 // Create a QueryClient instance
 const queryClient = new QueryClient({
@@ -69,7 +75,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <AppLayout>
+      <AppLayout d={undefined}>
         <div className="relative min-h-screen">
           <DynamicBackground sections={backgroundSections} currentSection={0} />
           <div className="relative z-10 overflow-auto custom-scrollbar">
@@ -98,7 +104,7 @@ const router = createBrowserRouter([
   {
     path: "/portfolio",
     element: (
-      <AppLayout>
+      <AppLayout d={undefined}>
         <div className="relative">
           <DynamicBackground sections={backgroundSections} currentSection={0} />
           <div className="relative z-10">
@@ -115,6 +121,14 @@ const router = createBrowserRouter([
   { path: "/stock/all", element: <AllStocks /> },
   { path: "/stock/buy", element: <BuyStocks /> },
   { path: "/stock/sell", element: <SellStocks /> },
+  { path: "/learn/basics", element: <LearnPage /> },
+  { path: "/learn/strategies", element: <TradingStrategiesPage /> },
+  { path: "/learn/technical", element: <TechnicalAnalysisPage /> },
+  { path: "/learn/fundamental", element: <FundamentalAnalysisPage /> },
+  { path: "/trading/futures", element: <FuturesTrading /> },
+  { path: "/trading/margin", element: <MarginTrading /> },
+  { path: "/trading/spot", element: <SpotTrading /> },
+  { path: "/trading/options", element: <OptionsTrading /> },
   { path: "*", element: <NotFound /> }
 ]);
 
@@ -122,6 +136,7 @@ const router = createBrowserRouter([
 function App() {
   return (
     <ErrorBoundary>
+      <CookieConsent/>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <MarketProvider>

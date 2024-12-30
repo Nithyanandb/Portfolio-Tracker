@@ -43,7 +43,9 @@ const Header: React.FC = () => {
             <Logo />
             
             <div className="flex items-center gap-8">
+              <div className="absolute inset-0 flex items-center justify-center">
               <NavigationMenu />
+              </div>
               <div className="flex items-center gap-6">
                 <SearchPopover/>
                 {isAuthenticated ? (
