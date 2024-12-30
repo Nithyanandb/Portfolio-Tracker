@@ -1,48 +1,78 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { IndexTable } from './IndexTable/IndexTable';
 import { useWorldIndices } from '../../hooks/useWorldIndices';
 
 interface WorldIndicesProps {
-  isLoading: boolean;
+  isLoading?: boolean;
 }
 
-export const WorldIndices: React.FC<WorldIndicesProps> = ({ isLoading: initialLoading }) => {
+export const WorldIndices: React.FC<WorldIndicesProps> = ({ isLoading: initialLoading = false }) => {
   const { data: indexData, isLoading } = useWorldIndices();
+  const prevData = useRef(indexData);
+
+  useEffect(() => {
+    if (indexData) {
+      prevData.current = indexData;
+    }
+  }, [indexData]);
 
   const loading = isLoading || initialLoading;
 
   return (
-    <div className="space-y-6 xs:max-h-[1100px] xs:max-w-full xs:p-0">
+    <div className="relative w-full">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-black/80 backdrop-blur-xl rounded-2xl lg:p-4 xs:p-0 md:p-1"
+        className="backdrop-blur-2xl bg-black/40 rounded-3xl overflow-hidden"
       >
-        <h2 className="text-xl sm:text-2xl font-bold text-white mb-6">
-          World Market Indices
-        </h2>
+        <div className="px-8 py-6 border-b border-white/10">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-medium text-white tracking-tight">
+              World Market Indices
+            </h2>
+            <div className="flex items-center space-x-2">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-500/10 text-green-400">
+                Live Updates
+              </span>
+              <span className="text-sm text-gray-400">
+                Every 5s
+              </span>
+            </div>
+          </div>
+        </div>
         
         {loading ? (
-          <div className="flex justify-center items-center h-40">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white" />
+          <div className="flex justify-center items-center h-[400px]">
+            <div className="animate-spin rounded-full h-8 w-8 border-2 border-white/20 border-t-white" />
           </div>
         ) : (
-          <div className="space-y-8">
-            {Object.entries(indexData || {}).map(([region, indices]) => (
-              <section key={region}>
-                <h3 className="text-lg font-semibold text-white mb-4 capitalize">
-                  {region === 'asiaPacific' ? 'Asia-Pacific' : region}
-                </h3>
-                <IndexTable indices={indices} showMiniChart={true} />
-              </section>
-            ))}
-          </div>
+          <AnimatePresence mode="wait">
+            <div className="divide-y divide-white/10">
+              {Object.entries(indexData || {}).map(([region, indices]) => (
+                <motion.section
+                  key={region}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="px-8 py-6"
+                >
+                  <h3 className="text-lg font-medium text-white/90 mb-6">
+                    {region === 'asiaPacific' ? 'Asia-Pacific' : region}
+                  </h3>
+                  <IndexTable 
+                    indices={indices} 
+                    showMiniChart={true}
+                    prevData={prevData.current?.[region]}
+                  />
+                </motion.section>
+              ))}
+            </div>
+          </AnimatePresence>
         )}
       </motion.div>
     </div>
   );
 };
-
-export default WorldIndices;

@@ -112,7 +112,7 @@ const Header: React.FC = () => {
                       {[...Array(2)].map((_, i) => (
                         <motion.div
                           key={i}
-                          className="w-1.5 h-1.5 bg-white rounded-full"
+                          className="w-2 h-2 bg-white rounded-full"
                           variants={{
                             initial: { opacity: 0.3, scale: 1 },
                             hover: {

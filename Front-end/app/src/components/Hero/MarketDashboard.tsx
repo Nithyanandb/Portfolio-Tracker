@@ -10,8 +10,13 @@ const MarketDashboard: React.FC = () => {
   const { isRefetching, refetch } = useQuery({
     queryKey: ['marketData'],
     queryFn: fetchMarketData,
-    onSuccess: (data: React.SetStateAction<MarketData[]>) => setMarketData(data),
-    onError: (error: any) => console.error('Error fetching market data:', error),
+    enabled: true,
+    onSettled: (data: MarketData[] | undefined) => {
+      if (data) {
+        setMarketData(data);
+      }
+      setLoading(false);
+    },
   });
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState({

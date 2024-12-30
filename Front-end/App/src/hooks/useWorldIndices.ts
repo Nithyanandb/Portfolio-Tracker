@@ -1,29 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchIndexData } from '../services/marketData';
-import { MARKET_INDICES } from '../constants/marketIndices';
-import type { MarketIndex } from '../components/Hero/types/market';
+import { generateMockMarketData } from '../components/Hero/utils/mockDataGenerator';
 
 export const useWorldIndices = () => {
   return useQuery({
     queryKey: ['worldIndices'],
     queryFn: async () => {
-      const results: Record<string, MarketIndex[]> = {};
-      
-      for (const [region, indices] of Object.entries(MARKET_INDICES)) {
-        results[region] = await Promise.all(
-          indices.map(async (index) => {
-            const data = await fetchIndexData(index.symbol);
-            return {
-              ...index,
-              ...data,
-              region
-            } as MarketIndex;
-          })
-        );
-      }
-      
-      return results;
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      return generateMockMarketData();
     },
-    refetchInterval: 60000 // Refresh every minute
+    refetchInterval: 5000, // Refresh every 5 seconds for real-time feel
+    staleTime: 2000, // Consider data stale after 2 seconds
   });
 };

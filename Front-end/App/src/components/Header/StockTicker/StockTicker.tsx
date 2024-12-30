@@ -13,7 +13,7 @@ export const StockTicker: React.FC<StockTickerProps> = ({ stocks }) => {
       await controls.start({
         x: [0, -400],
         transition: {
-          duration: 10,
+          duration: 100,
           ease: "linear",
           repeat: Infinity,
         }

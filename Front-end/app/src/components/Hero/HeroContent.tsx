@@ -1,18 +1,18 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { TrendingUp } from 'lucide-react';
+import { TrendingUp, ChevronRight } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { cn } from '../../utils/cn';
 
 const HeroContent: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  // Parallax effect for background elements
+  // Enhanced parallax effects
   const backgroundY = useTransform(scrollY, [0, 1000], [0, 300]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const scale = useTransform(scrollY, [0, 300], [1, 0.95]);
 
-  // Mouse parallax effect
+  // Refined mouse parallax effect
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       const { clientX, clientY } = e;
@@ -26,15 +26,23 @@ const HeroContent: React.FC = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
+  // Stats data
+  const stats = [
+    { label: 'Active Traders', value: '2M+' },
+    { label: 'Daily Volume', value: '$8.2B' },
+    { label: 'Markets', value: '150+' },
+    { label: 'Success Rate', value: '94%' }
+  ];
+
   return (
-    <div ref={containerRef} className="relative min-h-screen overflow-hidden">
-      {/* Dynamic Gradient Background */}
+    <div ref={containerRef} className="relative min-h-[80vh] overflow-hidden">
+      {/* Enhanced Background Effects */}
       <motion.div 
-        className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-black to-purple-900/20"
+        className="absolute inset-0"
         style={{
-          x: mousePosition.x,
-          y: mousePosition.y,
-          transition: 'transform 0.1s ease-out'
+          backgroundImage: 'radial-gradient(circle at center, rgba(59,130,246,0.1) 0%, rgba(147,51,234,0.1) 50%, transparent 70%)',
+          scale,
+          opacity
         }}
       />
 
@@ -52,45 +60,7 @@ const HeroContent: React.FC = () => {
         }}
       />
 
-      {/* Floating Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        {Array.from({ length: 20 }).map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-[2px] h-[2px] bg-white/20 rounded-full"
-            animate={{
-              x: [
-                Math.random() * window.innerWidth,
-                Math.random() * window.innerWidth,
-              ],
-              y: [
-                Math.random() * window.innerHeight,
-                Math.random() * window.innerHeight,
-              ],
-              scale: [1, 1.5, 1],
-              opacity: [0.2, 0.5, 0.2],
-            }}
-            transition={{
-              duration: Math.random() * 10 + 20,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Gradient Sphere */}
-      <motion.div
-        className="absolute right-[-20%] top-[-20%] w-[600px] h-[600px] rounded-full"
-        style={{
-          background: 'radial-gradient(circle, rgba(59,130,246,0.1) 0%, rgba(147,51,234,0.1) 50%, transparent 70%)',
-          filter: 'blur(60px)',
-          x: mousePosition.x * 2,
-          y: mousePosition.y * 2,
-        }}
-      />
-
-      {/* Content */}
+      {/* Main Content */}
       <motion.div
         style={{ opacity }}
         className="relative z-10 pt-32 pb-16 container mx-auto px-4"
@@ -101,16 +71,19 @@ const HeroContent: React.FC = () => {
           transition={{ duration: 0.8 }}
           className="max-w-4xl"
         >
-          <h1 className="text-5xl md:text-7xl font-light text-white tracking-tight leading-tight">
-            The Future of
+          {/* Hero Title */}
+          <h1 className="text-6xl md:text-7xl font-light text-white tracking-tight leading-tight">
+            Trade Smarter with
             <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-              {" "}Trading{" "}
+              {" "}AI-Powered{" "}
             </span>
-            is Here
+            Analytics
           </h1>
-          <p className="mt-6 text-xl text-white/70 leading-relaxed">
-            Experience the next generation of trading with our advanced AI-powered platform.
-            Real-time analytics, predictive insights, and seamless execution.
+
+          {/* Hero Description */}
+          <p className="mt-6 text-xl text-white/70 leading-relaxed max-w-2xl">
+            Experience the future of trading with real-time market insights, 
+            predictive analytics, and AI-driven recommendations.
           </p>
 
           {/* CTA Buttons */}
@@ -120,16 +93,28 @@ const HeroContent: React.FC = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="mt-10 flex flex-col sm:flex-row gap-4"
           >
-            <button className="group relative w-full sm:w-[280px] h-[60px] bg-white text-black rounded-none hover:bg-white/90 transition-all duration-300">
-              <span className="relative z-10 text-sm tracking-[0.2em] uppercase font-medium">
-                GET STARTED
+            <motion.button
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              className="group relative w-full sm:w-[280px] h-[60px] bg-white text-black rounded-lg overflow-hidden"
+            >
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              />
+              <span className="relative z-10 text-sm tracking-[0.2em] uppercase font-medium group-hover:text-white transition-colors duration-300">
+                Start Trading <ChevronRight className="inline-block ml-2" />
               </span>
-            </button>
-            <button className="group relative w-full sm:w-[280px] h-[60px] bg-transparent border-2 border-white/20 text-white rounded-none hover:border-white/40 transition-all duration-300">
+            </motion.button>
+
+            <motion.button
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              className="group relative w-full sm:w-[280px] h-[60px] bg-transparent border border-white/20 text-white rounded-lg hover:border-white/40 transition-all duration-300"
+            >
               <span className="relative z-10 text-sm tracking-[0.2em] uppercase font-medium">
-                LEARN MORE
+                Learn More
               </span>
-            </button>
+            </motion.button>
           </motion.div>
         </motion.div>
 
@@ -138,13 +123,31 @@ const HeroContent: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="max-w-4xl mx-auto mt-20 grid grid-cols-2 md:grid-cols-4 gap-12"
+          className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8"
         >
-          {/* ... existing stats content ... */}
+          {stats.map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 + index * 0.1 }}
+              className="text-center"
+            >
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="text-3xl font-light text-white mb-2"
+              >
+                {stat.value}
+              </motion.div>
+              <div className="text-sm text-gray-400 tracking-wider uppercase">
+                {stat.label}
+              </div>
+            </motion.div>
+          ))}
         </motion.div>
       </motion.div>
 
-      {/* Bottom Gradient */}
+      {/* Enhanced Gradient Overlays */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent" />
     </div>
   );
