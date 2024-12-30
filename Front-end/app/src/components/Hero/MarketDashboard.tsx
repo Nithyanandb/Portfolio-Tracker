@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { LineChart, RefreshCw, ArrowRight } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { API_CONFIG } from '../config/API_CONFIG';
-import StockDashboard from '../Stock/StockDashboard';
 import { fetchMarketData } from '../Service/marketApi';
 import { MarketData } from '../types/markets';
 
@@ -95,70 +93,80 @@ const MarketDashboard: React.FC = () => {
   }
 
   return (
-    <div className="relative bg-black/40 border-0 backdrop-blur-xl ">
-      {/* SpaceX-style grid background */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0"/>
+    <div className="relative overflow-hidden">
+      {/* Premium Glass Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-gray-900/50 to-black/80 backdrop-blur-2xl" />
+      
+      {/* Animated Grid Pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0" style={{
+          backgroundImage: 'radial-gradient(circle at center, rgba(255,255,255,0.1) 1px, transparent 1px)',
+          backgroundSize: '20px 20px'
+        }} />
       </div>
 
       <div className="relative">
-        {/* Header */}
-        <div className="flex items-center glass-button  border-1  rounded-0 shadow-md justify-between p-6 bg-black/40 backdrop-blur-xl">
-          <div className="flex items-center gap-3">
-            <LineChart className="w-5 h-5 text-white" />
-            <h2 className="text-white tracking-[0.2em] font-light">
+        {/* Refined Header */}
+        <div className="flex items-center justify-between p-8">
+          <div className="flex items-center space-x-4">
+            <LineChart className="w-5 h-5 text-blue-400" />
+            <h2 className="text-white text-lg tracking-[0.25em] font-light">
               MARKET OVERVIEW
             </h2>
           </div>
-
-
-        
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => refetch()}
-            disabled={isRefetching}
-            className="p-2 bg-white/5 hover:bg-white/10 transition-all duration-300"
+            className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition-all duration-300"
           >
             <RefreshCw className={`w-4 h-4 text-white ${isRefetching ? 'animate-spin' : ''}`} />
           </motion.button>
         </div>
 
-        {/* Dashboard Content */}
-        <div className="p-6 space-y-6">
-          {/* Market Summary */}
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <div className="text-sm text-gray-400 tracking-[0.2em]">S&P 500</div>
-                <div className="text-xl text-white font-light">4,587.64</div>
-                <div className="text-sm text-green-400">+0.63%</div>
-              </div>
-              <div className="space-y-1">
-                <div className="text-sm text-gray-400 tracking-[0.2em]">NASDAQ</div>
-                <div className="text-xl text-white font-light">14,346.02</div>
-                <div className="text-sm text-green-400">+0.82%</div>
-              </div>
-            </div>
+        {/* Enhanced Market Data Display */}
+        <div className="p-8 space-y-8">
+          <div className="grid grid-cols-2 gap-6">
+            {[
+              { label: 'S&P 500', value: '4,587.64', change: '+0.63%' },
+              { label: 'NASDAQ', value: '14,346.02', change: '+0.82%' }
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="relative overflow-hidden rounded-lg bg-white/5 p-6"
+              >
+                <div className="space-y-2">
+                  <div className="text-sm text-gray-400 tracking-[0.2em]">
+                    {item.label}
+                  </div>
+                  <div className="text-2xl text-white font-light tracking-wider">
+                    {item.value}
+                  </div>
+                  <div className="text-green-400 text-sm tracking-wider">
+                    {item.change}
+                  </div>
+                </div>
+                {/* Subtle Gradient Accent */}
+                <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-blue-500/10 blur-2xl rounded-full" />
+              </motion.div>
+            ))}
           </div>
 
-           
           {/* Quick Actions */}
-          <div className="space-y-3">
-            <motion.button
-              whileHover={{ x: 4 }}
-              className="w-full flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 transition-all duration-300"
-            >
-              <span className="text-sm text-white tracking-[0.2em]">VIEW MARKETS</span>
-              <ArrowRight className="w-4 h-4 text-white" />
-            </motion.button>
-            <motion.button
-              whileHover={{ x: 4 }}
-              className="w-full flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 transition-all duration-300"
-            >
-              <span className="text-sm text-white tracking-[0.2em]">TRADE NOW</span>
-              <ArrowRight className="w-4 h-4 text-white" />
-            </motion.button>
+          <div className="space-y-3 pt-4">
+            {['VIEW MARKETS', 'TRADE NOW'].map((action, index) => (
+              <motion.button
+                key={action}
+                whileHover={{ x: 4, backgroundColor: 'rgba(255,255,255,0.1)' }}
+                className="w-full flex items-center justify-between p-4 bg-white/5 backdrop-blur-xl transition-all duration-300 group"
+              >
+                <span className="text-sm text-white tracking-[0.2em]">{action}</span>
+                <ArrowRight className="w-4 h-4 text-white transform group-hover:translate-x-1 transition-transform" />
+              </motion.button>
+            ))}
           </div>
         </div>
       </div>

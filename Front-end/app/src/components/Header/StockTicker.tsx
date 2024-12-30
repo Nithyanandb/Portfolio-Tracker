@@ -42,9 +42,9 @@ const StockTicker = () => {
   useEffect(() => {
     const animate = async () => {
       await controls.start({
-        x: [0, -2000],
+          x: [0, -400],
         transition: {
-          duration: 30,
+          duration: 10,
           ease: "linear",
           repeat: Infinity,
         }
@@ -54,13 +54,10 @@ const StockTicker = () => {
   }, [controls]);
 
   return (
-    <div className="relative h-5 bg-black/40 backdrop-blur-xl overflow-hidden">
+    <div className="relative justify-center items-center ml-300 bg-black/40 backdrop-blur-xl overflow-hidden">
       {/* SpaceX-style grid background */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0" style={{
-          backgroundImage: 'radial-gradient(circle at center, rgba(255,255,255,0.05) 1px, transparent 1px)',
-          backgroundSize: '20px 20px'
-        }} />
+        <div className="absolute inset-0"  />
       </div>
 
       {/* Gradient fade edges */}
@@ -98,7 +95,7 @@ const StockTicker = () => {
               <motion.span 
                 className={`flex items-center text-xs ${stock.trending ? 'text-green-400' : 'text-red-400'}`}
                 animate={{ opacity: [0.7, 1, 0.7] }}
-                transition={{ duration: 2, repeat: Infinity }}
+                transition={{ duration: 20, repeat: Infinity }}
               >
                 {stock.trending ? (
                   <TrendingUp className="h-3 w-3 mr-1" />

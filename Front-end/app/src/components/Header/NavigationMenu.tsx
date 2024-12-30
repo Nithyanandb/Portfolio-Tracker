@@ -54,7 +54,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
             </div>
 
             {/* Right Side - Menu Items */}
-            <div className="space-y-6">
+            <div className="space-y-6 grid grid-cols-2 gap-8">
               <div>
                 <h3 className="text-sm font-medium text-white/60 uppercase tracking-wider mb-4">
                   Stock Market
@@ -74,7 +74,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
                   </NavLink>
                 </div>
               </div>
-
+              <div className="space-y-6">
               <div>
                 <h3 className="text-sm font-medium grid-cols-2 grid text-white/60 uppercase tracking-wider mb-4">
                   Market Indices
@@ -93,6 +93,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
                     <span className="text-sm text-white/60">Banking sector performance</span>
                   </NavLink>
                 </div>
+              </div>
               </div>
             </div>
           </div>

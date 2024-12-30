@@ -1,13 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { IndexTable } from '../market/IndexTable/IndexTable';
+import { IndexTable } from './IndexTable/IndexTable';
 import { useWorldIndices } from '../../hooks/useWorldIndices';
 
 interface WorldIndicesProps {
   isLoading: boolean;
 }
 
-export const WorldIndices: React.FC<WorldIndicesProps> = ({ isLoading: initialLoading }) => {
+const WorldIndices: React.FC<WorldIndicesProps> = ({ isLoading: initialLoading }) => {
   const { data: indexData, isLoading } = useWorldIndices();
 
   const loading = isLoading || initialLoading;
@@ -44,3 +44,5 @@ export const WorldIndices: React.FC<WorldIndicesProps> = ({ isLoading: initialLo
     </div>
   );
 };
+
+export default WorldIndices;

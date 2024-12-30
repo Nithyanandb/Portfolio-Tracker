@@ -1,5 +1,3 @@
-import { ReactNode } from "react";
-
 export interface MarketData {
   name: ReactNode;
   symbol: string;
@@ -13,14 +11,19 @@ export interface MarketData {
 
 export interface MarketIndex {
   symbol: string;
-  name: ReactNode;
+  name: string;
   price: number;
   change: number;
   changePercent: number;
   high: number;
   low: number;
   timestamp: number;
-  region: 'Americas' | 'Europe' | 'Asia-Pacific' | 'China' | 'India' | 'Japan' ;
+  region: 'Americas' | 'Europe' | 'Asia-Pacific';
+  historicalData?: {
+    timestamp: number;
+    price: number;
+  }[];
+  exchange?: string;
 }
 
 export interface MarketResponse {
@@ -36,6 +39,6 @@ export interface WatchlistItem {
   userId: string;
   symbol: string;
   alertPrice?: number;
-  notes?: ReactNode;
+  notes?: string;
   createdAt: Date;
 }
