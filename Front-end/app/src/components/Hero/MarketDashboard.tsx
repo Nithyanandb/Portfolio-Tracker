@@ -77,7 +77,7 @@ const MarketDashboard: React.FC = () => {
       shares: 85,
       avgPrice: 242.15,
       currentPrice: 378.85,
-      profit: 11629.50,
+      profit: 11629.57,
       profitPercent: 56.45,
       dayChange: 1.23,
       marketCap: '2.9T',

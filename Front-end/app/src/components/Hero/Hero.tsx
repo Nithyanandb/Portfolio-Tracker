@@ -7,6 +7,7 @@ import MarketMetrics from './MarketMetrics';
 import MarketDashboard from './MarketDashboard';
 import { WorldIndices } from '../market/WorldIndices';
 import StockDashboard from '../Stock/StockDashboard';
+import MarketGraph from './MarketGraph';
 
 const Hero: React.FC = () => {
   return (
@@ -64,6 +65,7 @@ const Hero: React.FC = () => {
                 className="backdrop-blur-2xl bg-black/40 rounded-3xl overflow-hidden transition-all duration-500"
               >
                 <MarketMetrics />
+                <MarketGraph symbol={'AAPL'}/>
               </motion.div>
 
               {/* World Indices with premium effects */}

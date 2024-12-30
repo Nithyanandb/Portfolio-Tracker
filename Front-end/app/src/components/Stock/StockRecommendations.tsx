@@ -77,7 +77,7 @@ const StockRecommendations: React.FC<StockRecommendationsProps> = ({ recommendat
     }
   };
 
-  const timeframes = ['1D', '1W', '1M', '1Y'];
+  const timeframes = ['1D', '1W', '1M', '3M', '1Y'];
 
   return (
     <div className="p-6 space-y-6">
