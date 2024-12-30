@@ -12,11 +12,11 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ onRefresh, isRefetching }) 
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex items-center justify-between p-6 bg-white/5 backdrop-blur-xl border border-white/10"
+      className="flex items-center justify-between p-6 bg-black/90 backdrop-blur-2xl border-y border-white/10"
     >
       <div className="flex items-center gap-3">
-        <LineChart className="w-5 h-5 text-white" />
-        <h2 className="text-white tracking-[0.2em] font-light">MARKET OVERVIEW</h2>
+        <LineChart className="w-4 h-4 text-white/90" />
+        <h2 className="text-white/90 text-xs tracking-[0.2em] font-light">MARKET OVERVIEW</h2>
       </div>
       <motion.button
         whileHover={{ scale: 1.05 }}
@@ -25,7 +25,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ onRefresh, isRefetching }) 
         disabled={isRefetching}
         className="p-2 bg-white/5 hover:bg-white/10 transition-all duration-300"
       >
-        <RefreshCw className={`w-4 h-4 text-white ${isRefetching ? 'animate-spin' : ''}`} />
+        <RefreshCw className={`w-3 h-3 text-white/90 ${isRefetching ? 'animate-spin' : ''}`} />
       </motion.button>
     </motion.div>
   );

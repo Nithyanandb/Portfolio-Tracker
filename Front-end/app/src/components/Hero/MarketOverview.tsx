@@ -38,28 +38,28 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({
           transition={{ delay: index * 0.1 }}
           className="bg-white/5 backdrop-blur-xl hover:bg-white/10 transition-all duration-300"
         >
-          <div className="p-4 space-y-3">
+          <div className="p-4 space-y-2">
             <div className="flex justify-between items-start">
               <div>
-                <h3 className="text-white tracking-[0.2em] font-light">{item.symbol}</h3>
-                <p className="text-sm text-gray-400 tracking-wider">{item.name}</p>
+                <h3 className="text-white tracking-[0.2em] text-sm font-light">{item.symbol}</h3>
+                <p className="text-xs text-gray-400 tracking-wider">{item.name}</p>
               </div>
-              <div className={`flex items-center gap-2 ${item.changePercent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+              <div className={`flex items-center gap-1.5 ${item.changePercent >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                 {item.changePercent >= 0 ? (
-                  <TrendingUp className="w-4 h-4" />
+                  <TrendingUp className="w-3 h-3" />
                 ) : (
-                  <TrendingDown className="w-4 h-4" />
+                  <TrendingDown className="w-3 h-3" />
                 )}
-                <span className="tracking-wider">
+                <span className="text-xs tracking-wider">
                   {item.changePercent.toFixed(2)}%
                 </span>
               </div>
             </div>
             <div className="flex justify-between items-end">
-              <p className="text-2xl text-white font-light tracking-wider">
+              <p className="text-lg text-white font-light tracking-wider tabular-nums">
                 ${item.price.toFixed(2)}
               </p>
-              <p className="text-sm text-gray-400 tracking-wider">
+              <p className="text-xs text-gray-400 tracking-wider tabular-nums">
                 Vol: {(item.volume / 1000000).toFixed(1)}M
               </p>
             </div>

@@ -1,12 +1,10 @@
 // Animation system
 export const animations = {
     durations: {
-      fastest: '50ms',
-      faster: '100ms',
-      fast: '150ms',
-      normal: '200ms',
-      slow: '300ms',
-      slower: '400ms',
+      fastest: '100ms',
+      fast: '200ms',
+      normal: '300ms',
+      slow: '400ms',
       slowest: '500ms'
     },
   

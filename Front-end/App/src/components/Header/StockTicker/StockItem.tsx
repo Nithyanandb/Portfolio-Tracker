@@ -1,39 +1,52 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp, TrendingDown } from 'lucide-react';
-import type { Stock } from './stock';
-
-interface StockItemProps {
-  stock: Stock;
-}
+import type { StockItemProps } from './stock';
 
 export const StockItem: React.FC<StockItemProps> = ({ stock }) => {
-  const TrendIcon = stock.trending ? TrendingUp : TrendingDown;
-  
+  const isPositive = parseFloat(stock.change) >= 0;
+
   return (
-    <motion.div 
-      className="flex items-center space-x-3 group px-4 py-2 rounded-lg transition-colors"
-      whileHover={{ 
-        scale: 1.05,
-        backgroundColor: 'rgba(255,255,255,0.05)',
-      }}
+    <motion.div
+      className="inline-flex items-center space-x-2.5 py-1 px-2"
+      whileHover={{ scale: 1.02 }}
     >
-      <span className="text-sm text-white tracking-[0.2em] font-light">
+      {/* Symbol */}
+      <span className="text-xs font-medium tracking-wide text-white/90">
         {stock.symbol}
       </span>
-      <span className="text-sm text-gray-400 tracking-wider">
-        ${stock.price}
+
+      {/* Price */}
+      <span className="text-[11px] font-light tracking-wide text-white/70 tabular-nums">
+        {stock.price}
       </span>
-      <motion.span 
-        className={`flex items-center text-xs ${
-          stock.trending ? 'text-green-400' : 'text-red-400'
+
+      {/* Change with premium animation */}
+      <motion.div
+        className={`flex items-center space-x-0.5 ${
+          isPositive ? 'text-emerald-400' : 'text-rose-400'
         }`}
-        animate={{ opacity: [0.7, 1, 0.7] }}
-        transition={{ duration: 20, repeat: Infinity }}
+        animate={{
+          opacity: [0.85, 1, 0.85],
+        }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          ease: "linear"
+        }}
       >
-        <TrendIcon className="h-3 w-3 mr-1" />
-        {stock.change}
-      </motion.span>
+        {isPositive ? (
+          <TrendingUp className="w-2.5 h-2.5" />
+        ) : (
+          <TrendingDown className="w-2.5 h-2.5" />
+        )}
+        <span className="text-[11px] font-medium tracking-wide tabular-nums">
+          {stock.change}
+        </span>
+      </motion.div>
+
+      {/* Premium separator */}
+      <span className="text-white/10 text-xs font-light">•</span>
     </motion.div>
   );
 };

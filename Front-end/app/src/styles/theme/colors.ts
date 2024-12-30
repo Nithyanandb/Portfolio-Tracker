@@ -2,16 +2,16 @@
 export const colors = {
     // Primary Colors with shades
     primary: {
-      50: '#E6F0FF',
-      100: '#CCE0FF',
-      200: '#99C2FF',
-      300: '#66A3FF',
-      400: '#3385FF',
-      500: '#0052CC', // Base primary
-      600: '#0047B3',
-      700: '#003D99',
-      800: '#003380',
-      900: '#002966'
+      50: '#FFF1F0',
+      100: '#FFE4E1',
+      200: '#FFB8AD',
+      300: '#FF8F71',
+      400: '#FF5449',
+      500: '#EF2D1A', // Base primary
+      600: '#D91E0B',
+      700: '#B91403',
+      800: '#8F1003',
+      900: '#660C02'
     },
   
     // Secondary Colors

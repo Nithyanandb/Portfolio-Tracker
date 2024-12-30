@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -26,10 +26,21 @@ interface NavigationMenuProps {
 }
 
 export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => {
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+
+  const handleMenuClick = (menuId: string) => {
+    setActiveMenu(activeMenu === menuId ? null : menuId);
+  };
+
   return (
     <NavigationMenuPrimitive.Root className={className}>
       <NavigationMenuPrimitive.List className="flex items-center gap-6">
-        <NavItem href="/" label="Markets">
+        <NavItem 
+          href="/" 
+          label="Markets" 
+          isActive={activeMenu === 'markets'}
+          onClick={() => handleMenuClick('markets')}
+        >
           <div className="container mx-auto grid grid-cols-2 gap-8 p-12">
             {/* Left Side - Markets Content */}
             <div className="space-y-6">
@@ -99,7 +110,12 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
           </div>
         </NavItem>
 
-        <NavItem href="/trading" label="Trading">
+        <NavItem 
+          href="/trading" 
+          label="Trading" 
+          isActive={activeMenu === 'trading'}
+          onClick={() => handleMenuClick('trading')}
+        >
           <div className="container mx-auto grid grid-cols-2 gap-8 p-12">
             {/* Left Side - Trading Image */}
             <div className="space-y-6">
@@ -175,7 +191,12 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
           </div>
         </NavItem>
 
-        <NavItem href="/learn" label="Learn">
+        <NavItem 
+          href="/learn" 
+          label="Learn" 
+          isActive={activeMenu === 'learn'}
+          onClick={() => handleMenuClick('learn')}
+        >
           <div className="container mx-auto grid grid-cols-2 gap-8 p-12">
             {/* Left Side - Learn Image */}
             <div className="space-y-6">
@@ -229,33 +250,31 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
   );
 };
 
-// NavItem component remains the same as in your original code
+// Updated NavItem component
 const NavItem: React.FC<{
   href: string;
   label: string;
   children: React.ReactNode;
-}> = ({ href, label, children }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
-
+  isActive: boolean;
+  onClick: () => void;
+}> = ({ href, label, children, isActive, onClick }) => {
   return (
-    <NavigationMenuPrimitive.Item
-      onMouseEnter={() => setIsOpen(true)}
-      onMouseLeave={() => setIsOpen(false)}
-    >
+    <NavigationMenuPrimitive.Item>
       <NavigationMenuPrimitive.Trigger
+        onClick={onClick}
         className="group flex items-center gap-1.5 text-white/80 hover:text-white transition-colors outline-none"
       >
         <span className="text-sm font-medium tracking-wide">{label}</span>
         <ChevronDown
           className={cn(
             "h-3.5 w-3.5 transition-transform duration-300",
-            isOpen && "rotate-180"
+            isActive && "rotate-180"
           )}
           aria-hidden="true"
         />
       </NavigationMenuPrimitive.Trigger>
       <AnimatePresence>
-        {isOpen && (
+        {isActive && (
           <NavigationMenuPrimitive.Content
             className="absolute left-0 right-0 top-full z-50 w-screen"
           >
@@ -277,7 +296,7 @@ const NavItem: React.FC<{
                   ease: [0.4, 0.0, 0.2, 1]
                 }
               }}
-              className="bg-black/95 backdrop-blur-xl border-t border-white/10"
+              className="bg-black/95 backdrop-blur-xl"
             >
               {children}
             </motion.div>
@@ -288,7 +307,7 @@ const NavItem: React.FC<{
   );
 };
 
-// Updated NavLink component to accept React element as icon
+// NavLink and SimpleNavLink components remain the same
 const NavLink: React.FC<{
   href: string;
   children: React.ReactNode;
@@ -310,15 +329,14 @@ const NavLink: React.FC<{
   </motion.a>
 );
 
-// SimpleNavLink component remains the same
-const SimpleNavLink: React.FC<{
-  href: string;
-  children: React.ReactNode;
-}> = ({ href, children }) => (
+const SimpleNavLink: React.FC<{ href: string; children: React.ReactNode }> = ({
+  href,
+  children,
+}) => (
   <NavigationMenuPrimitive.Item>
     <NavigationMenuPrimitive.Link
       href={href}
-      className="text-white/80 hover:text-white transition-colors"
+      className="text-sm text-white/70 hover:text-white transition-colors"
     >
       {children}
     </NavigationMenuPrimitive.Link>

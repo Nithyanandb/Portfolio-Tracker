@@ -1,38 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchMarketData } from '../Service/marketApi';
-import StockDashboard from '../Stock/StockDashboard';
+import StockDashboard from './StockDashboard';
 import { MarketData } from '../types/markets';
-import { Rocket, BarChart2, TrendingUp } from 'lucide-react';
+import { Rocket, BarChart2, TrendingUp, TrendingDown, Globe2 } from 'lucide-react';
 
 const MarketDashboard: React.FC = () => {
   const [marketData, setMarketData] = useState<MarketData[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 15
-      }
-    }
-  };
+  const tabs = [
+    { id: 'overview', label: 'Overview', icon: BarChart2 },
+    { id: 'global', label: 'Global', icon: Globe2 },
+    { id: 'recommendations', label: 'Top Picks', icon: Rocket },
+    { id: 'trends', label: 'Trends', icon: TrendingUp }
+  ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,127 +35,123 @@ const MarketDashboard: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  if (loading) {
-    return (
-      <div className="h-screen flex items-center justify-center bg-black">
-        <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 360],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-          className="relative w-16 h-16"
-        >
-          <div className="absolute inset-0 rounded-full border-t-2 border-blue-500 animate-glow"></div>
-          <div className="absolute inset-0 rounded-full border-r-2 border-purple-500 animate-glow" style={{ animationDelay: "0.5s" }}></div>
-          <div className="absolute inset-0 rounded-full border-b-2 border-pink-500 animate-glow" style={{ animationDelay: "1s" }}></div>
-        </motion.div>
-      </div>
-    );
-  }
-
   return (
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-      className="min-h-screen bg-black p-6 overflow-hidden"
+    <motion.div 
+      className="relative bg-black/90 backdrop-blur-2xl border border-white/10 rounded-2xl overflow-hidden"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
     >
-      {/* Header */}
-      <motion.div variants={itemVariants} className="mb-12">
-        <h1 className="text-4xl font-bold text-gradient mb-4">Market Intelligence</h1>
-        <p className="text-gray-400">Real-time market insights and AI-powered recommendations</p>
-      </motion.div>
+      {/* Premium Glass Effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
 
-      {/* Navigation Tabs */}
-      <motion.div variants={itemVariants} className="flex gap-6 mb-8">
-        {[
-          { id: 'overview', icon: BarChart2, label: 'Market Overview' },
-          { id: 'recommendations', icon: Rocket, label: 'Smart Recommendations' },
-          { id: 'trends', icon: TrendingUp, label: 'Market Trends' }
-        ].map(tab => (
+      {/* Tabs */}
+      <motion.div className="flex gap-0 p-6  overflow-x-auto hide-scrollbar">
+        {tabs.map(tab => (
           <motion.button
             key={tab.id}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${
-              activeTab === tab.id
-                ? 'glass-effect text-blue-400'
-                : 'text-gray-400 hover:text-white'
-            }`}
+            className={`flex items-center gap-2 px-4 py-2 text-xs rounded-full transition-all whitespace-nowrap
+              ${activeTab === tab.id 
+                ? 'bg-white/10 text-white shadow-lg shadow-black/20' 
+                : 'text-gray-400 hover:text-white hover:bg-white/5'
+              }`}
           >
-            <tab.icon className="w-5 h-5" />
-            <span>{tab.label}</span>
+            <tab.icon className="w-3 h-3" />
+            <span className="tracking-wider">{tab.label}</span>
           </motion.button>
         ))}
       </motion.div>
 
       {/* Content */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeTab}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
-        >
-          {activeTab === 'overview' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {marketData.slice(0, 6).map((item, index) => (
-                <motion.div
-                  key={item.symbol}
-                  variants={itemVariants}
-                  whileHover={{ scale: 1.02, y: -5 }}
-                  className="glass-card p-6 animate-glow"
-                >
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-xl font-bold mb-2">{item.symbol}</h3>
-                      <p className="text-3xl font-medium text-gradient">
-                        ${item.price.toFixed(2)}
-                      </p>
-                    </div>
-                    <motion.div
-                      animate={{
-                        y: [0, -5, 0],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        delay: index * 0.2,
-                      }}
-                      className={`text-lg font-medium ${
-                        item.changePercent >= 0 ? 'text-green-400' : 'text-red-400'
-                      }`}
-                    >
-                      {item.changePercent >= 0 ? '+' : ''}{item.changePercent.toFixed(2)}%
-                    </motion.div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          )}
-          
-          {activeTab === 'recommendations' && <StockDashboard recommendations={recommendations} />}
-          
-          {activeTab === 'trends' && (
+      <div className="p-6">
+        <AnimatePresence mode="wait">
+          {loading ? (
             <motion.div
-              variants={itemVariants}
-              className="glass-card p-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex justify-center py-8"
             >
-              <h3 className="text-xl font-bold mb-4 text-gradient">Market Trends</h3>
-              <p className="text-gray-400">Market trend analysis coming soon...</p>
+              <div className="animate-spin rounded-full h-8 w-8 border-2 border-white/20 border-t-white" />
+            </motion.div>
+          ) : (
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              {activeTab === 'overview' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {marketData.slice(0, 6).map((item, index) => (
+                    <motion.div
+                      key={item.symbol}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="group bg-white/5 p-4 hover:bg-white/10 transition-all duration-300 rounded-xl border border-white/5 hover:border-white/10"
+                    >
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="text-white/90 text-sm font-light tracking-wider">{item.symbol}</h3>
+                          <p className="text-xs text-gray-400">{item.name}</p>
+                        </div>
+                        <div className={`flex items-center gap-1.5 ${item.changePercent >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                          {item.changePercent >= 0 ? (
+                            <TrendingUp className="w-3 h-3" />
+                          ) : (
+                            <TrendingDown className="w-3 h-3" />
+                          )}
+                          <span className="text-xs tracking-wider">
+                            {item.changePercent >= 0 ? '+' : ''}{item.changePercent.toFixed(2)}%
+                          </span>
+                        </div>
+                      </div>
+                      <div className="mt-3 flex justify-between items-end">
+                        <span className="text-lg text-white/90 font-light tracking-wider tabular-nums">
+                          ${item.price.toFixed(2)}
+                        </span>
+                        <span className="text-xs text-gray-400 tracking-wider tabular-nums">
+                          Vol: {(item.volume / 1000000).toFixed(1)}M
+                        </span>
+                      </div>
+                      <motion.div 
+                        className="mt-3 h-[2px] bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        initial={false}
+                        animate={{ scaleX: [0, 1] }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                      />
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+              
+              {activeTab === 'recommendations' && <StockDashboard />}
+              
+              {activeTab === 'global' && (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Global market indices here */}
+                </div>
+              )}
+              
+              {activeTab === 'trends' && (
+                <div className="text-center py-8">
+                  <p className="text-gray-400 text-sm">Market trends coming soon...</p>
+                </div>
+              )}
             </motion.div>
           )}
-        </motion.div>
-      </AnimatePresence>
+        </AnimatePresence>
+      </div>
+
+      {/* Premium gradient overlay */}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
     </motion.div>
   );
 };
+
 
 export default MarketDashboard;

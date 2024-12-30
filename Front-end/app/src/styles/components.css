@@ -4,7 +4,6 @@
     @apply relative inline-flex items-center justify-center px-8 py-4 font-semibold rounded-full overflow-hidden;
     @apply bg-gradient-to-r from-[#FF8F71] to-[#EF2D1A] transition-all duration-300;
     @apply hover:scale-105 hover:shadow-[0_0_40px_8px_rgba(239,45,26,0.25)];
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
 
   .btn-gradient {
@@ -25,9 +24,8 @@
   /* Cards */
   .glass-card {
     @apply relative overflow-hidden rounded-2xl backdrop-blur-xl;
-    @apply bg-white/5 border border-white/10 transition-all duration-300;
-    @apply hover:border-white/20 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)];
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    @apply bg-white/5 transition-all duration-300;
+    @apply hover:bg-white/10;
   }
 
   .glass-card::before {

@@ -1,56 +1,25 @@
 /* Base Styles and CSS Variables */
 :root {
   /* Primary Colors */
-  --color-primary: #0EA5E9;
-  --color-secondary: #6366F1;
-  --color-accent: #8B5CF6;
-  --color-success: #10B981;
-  --color-warning: #F59E0B;
-  --color-danger: #EF4444;
-
+  --color-primary: #EF2D1A;
+  --color-secondary: #FF8F71;
+  
   /* Dark Theme Colors */
   --bg-dark-primary: #000000;
   --bg-dark-secondary: #111111;
-  --bg-dark-tertiary: #1A1A1A;
-
+  
   /* Glass Effect Colors */
   --glass-bg: rgba(255, 255, 255, 0.03);
   --glass-border: rgba(255, 255, 255, 0.05);
-  --glass-shine: rgba(255, 255, 255, 0.1);
-
+  
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #0EA5E9 0%, #6366F1 100%);
-  --gradient-secondary: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
-  --gradient-accent: linear-gradient(135deg, #10B981 0%, #3B82F6 100%);
-
-  /* Shadows */
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 20px rgba(14, 165, 233, 0.15);
+  --gradient-primary: linear-gradient(135deg, #FF8F71 0%, #EF2D1A 100%);
 }
 
 /* Base Layer Styles */
 @layer base {
-  :root {
-    /* Additional Variables */
-    --gradient-primary: linear-gradient(135deg, #FF8F71 0%, #EF2D1A 100%);
-    --color-primary: #EF2D1A;
-    --color-secondary: #FF8F71;
-    --color-background: #000;
-    --color-text: #fff;
-  }
-
   body {
     @apply antialiased text-white bg-black min-h-screen;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02";
-    scroll-behavior: smooth;
-    background: radial-gradient(circle at center, var(--bg-dark-secondary) 0%, var(--bg-dark-primary) 100%);
-  }
-
-  ::selection {
-    @apply bg-white/20;
-    background: var(--color-primary);
-    color: white;
   }
 }

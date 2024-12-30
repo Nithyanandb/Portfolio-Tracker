@@ -26,50 +26,70 @@ const queryClient = new QueryClient({
     queries: {
       refetchOnWindowFocus: false,
       retry: 1,
-      staleTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 5 * 60 * 1000,
     },
   },
 });
+
+// Enhanced background configuration
 const backgroundSections = [
   {
-    type: 'image',
+    type: 'gradient',
     content: {
-      src: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80',
+      colors: ['rgba(0,0,0,0.95)', 'rgba(17,24,39,0.95)'],
     },
     effects: {
-      gradient: {
-        colors: ['rgba(106, 4, 4, 0.7)', 'rgba(0,0,0,0.5)'],
-        opacity: 0.8,
+      grid: {
+        size: 40,
+        opacity: 0.03,
+        color: 'rgba(255, 143, 113, 0.5)',
       },
-      overlay: {
-        type: 'grid',
-        opacity: 0.1,
+      glowSpots: [
+        {
+          color: 'rgba(239, 45, 26, 0.15)',
+          position: { x: '25%', y: '25%' },
+          size: '600px',
+        },
+        {
+          color: 'rgba(255, 143, 113, 0.15)',
+          position: { x: '75%', y: '75%' },
+          size: '600px',
+        },
+      ],
+      noise: {
+        opacity: 0.015,
+        blendMode: 'overlay',
       },
-      particles: true,
     },
   },
 ];
 
-// Create router configuration
+// Create router configuration with enhanced styling
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <AppLayout d={undefined} children={undefined}>
-        <DynamicBackground sections={backgroundSections} currentSection={0} />
-        <div className="relative">
-          <div className="relative z-10 overflow-auto scroll-container">
+      <AppLayout>
+        <div className="relative min-h-screen">
+          <DynamicBackground sections={backgroundSections} currentSection={0} />
+          <div className="relative z-10 overflow-auto custom-scrollbar">
             <div className="space-y-32 pb-32">
-              <section className="min-h-screen flex items-center justify-center transition-all duration-1000">
+              <section className="min-h-screen flex-center transition-all duration-1000">
                 <Hero />
               </section>
-              <section className="min-h-screen flex items-center justify-center transition-all duration-1000">
+              <section className="min-h-screen flex-center transition-all duration-1000">
                 <Features />
               </section>
-              <section className="min-h-screen flex items-center justify-center transition-all duration-1000">
+              <section className="min-h-screen flex-center transition-all duration-1000">
                 <Security />
               </section>
             </div>
+          </div>
+          
+          {/* Premium gradient overlays */}
+          <div className="fixed inset-0 pointer-events-none">
+            <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-transparent to-black/90" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_black_100%)] opacity-70" />
           </div>
         </div>
       </AppLayout>
@@ -80,7 +100,7 @@ const router = createBrowserRouter([
     element: (
       <AppLayout>
         <div className="relative">
-        <DynamicBackground sections={backgroundSections} currentSection={0} />
+          <DynamicBackground sections={backgroundSections} currentSection={0} />
           <div className="relative z-10">
             <PortfolioDashboard />
           </div>
@@ -98,14 +118,14 @@ const router = createBrowserRouter([
   { path: "*", element: <NotFound /> }
 ]);
 
-// Main App component with providers
+// Main App component with enhanced providers and styling
 function App() {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <MarketProvider>
-            <div className="relative min-h-screen bg-black">
+            <div className="relative min-h-screen bg-black text-white antialiased font-sans">
               <RouterProvider router={router} />
             </div>
           </MarketProvider>

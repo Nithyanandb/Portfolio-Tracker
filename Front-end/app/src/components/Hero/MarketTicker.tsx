@@ -26,26 +26,26 @@ const MarketTicker: React.FC<MarketTickerProps> = ({ symbol }) => {
     >
       <div className="flex justify-between items-center p-4">
         <div>
-          <h3 className="text-white tracking-[0.2em] font-light">
+          <h3 className="text-xs text-white tracking-[0.2em] font-light">
             {symbol}
           </h3>
-          <p className="text-sm text-gray-400 tracking-wider mt-1">
+          <p className="text-xs text-gray-400 tracking-wider mt-1">
             {quote.companyName}
           </p>
         </div>
         <div className="text-right">
-          <p className="text-white font-light tracking-wider">
+          <p className="text-sm text-white font-light tracking-wider tabular-nums">
             {formatCurrency(quote.price)}
           </p>
-          <div className={`flex items-center gap-2 ${
-            quote.changePercent >= 0 ? 'text-green-400' : 'text-red-400'
+          <div className={`flex items-center gap-1.5 ${
+            quote.changePercent >= 0 ? 'text-emerald-400' : 'text-rose-400'
           }`}>
             {quote.changePercent >= 0 ? (
-              <TrendingUp className="w-4 h-4" />
+              <TrendingUp className="w-3 h-3" />
             ) : (
-              <TrendingDown className="w-4 h-4" />
+              <TrendingDown className="w-3 h-3" />
             )}
-            <span className="tracking-wider">
+            <span className="text-xs tracking-wider">
               {formatPercentage(quote.changePercent)}
             </span>
           </div>

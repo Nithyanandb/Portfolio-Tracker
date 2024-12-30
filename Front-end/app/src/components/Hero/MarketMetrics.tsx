@@ -1,78 +1,65 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { TrendingUp, TrendingDown, Activity, BarChart2 } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
-import { API_CONFIG } from '../config/API_CONFIG';
+import { TrendingUp, TrendingDown, Activity, DollarSign, BarChart2 } from 'lucide-react';
 
 const MarketMetrics: React.FC = () => {
-  useQuery({
-    queryKey: ['market-metrics'],
-    queryFn: () => fetch(API_CONFIG.getEndpointUrl('METRICS')).then(res => res.json()),
-    refetchInterval: API_CONFIG.CACHE_DURATION,
-  });
-
-  const metricCards = [
+  const metrics = [
     {
-      title: 'MARKET CAP',
-      value: '$2.8T',
+      label: 'Market Cap',
+      value: '$2.84T',
       change: '+2.4%',
-      icon: BarChart2,
-      color: 'text-blue-400'
+      icon: DollarSign,
+      positive: true
     },
     {
-      title: 'VOLUME 24H',
-      value: '$86.2B',
-      change: '+5.1%',
+      label: 'Volume',
+      value: '127.8M',
+      change: '-1.2%',
       icon: Activity,
-      color: 'text-purple-400'
+      positive: false
     },
     {
-      title: 'GAINERS',
-      value: '2,431',
-      change: '+12%',
-      icon: TrendingUp,
-      color: 'text-green-400'
-    },
-    {
-      title: 'LOSERS',
-      value: '1,243',
-      change: '-8%',
-      icon: TrendingDown,
-      color: 'text-red-400'
+      label: 'Volatility',
+      value: '14.2',
+      change: '+0.8%',
+      icon: BarChart2,
+      positive: true
     }
   ];
 
   return (
-    <div className="relative bg-black p-0 w-full h-auto rounded-lg overflow-hidden -ml-[20px]   backdrop-blur-xl">
-      {/* SpaceX-style grid background */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0"  />
-      </div>
-
-      <div className="relative grid grid-cols-2 lg:grid-cols-4 gap-px ">
-        {metricCards.map((metric, index) => (
+    <div className="relative p-6">
+      {/* Premium glass effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5" />
+      
+      <div className="relative grid grid-cols-1 md:grid-cols-3 gap-6">
+        {metrics.map((metric, index) => (
           <motion.div
-            key={metric.title}
+            key={metric.label}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="p-6 bg-black/40 backdrop-blur-xl"
+            className="group relative bg-white/5 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300"
           >
-            <div className="flex items-center gap-3 mb-4">
-              <metric.icon className={`w-5 h-5 ${metric.color}`} />
-              <span className="text-sm text-gray-400 tracking-[0.2em]">
-                {metric.title}
-              </span>
-            </div>
-            <div className="space-y-2">
-              <div className="text-2xl text-white font-light tracking-wider">
-                {metric.value}
+            {/* Glow effect on hover */}
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500" />
+            
+            <div className="relative">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <metric.icon className="w-5 h-5 text-white/60" />
+                  <span className="text-sm text-white/60 font-light tracking-wider">{metric.label}</span>
+                </div>
+                <div className={`flex items-center gap-1 ${metric.positive ? 'text-emerald-400' : 'text-rose-400'}`}>
+                  {metric.positive ? (
+                    <TrendingUp className="w-4 h-4" />
+                  ) : (
+                    <TrendingDown className="w-4 h-4" />
+                  )}
+                  <span className="text-sm tracking-wider">{metric.change}</span>
+                </div>
               </div>
-              <div className={`text-sm ${
-                metric.change.startsWith('+') ? 'text-green-400' : 'text-red-400'
-              } tracking-wider`}>
-                {metric.change}
-              </div>
+              <div className="text-2xl font-light tracking-wider text-white">{metric.value}</div>
             </div>
           </motion.div>
         ))}

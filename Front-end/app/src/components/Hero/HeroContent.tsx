@@ -1,154 +1,77 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { TrendingUp, ChevronRight } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { ArrowRight, TrendingUp } from 'lucide-react';
 
 const HeroContent: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollY } = useScroll();
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  // Enhanced parallax effects
-  const backgroundY = useTransform(scrollY, [0, 1000], [0, 300]);
-  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
-  const scale = useTransform(scrollY, [0, 300], [1, 0.95]);
-
-  // Refined mouse parallax effect
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e;
-      const { innerWidth, innerHeight } = window;
-      const x = (clientX / innerWidth - 0.5) * 20;
-      const y = (clientY / innerHeight - 0.5) * 20;
-      setMousePosition({ x, y });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  // Stats data
-  const stats = [
-    { label: 'Active Traders', value: '2M+' },
-    { label: 'Daily Volume', value: '$8.2B' },
-    { label: 'Markets', value: '150+' },
-    { label: 'Success Rate', value: '94%' }
-  ];
-
   return (
-    <div ref={containerRef} className="relative min-h-[80vh] overflow-hidden">
-      {/* Enhanced Background Effects */}
-      <motion.div 
-        className="absolute inset-0"
-        style={{
-          backgroundImage: 'radial-gradient(circle at center, rgba(59,130,246,0.1) 0%, rgba(147,51,234,0.1) 50%, transparent 70%)',
-          scale,
-          opacity
-        }}
-      />
+    <div className="relative mt-20">
+      {/* Grok-style glow effect */}
+      <div className="absolute -inset-1">
+        <div className="w-full h-full bg-gradient-to-r from-blue-500 to-black-500 opacity-30 " />
+      </div>
 
-      {/* Animated Grid Pattern */}
       <motion.div
-        className="absolute inset-0"
-        style={{
-          backgroundImage: `
-            radial-gradient(circle at center, rgba(255,255,255,0.03) 1px, transparent 1px),
-            radial-gradient(circle at center, rgba(255,255,255,0.02) 1px, transparent 1px)
-          `,
-          backgroundSize: '24px 24px, 96px 96px',
-          backgroundPosition: '0 0, 0 0',
-          y: backgroundY
-        }}
-      />
-
-      {/* Main Content */}
-      <motion.div
-        style={{ opacity }}
-        className="relative z-10 pt-32 pb-16 container mx-auto px-4"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative bg-black/40 backdrop-blur-xl rounded-3xl  p-8 lg:p-12"
       >
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="max-w-4xl"
-        >
-          {/* Hero Title */}
-          <h1 className="text-6xl md:text-7xl font-light text-white tracking-tight leading-tight">
-            Trade Smarter with
-            <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-              {" "}AI-Powered{" "}
+        <div className="max-w-3xl">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="flex items-center gap-2 mb-6"
+          >
+            <TrendingUp className="w-5 h-5 text-blue-500" />
+            <span className="text-sm text-blue-500 font-light tracking-wider"></span>
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="text-4xl lg:text-5xl font-100 tracking-tight text-white mb-6"
+          >
+            Advanced Trading Platform with{' '}
+            <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+              AI-Powered Insights
             </span>
-            Analytics
-          </h1>
+          </motion.h1>
 
-          {/* Hero Description */}
-          <p className="mt-6 text-xl text-white/70 leading-relaxed max-w-2xl">
-            Experience the future of trading with real-time market insights, 
-            predictive analytics, and AI-driven recommendations.
-          </p>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="text-lg text-white/60 mb-8 font-100 leading-relaxed"
+          >
+            Experience the next generation of trading with real-time market analysis, 
+            AI-driven predictions, and advanced portfolio management tools.
+          </motion.p>
 
-          {/* CTA Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="mt-10 flex flex-col sm:flex-row gap-4"
+            transition={{ delay: 0.5 }}
+            className="flex flex-wrap gap-4"
           >
             <motion.button
-              whileHover={{ scale: 1.02, y: -2 }}
+              whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="group relative w-full sm:w-[280px] h-[60px] bg-white text-black rounded-lg overflow-hidden"
+              className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg text-white font-light tracking-wide flex items-center gap-2 hover:opacity-90 transition-all duration-300"
             >
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-              />
-              <span className="relative z-10 text-sm tracking-[0.2em] uppercase font-medium group-hover:text-white transition-colors duration-300">
-                Start Trading <ChevronRight className="inline-block ml-2" />
-              </span>
+              Start Trading
+              <ArrowRight className="w-4 h-4" />
             </motion.button>
-
             <motion.button
-              whileHover={{ scale: 1.02, y: -2 }}
+              whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="group relative w-full sm:w-[280px] h-[60px] bg-transparent border border-white/20 text-white rounded-lg hover:border-white/40 transition-all duration-300"
+              className="px-8 py-3 bg-white/5 border border-white/10 hover:bg-white/10 rounded-lg text-white font-light tracking-wide transition-all duration-300"
             >
-              <span className="relative z-10 text-sm tracking-[0.2em] uppercase font-medium">
-                Learn More
-              </span>
+              Learn More
             </motion.button>
           </motion.div>
-        </motion.div>
-
-        {/* Stats Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8"
-        >
-          {stats.map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 + index * 0.1 }}
-              className="text-center"
-            >
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="text-3xl font-light text-white mb-2"
-              >
-                {stat.value}
-              </motion.div>
-              <div className="text-sm text-gray-400 tracking-wider uppercase">
-                {stat.label}
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+        </div>
       </motion.div>
-
-      {/* Enhanced Gradient Overlays */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent" />
     </div>
   );
 };
