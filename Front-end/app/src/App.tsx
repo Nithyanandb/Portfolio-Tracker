@@ -118,7 +118,7 @@ const router = createBrowserRouter([
   { path: "/:type/:symbol", element: <TransactionPage /> },
   { path: "/portfolio/add", element: <StockForm /> },
   { path: "/portfolio/edit/:id", element: <StockForm /> },
-  { path: "/stock/all", element: <AllStocks /> },
+  { path: "/transaction/all", element: <AllStocks /> },
   { path: "/stock/buy", element: <BuyStocks /> },
   { path: "/stock/sell", element: <SellStocks /> },
   { path: "/learn/basics", element: <LearnPage /> },

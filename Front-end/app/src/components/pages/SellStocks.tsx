@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { TrendingDown, DollarSign, BarChart2, AlertCircle } from 'lucide-react';
+import Header from '../Header/Header';
 
 interface StockFormData {
   symbol: string;
@@ -40,12 +41,13 @@ export const SellStocks: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white p-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-black text-white p-8">
+      <Header/>
+      <div className="max-w-4xl pt-28 mx-auto">
         <div className="mb-12 text-center">
           <h1 className="text-4xl font-bold mb-4 flex items-center justify-center gap-3">
             <TrendingDown className="text-red-400" />
-            Sell Stocks
+            Sell Stock
           </h1>
           <p className="text-gray-400 text-lg">Execute your exit strategy with precision</p>
         </div>

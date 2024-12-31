@@ -8,7 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/transactions")
+@RequestMapping("/transaction")
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class TransactionController {
     private final TransactionService transactionService;
