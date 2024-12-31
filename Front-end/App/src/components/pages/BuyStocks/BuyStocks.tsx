@@ -139,24 +139,24 @@ export const BuyStocks: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-900 to-black text-white">
-      {/* Tesla-inspired fixed header */}
-      <Header/>
-      {/* <div className="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-xl border-b border-white/10">
-        <div className="flex items-center justify-between px-8 py-4">
-          <h1 className="text-2xl font-medium">Trade Stocks</h1>
-          {selectedStockDetail && (
-            <button
-              onClick={() => setSelectedStock(selectedStockDetail)}
-              className="px-8 py-3 bg-white text-black font-medium rounded-full hover:bg-white/90 transition-all flex items-center gap-2"
-            >
-              <DollarSign size={20} />
-              Buy {selectedStockDetail.symbol}
-            </button>
-          )}
+      <div className="fixed top-0 left-0 right-0 z-50">
+        <Header/>
+        <div className="mt-24">
+          <div className="flex items-center justify-end px-8 py-4">
+            {selectedStockDetail && (
+              <button
+                onClick={() => setSelectedStock(selectedStockDetail)}
+                className="px-8 py-3 bg-white text-black font-medium rounded-full hover:bg-white/90 transition-all flex items-center gap-2"
+              >
+                <DollarSign size={20} />
+                Buy {selectedStockDetail.symbol}
+              </button>
+            )}
+          </div>
         </div>
-      </div> */}
+      </div>
 
-      <div className="flex h-screen pt-20">
+      <div className="flex h-screen pt-32">
         {/* Sidebar */}
         <div className="w-96 bg-black/30 border-r border-white/10 overflow-hidden">
           <div className="p-6">

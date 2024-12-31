@@ -1,152 +1,114 @@
 import React, { useState } from 'react';
-import { X, DollarSign, Hash, AlertCircle, Loader2, Check } from 'lucide-react';
-import { Stock } from './stockApi';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../../hooks/useAuth';
 
 interface BuyModalProps {
-  stock: Stock;
+  stock: {
+    symbol: string;
+    name: string;
+    price: number;
+  };
   onClose: () => void;
 }
 
 export const BuyModal: React.FC<BuyModalProps> = ({ stock, onClose }) => {
-  const [quantity, setQuantity] = useState<string>('1');
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { user } = useAuth();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+  const handlePurchase = async () => {
+    if (!user) {
+      setError('Please login to continue');
+      return;
+    }
+
+    setIsProcessing(true);
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:2000/transaction/buy', {
+      const response = await fetch('http://localhost:2000/api/transactions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}` // Assuming you have a token in user object
         },
         body: JSON.stringify({
+          userId: user.id,
           stockSymbol: stock.symbol,
           stockName: stock.name,
-          quantity: parseInt(quantity),
+          quantity: quantity,
           price: stock.price,
-        }),
+          totalAmount: stock.price * quantity,
+          transactionType: 'BUY'
+        })
       });
 
       if (!response.ok) {
-        throw new Error('Transaction failed');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to process transaction');
       }
 
-      setSuccess(true);
-      setTimeout(() => {
-        onClose();
-      }, 2000);
+      // Transaction successful
+      onClose();
+      // You might want to show a success message or update the UI
     } catch (err) {
-      setError('Failed to process transaction');
+      setError(err instanceof Error ? err.message : 'Transaction failed');
     } finally {
-      setLoading(false);
+      setIsProcessing(false);
     }
   };
 
   return (
-    <AnimatePresence>
-      <div className="fixed inset-0 bg-black/80 backdrop-blur-2xl z-50 flex items-center justify-center">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          className="bg-zinc-900/90 backdrop-blur-2xl rounded-3xl p-8 w-full max-w-md relative"
-        >
-          {success ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-12"
-            >
-              <div className="mb-6 flex justify-center">
-                <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center">
-                  <Check className="w-10 h-10 text-white" />
-                </div>
-              </div>
-              <h3 className="text-3xl font-medium text-white mb-4">Success!</h3>
-              <p className="text-xl text-gray-400">
-                You've successfully purchased {quantity} shares of {stock.symbol}
-              </p>
-            </motion.div>
-          ) : (
-            <>
-              <button
-                onClick={onClose}
-                className="absolute right-6 top-6 text-white/60 hover:text-white transition-colors"
-              >
-                <X size={24} />
-              </button>
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
+      <div className="bg-black/90 border border-white/10 rounded-xl p-6 w-full max-w-md">
+        <h2 className="text-xl font-medium mb-4">Buy {stock.symbol}</h2>
+        
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm text-white/60 mb-1">Quantity</label>
+            <input
+              type="number"
+              min="1"
+              value={quantity}
+              onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value)))}
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2"
+            />
+          </div>
 
-              <form onSubmit={handleSubmit} className="space-y-8">
-                <div>
-                  <h2 className="text-3xl font-medium mb-2">Buy {stock.symbol}</h2>
-                  <p className="text-white/60">{stock.name}</p>
-                </div>
+          <div className="border-t border-white/10 pt-4">
+            <div className="flex justify-between mb-2">
+              <span className="text-white/60">Price per share</span>
+              <span>₹{stock.price.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between text-lg font-medium">
+              <span>Total Amount</span>
+              <span>₹{(stock.price * quantity).toFixed(2)}</span>
+            </div>
+          </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-white/60 mb-2">
-                    Current Price
-                  </label>
-                  <div className="text-3xl font-medium">
-                    ₹{(stock.price * 83).toFixed(2)}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-white/60 mb-2">
-                    Quantity
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-lg focus:outline-none focus:border-blue-500 transition-colors"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-white/60 mb-2">
-                    Total Amount
-                  </label>
-                  <div className="text-3xl font-medium">
-                    ₹{(stock.price * parseInt(quantity || '0') * 83).toFixed(2)}
-                  </div>
-                </div>
-
-                {error && (
-                  <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 text-red-500">
-                    {error}
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full bg-white text-black py-4 rounded-full text-lg font-medium flex items-center justify-center gap-2 hover:bg-white/90 transition-all disabled:opacity-50"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 size={24} className="animate-spin" />
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      <DollarSign size={24} />
-                      Buy Now
-                    </>
-                  )}
-                </button>
-              </form>
-            </>
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 text-red-400 text-sm">
+              {error}
+            </div>
           )}
-        </motion.div>
+
+          <div className="flex gap-3">
+            <button
+              onClick={onClose}
+              className="flex-1 px-4 py-2 border border-white/10 rounded-lg hover:bg-white/5"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handlePurchase}
+              disabled={isProcessing}
+              className="flex-1 px-4 py-2 bg-blue-500 rounded-lg hover:bg-blue-600 disabled:opacity-50"
+            >
+              {isProcessing ? 'Processing...' : 'Confirm Purchase'}
+            </button>
+          </div>
+        </div>
       </div>
-    </AnimatePresence>
+    </div>
   );
 };

@@ -20,13 +20,18 @@ import {
   Lightbulb
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
+import { useAuth } from '../../hooks/useAuth';
+import AuthModal from '../Auth/AuthModal';
 
 interface NavigationMenuProps {
   className?: string;
 }
 
 export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => {
+  const { isAuthenticated } = useAuth();
   const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
 
   const handleMouseEnter = (menuId: string) => {
     setHoveredMenu(menuId);
@@ -36,80 +41,100 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
     setHoveredMenu(hoveredMenu);
   };
 
-  return (
-    <NavigationMenuPrimitive.Root className={className}>
-      <NavigationMenuPrimitive.List className="flex items-center gap-6">
-        <NavItem 
-          href="/" 
-          label="Markets" 
-          isHovered={hoveredMenu === 'markets'}
-          onMouseEnter={() => handleMouseEnter('markets')}
-          onMouseLeave={handleMouseLeave}
-        >
-          <div className="container mx-auto grid grid-cols-2 gap-8 p-12">
-            {/* Left Side - Markets Content */}
-            <div className="space-y-6">
-              <motion.div
-                initial={{ opacity: 0, x: 0 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0 }}
-                className="relative aspect-[16/9] overflow-hidden"
-              >
-                <img
-                  src="holderimage.com/800x600"
-                  alt="Markets Overview"
-                  className="w-full h-full border-bottom-10 border-bottom-white/10 rounded-lg"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h3 className="text-2xl font-light text-white tracking-wide">
-                    Real-time market analysis and tracking
-                  </h3>
-                </div>
-              </motion.div>
-            </div>
+  const handleNavigation = (e: React.MouseEvent, href: string) => {
+    e.preventDefault();
+    if (!isAuthenticated) {
+      setPendingNavigation(href);
+      setIsAuthModalOpen(true);
+      return;
+    }
+    window.location.href = href;
+  };
 
-            {/* Right Side - Menu Items */}
-            <div className="space-y-6 grid grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-sm font-medium text-white/60 uppercase tracking-wider mb-4">
-                  Stock Market
-                </h3>
-                <div className="grid gap-2">
-                  <NavLink href="/stock/all" icon={<BarChart2 size={20} />}>
-                    <span className="font-medium">All Stocks</span>
-                    <span className="text-sm text-white/60">Browse all available stocks</span>
-                  </NavLink>
-                  <NavLink href="/stock/buy" icon={<DollarSign size={20} />}>
-                    <span className="font-medium">Buy Stocks</span>
-                    <span className="text-sm text-white/60">Place buy orders</span>
-                  </NavLink>
-                  <NavLink href="/stock/sell" icon={<PieChart size={20} />}>
-                    <span className="font-medium">Sell Stocks</span>
-                    <span className="text-sm text-white/60">Manage your holdings</span>
-                  </NavLink>
-                </div>
-              </div>
+  const handleAuthSuccess = () => {
+    setIsAuthModalOpen(false);
+    if (pendingNavigation) {
+      window.location.href = pendingNavigation;
+      setPendingNavigation(null);
+    }
+  };
+
+  return (
+    <>
+      <NavigationMenuPrimitive.Root className={className}>
+        <NavigationMenuPrimitive.List className="flex items-center gap-6">
+          <NavItem 
+            href="/" 
+            label="Markets" 
+            isHovered={hoveredMenu === 'markets'}
+            onMouseEnter={() => handleMouseEnter('markets')}
+            onMouseLeave={handleMouseLeave}
+          >
+            <div className="container mx-auto grid grid-cols-2 gap-8 p-12">
+              {/* Left Side - Markets Content */}
               <div className="space-y-6">
-              <div>
-                <h3 className="text-sm font-medium grid-cols-2 grid text-white/60 uppercase tracking-wider mb-4">
-                  Market Indices
-                </h3>
-                <div className="grid gap-2 ">
-                  <NavLink href="/indices/nifty" icon={<Target size={20} />}>
-                    <span className="font-medium">NIFTY 50</span>
-                    <span className="text-sm text-white/60">Track primary index</span>
-                  </NavLink>
-                  <NavLink href="/indices/sensex" icon={<LineChart size={20} />}>
-                    <span className="font-medium">SENSEX</span>
-                    <span className="text-sm text-white/60">BSE benchmark index</span>
-                  </NavLink>
-                  <NavLink href="/indices/banknifty" icon={<Landmark size={20} />}>
-                    <span className="font-medium">BANK NIFTY</span>
-                    <span className="text-sm text-white/60">Banking sector performance</span>
-                  </NavLink>
-                </div>
+                <motion.div
+                  initial={{ opacity: 0, x: 0 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0 }}
+                  className="relative aspect-[16/9] overflow-hidden"
+                >
+                  <img
+                    src="holderimage.com/800x600"
+                    alt="Markets Overview"
+                    className="w-full h-full border-bottom-10 border-bottom-white/10 rounded-lg"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <h3 className="text-2xl font-light text-white tracking-wide">
+                      Real-time market analysis and tracking
+                    </h3>
+                  </div>
+                </motion.div>
               </div>
+
+              {/* Right Side - Menu Items */}
+              <div className="space-y-6 grid grid-cols-2 gap-8">
+                <div>
+                  <h3 className="text-sm font-medium text-white/60 uppercase tracking-wider mb-4">
+                    Stock Market
+                  </h3>
+                  <div className="grid gap-2">
+                    <NavLink href="/stock/all" icon={<BarChart2 size={20} />}>
+                      <span className="font-medium">All Stocks</span>
+                      <span className="text-sm text-white/60">Browse all available stocks</span>
+                    </NavLink>
+                    <NavLink href="/stock/buy" icon={<DollarSign size={20} />}>
+                      <span className="font-medium">Buy Stocks</span>
+                      <span className="text-sm text-white/60">Place buy orders</span>
+                    </NavLink>
+                    <NavLink href="/stock/sell" icon={<PieChart size={20} />}>
+                      <span className="font-medium">Sell Stocks</span>
+                      <span className="text-sm text-white/60">Manage your holdings</span>
+                    </NavLink>
+                  </div>
+                </div>
+                <div className="space-y-6">
+                <div>
+                  <h3 className="text-sm font-medium grid-cols-2 grid text-white/60 uppercase tracking-wider mb-4">
+                    Market Indices
+                  </h3>
+                  <div className="grid gap-2 ">
+                    <NavLink href="/indices/nifty" icon={<Target size={20} />}>
+                      <span className="font-medium">NIFTY 50</span>
+                      <span className="text-sm text-white/60">Track primary index</span>
+                    </NavLink>
+                    <NavLink href="/indices/sensex" icon={<LineChart size={20} />}>
+                      <span className="font-medium">SENSEX</span>
+                      <span className="text-sm text-white/60">BSE benchmark index</span>
+                    </NavLink>
+                    <NavLink href="/indices/banknifty" icon={<Landmark size={20} />}>
+                      <span className="font-medium">BANK NIFTY</span>
+                      <span className="text-sm text-white/60">Banking sector performance</span>
+                    </NavLink>
+                  </div>
+                </div>
+                </div>
               </div>
             </div>
           </div>
@@ -253,7 +278,16 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
       </NavigationMenuPrimitive.List>
 
       <NavigationMenuPrimitive.Viewport className="absolute left-0 right-0 top-full" />
-    </NavigationMenuPrimitive.Root>
+
+      <AuthModal 
+        isOpen={isAuthModalOpen}
+        onClose={() => {
+          setIsAuthModalOpen(false);
+          setPendingNavigation(null);
+        }}
+        onSuccess={handleAuthSuccess}
+      />
+    </>
   );
 };
 
@@ -308,21 +342,47 @@ const NavLink: React.FC<{
   children: React.ReactNode;
   icon?: React.ReactElement;
   className?: string;
-}> = ({ href, children, icon, className }) => (
-  <motion.a
-    href={href}
-    className={cn(
-      "group flex flex-col gap-0.5 p-4 rounded-lg hover:bg-white/5 transition-all duration-200",
-      className
-    )}
-    whileHover={{ x: 8 }}
-  >
-    <div className="flex items-center gap-3">
-      {icon && React.cloneElement(icon, { className: "text-white/60 group-hover:text-white transition-colors" })}
-      <div className="flex flex-col">{children}</div>
-    </div>
-  </motion.a>
-);
+}> = ({ href, children, icon, className }) => {
+  const { isAuthenticated } = useAuth();
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!isAuthenticated) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+    window.location.href = href;
+  };
+
+  return (
+    <>
+      <motion.a
+        href={href}
+        className={cn(
+          "group flex flex-col gap-0.5 p-4 rounded-lg hover:bg-white/5 transition-all duration-200",
+          className
+        )}
+        whileHover={{ x: 8 }}
+        onClick={handleClick}
+      >
+        <div className="flex items-center gap-3">
+          {icon && React.cloneElement(icon, { className: "text-white/60 group-hover:text-white transition-colors" })}
+          <div className="flex flex-col">{children}</div>
+        </div>
+      </motion.a>
+
+      <AuthModal 
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onSuccess={() => {
+          setIsAuthModalOpen(false);
+          window.location.href = href;
+        }}
+      />
+    </>
+  );
+};
 
 const SimpleNavLink: React.FC<{ href: string; children: React.ReactNode }> = ({
   href,
