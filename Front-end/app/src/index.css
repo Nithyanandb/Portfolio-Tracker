@@ -1,0 +1,198 @@
+/* Tailwind Imports */
+@import 'tailwindcss/base';
+@import './styles/base.css';
+
+@import 'tailwindcss/components';
+@import './styles/components.css';
+
+@import 'tailwindcss/utilities';
+@import './styles/utilities.css';
+
+/* CSS Variables */
+:root {
+  --background-dark: #000000;
+  --card-dark: #1a1a1a;
+  --text-primary: #ffffff;
+  --text-secondary: #a0aec0;
+  --accent-blue: #3B82F6;
+}
+
+/* Dark Theme */
+.dark {
+  color-scheme: dark;
+  background-color: var(--background-dark);
+  color: var(--text-primary);
+}
+
+/* Gradient Background */
+.gradient-background {
+  background: linear-gradient(to bottom right, #000000, #1a1a1a);
+  position: relative;
+  overflow: hidden;
+}
+
+.gradient-background::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+  animation: pulse 8s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+}
+
+/* Card Styling */
+.card-dark {
+  background-color: var(--card-dark);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Tailwind Layers - Base */
+@layer base {
+  body {
+    @apply bg-black text-white antialiased;
+  }
+}
+
+/* Tailwind Layers - Components */
+@layer components {
+  .glass-card {
+    @apply bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl;
+  }
+
+  .glass-button {
+    @apply bg-white/10 hover:bg-white/20 backdrop-blur-lg border border-white/20 rounded-lg px-6 py-3 text-white transition-all duration-300;
+  }
+}
+
+/* Tailwind Layers - Utilities */
+@layer utilities {
+  .grid-auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  .glass-effect {
+    @apply backdrop-blur-lg bg-white/5 border border-white/10;
+  }
+}
+
+/* Custom Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Gradient Text */
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500;
+}
+
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-black text-white;
+  overflow-x: hidden;
+}
+
+/* Optional: Add this if you want even smoother transitions */
+* {
+  transition: all 0.25s ease-out;
+}
+
+/* Add these styles to your CSS */
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.scroll-smooth {
+  scroll-behavior: smooth;
+}
+
+/* Smooth scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.3);
+}
+
+/* Remove snap scrolling */
+.space-y-32 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(12rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(12rem * var(--tw-space-y-reverse));
+}
+
+/* Custom slow scroll behavior */
+.scroll-container {
+  scroll-behavior: smooth;
+  transition: scroll-behavior 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Smooth scrollbar with slower tracking */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.2);
+  border-radius: 3px;
+  transition: background-color 0.5s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.3);
+}
+
+/* Add smooth transition for all animations */
+* {
+  transition-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+}

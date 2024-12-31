@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="140" height="40" viewBox="0 0 140 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Glow Effect -->
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Main Text -->
+  <text x="40" y="28" fill="#FFFFFF" font-family="Arial, sans-serif" font-weight="700" font-size="24">
+    Cap
+    <tspan fill="#3B223">X</tspan>
+  </text>
+
+  <!-- Trading Chart Icon -->
+  <path d="M10 20L15 15L20 25L25 10" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" filter="url(#glow)"/>
+  
+  <!-- Dot at the end of chart -->
+  <circle cx="25" cy="10" r="2" fill="#3B82F6"/>
+</svg>

@@ -1,0 +1,33 @@
+// Enterprise Theme Customizations
+// ------------------------------------
+
+// Primary and secondary colors
+$primary: #0052CC; // Main theme color
+$secondary: #6B778C; // Secondary theme color
+
+// Status colors
+$success: #36B37E; // Success color
+$info: #00B8D9; // Info color
+$warning: #FFAB00; // Warning color
+$danger: #FF5630; // Danger color
+
+// Neutral colors
+$light: #F4F5F7; // Light background color
+$dark: #172B4D; // Dark background color
+
+// Custom enterprise variables
+// ------------------------------
+
+// Border radius
+$border-radius: 0.375rem;
+
+// Box shadow
+$box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+
+// Enable/Disable features
+$enable-shadows: true; // Enable box shadows
+$enable-gradients: false; // Disable gradients
+$enable-responsive-font-sizes: true; // Enable responsive font sizes
+
+// Import Bootstrap
+@use "bootstrap/scss/bootstrap";
