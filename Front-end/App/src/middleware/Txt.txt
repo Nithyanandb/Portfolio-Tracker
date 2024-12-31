@@ -1,0 +1,83 @@
+// Stock market data service
+export interface Stock {
+    symbol: string;
+    name: string;
+    price: number;
+    change?: number;
+    volume?: number;
+    high?: number;
+    low?: number;
+    marketCap?: number;
+  }
+  
+  const STOCK_SYMBOLS = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'META', 'TSLA', 'NVDA', 'JPM'];
+  const API_KEY = '1f4b65858bb4480e8758cd897b1acc88'; // Consider moving this to environment variables
+ //valid api // const API_KEY = '8a650fef7a7948c4a7740ac06269a08f'; // Consider moving this to environment variables
+  
+  // Add delay between requests
+  const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+  
+  export const fetchStocks = async (): Promise<Stock[]> => {
+    try {
+      // Fetch stocks sequentially instead of parallel to avoid rate limits
+      const results: Stock[] = [];
+      
+      for (const symbol of STOCK_SYMBOLS) {
+        try {
+          await delay(100); // Add 100ms delay between requests
+          const response = await fetch(
+            `https://api.twelvedata.com/quote?symbol=${symbol}&apikey=${API_KEY}`
+          );
+          
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          
+          const data = await response.json();
+          
+          if (data.code === 400 || data.status === 'error') {
+            throw new Error(data.message || 'API Error');
+          }
+
+          results.push({
+            symbol: data.symbol,
+            name: data.name || symbol,
+            price: parseFloat(data.close) || 0,
+            change: parseFloat(data.percent_change) || 0,
+            volume: parseInt(data.volume) || 0,
+            high: parseFloat(data.high) || 0,
+            low: parseFloat(data.low) || 0,
+            marketCap: parseFloat(data.market_cap) || 0,
+          });
+        } catch (error) {
+          console.error(`Error fetching ${symbol}:`, error);
+          // Add fallback data for failed requests
+          results.push({
+            symbol,
+            name: symbol,
+            price: Math.random() * 1000,
+            change: (Math.random() - 0.5) * 10,
+            volume: Math.floor(Math.random() * 1000000),
+            high: Math.random() * 1000,
+            low: Math.random() * 1000,
+            marketCap: Math.random() * 1000,
+          });
+        }
+      }
+
+      return results;
+      
+    } catch (error) {
+      console.error('Error fetching stocks:', error);
+      return STOCK_SYMBOLS.map(symbol => ({
+        symbol,
+        name: symbol,
+        price: Math.random() * 1000,
+        change: (Math.random() - 0.5) * 10,
+        volume: Math.floor(Math.random() * 1000000),
+        high: Math.random() * 1000,
+        low: Math.random() * 1000,
+        marketCap: Math.random() * 1000,
+      }));
+    }
+  };

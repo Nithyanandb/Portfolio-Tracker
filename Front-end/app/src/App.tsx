@@ -15,7 +15,6 @@ import TransactionPage from './components/pages/TransactionPage';
 import PortfolioDashboard from './components/portfolio/PortfolioDashboard';
 import AllStocks from './components/pages/AllStocks';
 import SellStocks from './components/pages/SellStocks';
-import BuyStocks from './components/BuyStocks/BuyStocks';
 import StockForm from './components/portfolio/StockForm';
 import OAuthCallback from './components/Auth/OAuthCallback';
 import NotFound from './components/ErrorBoundary/NotFound';
@@ -25,6 +24,7 @@ import FuturesTrading from './components/Header/Navigation/FuturesTrading';
 import MarginTrading from './components/Header/Navigation/MarginTrading';
 import SpotTrading from './components/Header/Navigation/SpotTrading';
 import OptionsTrading from './components/Header/Navigation/trading/OptionsTrading';
+import BuyStocks from './components/pages/BuyStocks/BuyStocks';
 
 // Create a QueryClient instance
 const queryClient = new QueryClient({
@@ -115,7 +115,7 @@ const router = createBrowserRouter([
     ),
   },
   { path: "/auth/callback", element: <OAuthCallback /> },
-  { path: "/:type/:symbol", element: <TransactionPage /> },
+  { path: "/:type/:symbol", element: <TransactionPage /> }, 
   { path: "/portfolio/add", element: <StockForm /> },
   { path: "/portfolio/edit/:id", element: <StockForm /> },
   { path: "/transaction/all", element: <AllStocks /> },
