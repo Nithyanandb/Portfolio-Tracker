@@ -20,8 +20,8 @@ import {
   Lightbulb
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
-import { useAuth } from '../../hooks/useAuth';
 import AuthModal from '../Auth/AuthModal';
+import { useAuth } from '../hooks/useAuth';
 
 interface NavigationMenuProps {
   className?: string;
@@ -114,12 +114,11 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
                     </NavLink>
                   </div>
                 </div>
-                <div className="space-y-6">
                 <div>
-                  <h3 className="text-sm font-medium grid-cols-2 grid text-white/60 uppercase tracking-wider mb-4">
+                  <h3 className="text-sm font-medium text-white/60 uppercase tracking-wider mb-4">
                     Market Indices
                   </h3>
-                  <div className="grid gap-2 ">
+                  <div className="grid gap-2">
                     <NavLink href="/indices/nifty" icon={<Target size={20} />}>
                       <span className="font-medium">NIFTY 50</span>
                       <span className="text-sm text-white/60">Track primary index</span>
@@ -134,150 +133,149 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
                     </NavLink>
                   </div>
                 </div>
-                </div>
               </div>
             </div>
-          </div>
-        </NavItem>
+          </NavItem>
 
-        <NavItem 
-          href="/trading" 
-          label="Trading" 
-          isHovered={hoveredMenu === 'trading'}
-          onMouseEnter={() => handleMouseEnter('trading')}
-          onMouseLeave={handleMouseLeave}
-        >
-          <div className="container mx-auto grid grid-cols-2 gap-8 p-12">
-            {/* Left Side - Trading Image */}
-            <div className="space-y-6">
-              <motion.div
-                initial={{ opacity: 0, x: 0 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 }}
-                className="relative aspect-[16/9] overflow-hidden rounded-lg"
-              >
-                <img
-                  src="/api/placeholder/800/600"
-                  alt="Trading Platform"
-                  className="object-cover w-full h-full"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h3 className="text-2xl font-light text-white tracking-wide">
-                    Advanced trading tools and analysis
+          <NavItem 
+            href="/trading" 
+            label="Trading" 
+            isHovered={hoveredMenu === 'trading'}
+            onMouseEnter={() => handleMouseEnter('trading')}
+            onMouseLeave={handleMouseLeave}
+          >
+            <div className="container mx-auto grid grid-cols-2 gap-8 p-12">
+              {/* Left Side - Trading Image */}
+              <div className="space-y-6">
+                <motion.div
+                  initial={{ opacity: 0, x: 0 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 }}
+                  className="relative aspect-[16/9] overflow-hidden rounded-lg"
+                >
+                  <img
+                    src="/api/placeholder/800/600"
+                    alt="Trading Platform"
+                    className="object-cover w-full h-full"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <h3 className="text-2xl font-light text-white tracking-wide">
+                      Advanced trading tools and analysis
+                    </h3>
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Right Side - Trading Options */}
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <h3 className="text-sm font-medium text-white/60 uppercase tracking-wider mb-4">
+                    Basic Trading
                   </h3>
+                  <div className="space-y-2">
+                    <NavLink href="/trading/spot" icon={<TrendingUp size={20} />}>
+                      <span className="font-medium">Spot Trading</span>
+                      <span className="text-sm text-white/60">Direct market access</span>
+                    </NavLink>
+                    <NavLink href="/trading/margin" icon={<Briefcase size={20} />}>
+                      <span className="font-medium">Margin Trading</span>
+                      <span className="text-sm text-white/60">Leverage your positions</span>
+                    </NavLink>
+                    <NavLink href="/trading/futures" icon={<LineChart size={20} />}>
+                      <span className="font-medium">Futures</span>
+                      <span className="text-sm text-white/60">Trade market futures</span>
+                    </NavLink>
+                    <NavLink href="/trading/options" icon={<Binary size={20} />}>
+                      <span className="font-medium">Options</span>
+                      <span className="text-sm text-white/60">Options trading platform</span>
+                    </NavLink>
+                  </div>
                 </div>
-              </motion.div>
-            </div>
-
-            {/* Right Side - Trading Options */}
-            <div className="grid grid-cols-2 gap-6">
-              <div>
-                <h3 className="text-sm font-medium text-white/60 uppercase tracking-wider mb-4">
-                  Basic Trading
-                </h3>
-                <div className="space-y-2">
-                  <NavLink href="/trading/spot" icon={<TrendingUp size={20} />}>
-                    <span className="font-medium">Spot Trading</span>
-                    <span className="text-sm text-white/60">Direct market access</span>
-                  </NavLink>
-                  <NavLink href="/trading/margin" icon={<Briefcase size={20} />}>
-                    <span className="font-medium">Margin Trading</span>
-                    <span className="text-sm text-white/60">Leverage your positions</span>
-                  </NavLink>
-                  <NavLink href="/trading/futures" icon={<LineChart size={20} />}>
-                    <span className="font-medium">Futures</span>
-                    <span className="text-sm text-white/60">Trade market futures</span>
-                  </NavLink>
-                  <NavLink href="/trading/options" icon={<Binary size={20} />}>
-                    <span className="font-medium">Options</span>
-                    <span className="text-sm text-white/60">Options trading platform</span>
-                  </NavLink>
-                </div>
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-white/60 uppercase tracking-wider mb-4">
-                  Advanced
-                </h3>
-                <div className="space-y-2">
-                  <NavLink href="/trading/algo" icon={<Laptop size={20} />}>
-                    <span className="font-medium">Algo Trading</span>
-                    <span className="text-sm text-white/60">Automated systems</span>
-                  </NavLink>
-                  <NavLink href="/trading/derivatives" icon={<Building2 size={20} />}>
-                    <span className="font-medium">Derivatives</span>
-                    <span className="text-sm text-white/60">Complex instruments</span>
-                  </NavLink>
-                  <NavLink href="/trading/analysis" icon={<Brain size={20} />}>
-                    <span className="font-medium">Technical Analysis</span>
-                    <span className="text-sm text-white/60">Chart analysis tools</span>
-                  </NavLink>
-                  <NavLink href="/trading/scanner" icon={<Target size={20} />}>
-                    <span className="font-medium">Market Scanner</span>
-                    <span className="text-sm text-white/60">Find opportunities</span>
-                  </NavLink>
-                </div>
-              </div>
-            </div>
-          </div>
-        </NavItem>
-
-        <NavItem 
-          href="/learn" 
-          label="Learn" 
-          isHovered={hoveredMenu === 'learn'}
-          onMouseEnter={() => handleMouseEnter('learn')}
-          onMouseLeave={handleMouseLeave}
-        >
-          <div className="container mx-auto grid grid-cols-2 gap-8 p-12">
-            {/* Left Side - Learn Image */}
-            <div className="space-y-6">
-              <motion.div
-                initial={{ opacity: 0, x: 0 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0 }}
-                className="relative aspect-[16/9] overflow-hidden rounded-lg"
-              >
-                <img
-                  src="/api/placeholder/800/600"
-                  alt="Learning Resources"
-                  className="object-cover w-full h-full"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h3 className="text-2xl font-light text-white tracking-wide">
-                    Educational resources and guides
+                <div>
+                  <h3 className="text-sm font-medium text-white/60 uppercase tracking-wider mb-4">
+                    Advanced
                   </h3>
+                  <div className="space-y-2">
+                    <NavLink href="/trading/algo" icon={<Laptop size={20} />}>
+                      <span className="font-medium">Algo Trading</span>
+                      <span className="text-sm text-white/60">Automated systems</span>
+                    </NavLink>
+                    <NavLink href="/trading/derivatives" icon={<Building2 size={20} />}>
+                      <span className="font-medium">Derivatives</span>
+                      <span className="text-sm text-white/60">Complex instruments</span>
+                    </NavLink>
+                    <NavLink href="/trading/analysis" icon={<Brain size={20} />}>
+                      <span className="font-medium">Technical Analysis</span>
+                      <span className="text-sm text-white/60">Chart analysis tools</span>
+                    </NavLink>
+                    <NavLink href="/trading/scanner" icon={<Target size={20} />}>
+                      <span className="font-medium">Market Scanner</span>
+                      <span className="text-sm text-white/60">Find opportunities</span>
+                    </NavLink>
+                  </div>
                 </div>
-              </motion.div>
+              </div>
             </div>
+          </NavItem>
 
-            {/* Right Side - Learning Paths */}
-            <div className="space-y-4">
-              <NavLink href="/learn/basics" icon={<BookOpen size={20} />} className="learning-path">
-                <span className="font-medium">Trading Basics</span>
-                <span className="text-sm text-white/60">Start your trading journey</span>
-              </NavLink>
-              <NavLink href="/learn/technical" icon={<LineChart size={20} />} className="learning-path">
-                <span className="font-medium">Technical Analysis</span>
-                <span className="text-sm text-white/60">Chart patterns & indicators</span>
-              </NavLink>
-              <NavLink href="/learn/fundamental" icon={<Brain size={20} />} className="learning-path">
-                <span className="font-medium">Fundamental Analysis</span>
-                <span className="text-sm text-white/60">Evaluate company metrics</span>
-              </NavLink>
-              <NavLink href="/learn/strategies" icon={<Lightbulb size={20} />} className="learning-path">
-                <span className="font-medium">Trading Strategies</span>
-                <span className="text-sm text-white/60">Advanced trading techniques</span>
-              </NavLink>
+          <NavItem 
+            href="/learn" 
+            label="Learn" 
+            isHovered={hoveredMenu === 'learn'}
+            onMouseEnter={() => handleMouseEnter('learn')}
+            onMouseLeave={handleMouseLeave}
+          >
+            <div className="container mx-auto grid grid-cols-2 gap-8 p-12">
+              {/* Left Side - Learn Image */}
+              <div className="space-y-6">
+                <motion.div
+                  initial={{ opacity: 0, x: 0 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0 }}
+                  className="relative aspect-[16/9] overflow-hidden rounded-lg"
+                >
+                  <img
+                    src="/api/placeholder/800/600"
+                    alt="Learning Resources"
+                    className="object-cover w-full h-full"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <h3 className="text-2xl font-light text-white tracking-wide">
+                      Educational resources and guides
+                    </h3>
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Right Side - Learning Paths */}
+              <div className="space-y-4">
+                <NavLink href="/learn/basics" icon={<BookOpen size={20} />} className="learning-path">
+                  <span className="font-medium">Trading Basics</span>
+                  <span className="text-sm text-white/60">Start your trading journey</span>
+                </NavLink>
+                <NavLink href="/learn/technical" icon={<LineChart size={20} />} className="learning-path">
+                  <span className="font-medium">Technical Analysis</span>
+                  <span className="text-sm text-white/60">Chart patterns & indicators</span>
+                </NavLink>
+                <NavLink href="/learn/fundamental" icon={<Brain size={20} />} className="learning-path">
+                  <span className="font-medium">Fundamental Analysis</span>
+                  <span className="text-sm text-white/60">Evaluate company metrics</span>
+                </NavLink>
+                <NavLink href="/learn/strategies" icon={<Lightbulb size={20} />} className="learning-path">
+                  <span className="font-medium">Trading Strategies</span>
+                  <span className="text-sm text-white/60">Advanced trading techniques</span>
+                </NavLink>
+              </div>
             </div>
-          </div>
-        </NavItem>
+          </NavItem>
 
-        <SimpleNavLink href="/about">About</SimpleNavLink>
-      </NavigationMenuPrimitive.List>
+          <SimpleNavLink href="/about">About</SimpleNavLink>
+        </NavigationMenuPrimitive.List>
 
-      <NavigationMenuPrimitive.Viewport className="absolute left-0 right-0 top-full" />
+        <NavigationMenuPrimitive.Viewport className="absolute left-0 right-0 top-full" />
+      </NavigationMenuPrimitive.Root>
 
       <AuthModal 
         isOpen={isAuthModalOpen}

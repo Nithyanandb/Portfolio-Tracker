@@ -51,10 +51,9 @@ public class SecurityConfig {
                 .requestMatchers("/error").permitAll()
                 
                 // Protected endpoints
-                .requestMatchers("/transaction/**").authenticated()
+                .requestMatchers("/transaction/**").permitAll()
                 .requestMatchers("/portfolio/**").authenticated()
                 .requestMatchers("/user/**").authenticated()
-                .requestMatchers("/api/button/**").authenticated()
                 .anyRequest().authenticated()
             )
             .oauth2Login(oauth2 -> oauth2

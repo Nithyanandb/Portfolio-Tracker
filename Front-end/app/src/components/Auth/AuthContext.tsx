@@ -135,13 +135,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [token]);
 
-  const login = async (credentials) => {
-    // Implement login logic
-  };
 
-  const register = async (userData) => {
-    // Implement register logic
-  };
 
   return (
     <AuthContext.Provider
@@ -158,8 +152,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         error,
         handleOAuthCallback,
         setIsAuthenticating,
-        login,
-        register,
+        
       }}
     >
       {children}

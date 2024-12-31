@@ -139,24 +139,24 @@ export const BuyStocks: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-900 to-black text-white">
-      <div className="fixed top-0 left-0 right-0 z-50">
-        <Header/>
-        <div className="mt-24">
-          <div className="flex items-center justify-end px-8 py-4">
-            {selectedStockDetail && (
-              <button
-                onClick={() => setSelectedStock(selectedStockDetail)}
-                className="px-8 py-3 bg-white text-black font-medium rounded-full hover:bg-white/90 transition-all flex items-center gap-2"
-              >
-                <DollarSign size={20} />
-                Buy {selectedStockDetail.symbol}
-              </button>
-            )}
-          </div>
+      {/* Tesla-inspired fixed header */}
+      <Header/>
+      <div>
+        <div className="mt-32 absolute flex z-20 px-8 justify-end w-full">
+         
+          {selectedStockDetail && (
+            <button
+              onClick={() => setSelectedStock(selectedStockDetail)}
+              className="px-8 py-3 bg-white text-black font-medium rounded-full hover:bg-white/90 transition-all flex items-center gap-2"
+            >
+              <DollarSign size={20} />
+              Buy {selectedStockDetail.symbol}
+            </button>
+          )}
         </div>
       </div>
 
-      <div className="flex h-screen pt-32">
+      <div className="flex h-screen pt-20">
         {/* Sidebar */}
         <div className="w-96 bg-black/30 border-r border-white/10 overflow-hidden">
           <div className="p-6">
@@ -236,7 +236,7 @@ export const BuyStocks: React.FC = () => {
         <BuyModal
           stock={selectedStock}
           onClose={() => setSelectedStock(null)}
-        />
+        /> 
       )}
     </div>
   );

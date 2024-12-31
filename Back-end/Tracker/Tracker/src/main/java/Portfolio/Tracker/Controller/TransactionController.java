@@ -18,7 +18,6 @@ public class TransactionController {
     }
 
     @PostMapping("/buy")
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> buyStock(@Valid @RequestBody TransactionRequest request) {
         return transactionService.executeBuyOrder(request);
     }
