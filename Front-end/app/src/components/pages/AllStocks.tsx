@@ -136,3 +136,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({ transactions }) => 
 };
 
 export default AllStocks;
+
+
+
+
