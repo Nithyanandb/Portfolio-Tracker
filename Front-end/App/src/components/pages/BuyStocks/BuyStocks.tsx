@@ -83,21 +83,28 @@ export const BuyStocks: React.FC = () => {
     quantity: number;
     price: number;
   }) => {
+    const { token } = useAuth();
+  
+    if (!token) {
+      setMessage({ type: 'error', text: 'Please login to continue' });
+      return;
+    }
+  
     try {
       const response = await fetch('http://localhost:2000/transaction/buy', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-         
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(stockData),
       });
-
+  
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to process transaction');
       }
-
+  
       setMessage({ type: 'success', text: 'Transaction completed successfully!' });
       loadStocks();
     } catch (error) {

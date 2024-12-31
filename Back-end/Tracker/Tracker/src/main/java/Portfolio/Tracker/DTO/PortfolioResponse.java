@@ -1,22 +1,11 @@
 package Portfolio.Tracker.DTO;
 
-import lombok.Data;
+import Portfolio.Tracker.Entity.Portfolio;
 import java.util.List;
+import lombok.Data;
 
 @Data
 public class PortfolioResponse {
+    private List<Portfolio> holdings;
     private double totalValue;
-    private double totalProfit;
-    private List<PortfolioItem> holdings;
-    
-    @Data
-    public static class PortfolioItem {
-        private String symbol;
-        private String name;
-        private int quantity;
-        private double averagePrice;
-        private double currentPrice;
-        private double totalValue;
-        private double profit;
-    }
-} 
+}

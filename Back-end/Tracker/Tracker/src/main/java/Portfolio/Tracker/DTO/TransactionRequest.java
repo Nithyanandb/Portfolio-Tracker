@@ -15,7 +15,7 @@ public class TransactionRequest {
     @DecimalMin(value = "0.01", message = "Price must be greater than 0")
     private double price;
 
-    private String notes;
+
 
     // Getters and Setters
     public String getStockSymbol() {

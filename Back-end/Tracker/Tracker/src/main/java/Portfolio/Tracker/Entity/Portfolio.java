@@ -2,11 +2,10 @@ package Portfolio.Tracker.Entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import java.time.LocalDateTime;
 
-@Entity
 @Data
-@Table(name = "portfolios")
+@Entity
+@Table(name = "portfolio")
 public class Portfolio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,18 +15,7 @@ public class Portfolio {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false)
-    private String stockSymbol;
-
-    @Column(nullable = false)
-    private String stockName;
-
-    @Column(nullable = false)
+    private String symbol;
     private int quantity;
-
-    @Column(nullable = false)
     private double averagePrice;
-
-    @Column(nullable = false)
-    private LocalDateTime lastUpdated;
-} 
+}
