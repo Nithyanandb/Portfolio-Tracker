@@ -153,22 +153,17 @@ const MarketDashboard: React.FC = () => {
       
       <div className="relative max-w-10xl mx-auto px-0 sm:px-6 lg:px-8 py-12">
         {/* Market Status Bar with refined styling */}
-        <div className="flex items-center justify-between mb-10">
+        {/* <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-4 backdrop-blur-xl bg-white/[0.02] px-4 py-2 rounded-2xl">
             <div className={`h-2.5 w-2.5 rounded-full ${marketStatus.isOpen ? 'bg-green-400' : 'bg-red-400'} 
               shadow-lg shadow-green-500/20 animate-pulse`} 
             />
-            <span className="text-sm font-medium text-gray-300">
-              {marketStatus.isOpen ? 'Market Open' : `Opens ${marketStatus.nextOpen}`}
-            </span>
+          
           </div>
-          <div className="flex items-center gap-3 text-sm text-gray-400">
-            <Clock className="w-4 h-4" />
-            <span className="font-medium">Last updated {marketStatus.lastUpdate}</span>
-          </div>
-        </div>
+         
+        </div> */}
 
-        {/* Portfolio Value Section with glass effect */}
+        {/* Portfolio Value Section with glass effect
         <div className="mb-12 p-8 rounded-3xl bg-white/[0.02] backdrop-blur-xl">
           <div className="flex items-baseline justify-between mb-4">
             <div className="space-y-1">
@@ -205,7 +200,7 @@ const MarketDashboard: React.FC = () => {
               ({portfolioSummary.todayChangePercent}%)
             </span>
           </div>
-        </div>
+        </div> */}
 
         {/* Timeframe Selector with premium styling */}
         <div className="flex gap-2 p-1 bg-white/[0.02] backdrop-blur-xl rounded-xl mb-8 w-fit">
