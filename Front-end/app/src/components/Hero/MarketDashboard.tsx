@@ -151,7 +151,7 @@ const MarketDashboard: React.FC = () => {
       {/* Premium gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900/90 to-black" />
       
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="relative max-w-10xl mx-auto px-0 sm:px-6 lg:px-8 py-12">
         {/* Market Status Bar with refined styling */}
         <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-4 backdrop-blur-xl bg-white/[0.02] px-4 py-2 rounded-2xl">

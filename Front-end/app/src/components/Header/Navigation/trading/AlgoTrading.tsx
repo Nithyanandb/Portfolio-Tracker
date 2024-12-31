@@ -1,11 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Laptop, Play, Pause, Settings, Code } from 'lucide-react';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import Header from '../../Header';
-import RiskWarning from '../trading/RiskWarning';
+import RiskWarning from './RiskWarning';
+import { tradingApi } from '../../../../services/tradingApi';
 
 const AlgoTrading = () => {
   const [selectedStrategy, setSelectedStrategy] = useState('ma_crossover');
-  
+
+  // Fetch active positions
+  const { data: positions, refetch: refetchPositions } = useQuery({
+    queryKey: ['algoPositions'],
+    queryFn: tradingApi.getPositions
+  });
+
+  // Start strategy mutation
+  const startStrategyMutation = useMutation({
+    mutationFn: tradingApi.startAlgoStrategy,
+    onSuccess: () => {
+      refetchPositions();
+    }
+  });
+
+  // Stop strategy mutation
+  const stopStrategyMutation = useMutation({
+    mutationFn: tradingApi.stopAlgoStrategy,
+    onSuccess: () => {
+      refetchPositions();
+    }
+  });
+
+  const handleStartStrategy = async (strategyId: string) => {
+    await startStrategyMutation.mutateAsync({
+      strategyId,
+      symbol: 'BTC/USD',
+      config: {
+        // Strategy specific configuration
+        timeframe: '1h',
+        fastPeriod: 9,
+        slowPeriod: 21
+      }
+    });
+  };
+
+  const handleStopStrategy = async (strategyId: string) => {
+    await stopStrategyMutation.mutateAsync(strategyId);
+  };
+
   const strategies = [
     {
       id: 'ma_crossover',
