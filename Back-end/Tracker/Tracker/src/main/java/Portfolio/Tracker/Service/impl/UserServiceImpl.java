@@ -2,8 +2,8 @@ package Portfolio.Tracker.Service.impl;
 
 import Portfolio.Tracker.DTO.AuthRequest;
 import Portfolio.Tracker.DTO.AuthResponse;
-import Portfolio.Tracker.Entity.AuthProvider;
-import Portfolio.Tracker.Entity.Role;
+import Portfolio.Tracker.DTO.AuthProvider;
+import Portfolio.Tracker.DTO.Role;
 import Portfolio.Tracker.Entity.User;
 import Portfolio.Tracker.Repository.UserRepository;
 import Portfolio.Tracker.Security.JwtTokenProvider;
@@ -166,13 +166,13 @@ public class UserServiceImpl implements UserService {
         if (token != null && jwtTokenProvider.validateToken(token)) {
             jwtTokenProvider.invalidateToken(token);
             SecurityContextHolder.clearContext();
+
             HttpSession session = request.getSession(false);
             if (session != null) {
                 session.invalidate();
             }
         }
     }
-
     @Override
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

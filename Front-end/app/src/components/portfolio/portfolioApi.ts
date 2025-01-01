@@ -1,37 +1,53 @@
-// This would typically interact with your backend
-// Using localStorage for demo purposes
+import axios from 'axios';
+import { ApiResponse, Portfolio, PortfolioStats, Transaction } from './Portfolio';
 
-export interface PortfolioStock {
-    id: string;
-    symbol: string;
-    name: string;
-    quantity: number;
-    buyPrice: number;
-    currentPrice?: number;
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:2000/';
+
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json'
   }
-  
-  export const getPortfolio = (): PortfolioStock[] => {
-    const portfolio = localStorage.getItem('portfolio');
-    return portfolio ? JSON.parse(portfolio) : [];
-  };
-  
-  export const addStock = (stock: Omit<PortfolioStock, 'id'>): PortfolioStock => {
-    const portfolio = getPortfolio();
-    const newStock = { ...stock, id: Date.now().toString() };
-    localStorage.setItem('portfolio', JSON.stringify([...portfolio, newStock]));
-    return newStock;
-  };
-  
-  export const updateStock = (stock: PortfolioStock): void => {
-    const portfolio = getPortfolio();
-    const updatedPortfolio = portfolio.map(item => 
-      item.id === stock.id ? stock : item
-    );
-    localStorage.setItem('portfolio', JSON.stringify(updatedPortfolio));
-  };
-  
-  export const deleteStock = (id: string): void => {
-    const portfolio = getPortfolio();
-    const updatedPortfolio = portfolio.filter(item => item.id !== id);
-    localStorage.setItem('portfolio', JSON.stringify(updatedPortfolio));
-  };
+});
+
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    console.error('API Request Error:', error);
+    return Promise.reject(error);
+  }
+);
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.code === 'ERR_CONNECTION_REFUSED') {
+      console.error('Cannot connect to the server. Please check if the backend is running.');
+    }
+    return Promise.reject(error);
+  }
+);
+
+export const getPortfolio = () => 
+  api.get<ApiResponse<Portfolio[]>>('/portfolio');
+
+export const getPortfolioStats = () => 
+  api.get<ApiResponse<PortfolioStats>>('/portfolio/stats');
+
+// export const buyStock = (data: TransactionRequest) => 
+//   api.post<ApiResponse<Transaction>>('/transactions/buy', data);
+
+// export const sellStock = (data: TransactionRequest) => 
+//   api.post<ApiResponse<Transaction>>('/transactions/sell', data);
+
+export const getTransactions = () => 
+  api.get<ApiResponse<Transaction[]>>('/transactions/history');
+
+export default api;

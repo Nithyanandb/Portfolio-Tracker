@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
 
-@Data
+
+
 @Entity
+@Data
 @Table(name = "transactions")
 public class Transaction {
     @Id
@@ -20,12 +22,10 @@ public class Transaction {
     private String type; // BUY or SELL
     private int quantity;
     private double price;
-    private LocalDateTime date;
-
-    // Additional fields as needed
     private double totalAmount;
     private String status;
-    
+    private LocalDateTime date;
+
     @PrePersist
     protected void onCreate() {
         date = LocalDateTime.now();

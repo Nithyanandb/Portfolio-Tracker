@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Search, TrendingUp, ArrowUp, ArrowDown, RefreshCcw, Clock, BarChart2, Globe, DollarSign } from 'lucide-react';
 import { Stock, fetchStocks } from './stockApi';
 import { StockChart } from './StockChart';
-
+import { Check } from 'lucide-react';
 import { BuyModal } from './BuyModal';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header/Header';
 import { StockDetail } from './StockDetail';
+import { useAuth } from '@/components/hooks/useAuth';
 
 export const BuyStocks: React.FC = () => {
   const [stocks, setStocks] = useState<Stock[]>([]);
@@ -22,16 +23,24 @@ export const BuyStocks: React.FC = () => {
   const [stockDetailLoading, setStockDetailLoading] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
   const [timeFrame, setTimeFrame] = useState('1D');
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+
+  const handleTransactionSuccess = () => {
+    setShowSuccessPopup(true);
+    loadStocks();
+    setTimeout(() => {
+      setShowSuccessPopup(false);
+    }, 3000);
+  };
+
 
   const loadStocks = async () => {
     setLoading(true);
     try {
       const fetchedStocks = await fetchStocks();
       setStocks(fetchedStocks);
-      // Set the first stock as default selected stock
-      if (fetchedStocks.length > 0 && !selectedStockDetail) {
-        setSelectedStockDetail(fetchedStocks[0]);
-      }
+      // Remove default selection
+      setSelectedStockDetail(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load stocks');
     } finally {
@@ -125,24 +134,17 @@ export const BuyStocks: React.FC = () => {
     setSelectedStockDetail(stock);
     
     try {
-      // Simulate loading detailed stock data
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      // Here you would typically fetch additional stock details
-      
+      // Fetch additional stock details if needed
+      const detailedStock = { ...stock }; // Add API call here if needed
+      setSelectedStockDetail(detailedStock);
     } catch (error) {
       console.error('Failed to load stock details:', error);
+      setError('Failed to load stock details');
     } finally {
       setStockDetailLoading(false);
     }
   };
 
-  const handleTransactionSuccess = () => {
-    setMessage({
-      type: 'success',
-      text: 'Transaction completed successfully!'
-    });
-    loadStocks(); // Refresh the stock list
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-900 to-black text-white">
@@ -189,7 +191,7 @@ export const BuyStocks: React.FC = () => {
                       ? 'bg-white/10'
                       : 'bg-black/20 hover:bg-white/5'
                   }`}
-                  onClick={() => setSelectedStockDetail(stock)}
+                  onClick={() => handleStockSelect(stock)}
                 >
                   <div className="flex justify-between items-start">
                     <div>
@@ -221,7 +223,11 @@ export const BuyStocks: React.FC = () => {
 
         {/* Main Content */}
         <div className="flex-1 overflow-y-auto">
-          {selectedStockDetail ? (
+          {stockDetailLoading ? (
+            <div className="h-full flex items-center justify-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+            </div>
+          ) : selectedStockDetail ? (
             <StockDetail
               stock={selectedStockDetail}
               onBuyClick={setSelectedStock}
@@ -238,11 +244,31 @@ export const BuyStocks: React.FC = () => {
         </div>
       </div>
 
+      <AnimatePresence>
+        {showSuccessPopup && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            className="fixed bottom-8 right-8 z-50"
+          >
+            <div className="bg-green-500 text-white px-6 py-4 rounded-xl shadow-xl flex items-center gap-3">
+              <div className="bg-white/20 rounded-full p-1">
+                <Check className="w-4 h-4" />
+              </div>
+              <span>Transaction completed successfully!</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+
       {/* Buy Modal */}
       {selectedStock && (
         <BuyModal
           stock={selectedStock}
           onClose={() => setSelectedStock(null)}
+          onSuccess={handleTransactionSuccess}
         /> 
       )}
     </div>

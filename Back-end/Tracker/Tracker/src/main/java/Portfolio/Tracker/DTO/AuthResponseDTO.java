@@ -14,4 +14,6 @@ public class AuthResponseDTO {
     private String email;
     private String name;
     private String message;
-} 
+
+
+}

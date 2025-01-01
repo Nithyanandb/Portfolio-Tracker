@@ -2,56 +2,58 @@ package Portfolio.Tracker.Controller;
 
 import Portfolio.Tracker.DTO.*;
 import Portfolio.Tracker.Service.TransactionService;
-import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/transaction")
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@RequiredArgsConstructor
 public class TransactionController {
-        private final TransactionService transactionService;
-
-    public TransactionController(TransactionService transactionService) {
-        this.transactionService = transactionService;
-    }
+    private final TransactionService transactionService;
 
     @PostMapping("/buy")
-        public ResponseEntity<?> buyStock(
-                @RequestHeader("Authorization") String authHeader,
-                @Valid @RequestBody TransactionRequest request) {
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                return ResponseEntity.status(401).body("No authentication token provided");
-            }
-            return transactionService.executeBuyOrder(request);
+    public ResponseEntity<ApiResponse<TransactionResponse>> buyStock(
+            @Valid @RequestBody TransactionRequest request,
+            Authentication auth) {
+        try {
+            request.setType("BUY");
+            transactionService.processTransaction(request, auth.getName());
+            return ResponseEntity.ok(new ApiResponse<>(true, "Buy order executed successfully", null));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse<>(false, e.getMessage(), null));
         }
     }
 
-//    @PostMapping("/sell")
-//    @PreAuthorize("isAuthenticated()")
-//    public ResponseEntity<?> sellStock(@Valid @RequestBody TransactionRequest request) {
-//        return transactionService.executeSellOrder(request);
-//    }
+    @PostMapping("/sell")
+    public ResponseEntity<ApiResponse<TransactionResponse>> sellStock(
+            @Valid @RequestBody TransactionRequest request,
+            Authentication auth) {
+        try {
+            request.setType("SELL");
+            transactionService.processTransaction(request, auth.getName());
+            return ResponseEntity.ok(new ApiResponse<>(true, "Sell order executed successfully", null));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse<>(false, e.getMessage(), null));
+        }
+    }
 
-//    @GetMapping("/history")
-//    @PreAuthorize("isAuthenticated()")
-//    public ResponseEntity<?> getTransactionHistory(
-//            @RequestParam(required = false) String symbol,
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "20") int size) {
-//        return transactionService.getTransactionHistory(symbol, page, size);
-//    }
-//
-//    @GetMapping("/portfolio")
-//    @PreAuthorize("isAuthenticated()")
-//    public ResponseEntity<PortfolioResponse> getPortfolio() {
-//        return ResponseEntity.ok(transactionService.getCurrentPortfolio());
-//    }
-
-//    @GetMapping("/portfolio/performance")
-//    @PreAuthorize("isAuthenticated()")
-//    public ResponseEntity<?> getPortfolioPerformance(
-//            @RequestParam(defaultValue = "7") int days) {
-//        return transactionService.getPortfolioPerformance(days);
-//    }
-//}
+    @GetMapping("/history")
+    public ResponseEntity<ApiResponse<List<TransactionResponse>>> getTransactionHistory(
+            Authentication auth) {
+        try {
+            List<TransactionResponse> history = transactionService.getTransactionHistory(auth.getName());
+            return ResponseEntity.ok(new ApiResponse<>(true, "Transaction history retrieved", history));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse<>(false, e.getMessage(), null));
+        }
+    }
+}

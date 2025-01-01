@@ -3,8 +3,8 @@ package Portfolio.Tracker.Service;
 import Portfolio.Tracker.DTO.AuthResponseDTO;
 import Portfolio.Tracker.DTO.LoginRequestDTO;
 import Portfolio.Tracker.DTO.RegisterRequestDTO;
-import Portfolio.Tracker.Entity.AuthProvider;
-import Portfolio.Tracker.Entity.Role;
+import Portfolio.Tracker.DTO.AuthProvider;
+import Portfolio.Tracker.DTO.Role;
 import Portfolio.Tracker.Entity.User;
 import Portfolio.Tracker.Repository.UserRepository;
 import Portfolio.Tracker.Security.JwtTokenProvider;
@@ -18,7 +18,6 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import Portfolio.Tracker.Service.KeyStorage;
 
 import java.util.Collections;
 import java.util.Map;

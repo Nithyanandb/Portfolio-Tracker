@@ -11,8 +11,10 @@ interface BuyModalProps {
     price: number;
   };
   onClose: () => void;
+  onSuccess: () => void;
 }
-export const BuyModal: React.FC<BuyModalProps> = ({ stock, onClose }) => {
+export const BuyModal: React.FC<BuyModalProps> = ({ stock, onClose, onSuccess }) => {
+
   const [quantity, setQuantity] = useState(1);
   const { isAuthenticated } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -20,13 +22,16 @@ export const BuyModal: React.FC<BuyModalProps> = ({ stock, onClose }) => {
     onSuccess: onClose 
   });
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!isAuthenticated) {
       setShowAuthModal(true);
       return;
     }
-    handlePurchase(stock, quantity);
+    await handlePurchase(stock, quantity);
+    onSuccess();
+    onClose();
   };
+
 
   return (
     <>

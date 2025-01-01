@@ -12,10 +12,9 @@ import Hero from './components/Hero/Hero';
 import Features from './components/Features/Features';
 import Security from './components/Security/Security';
 import TransactionPage from './components/pages/TransactionPage';
-import PortfolioDashboard from './components/portfolio/PortfolioDashboard';
 import AllStocks from './components/pages/AllStocks';
 import SellStocks from './components/pages/SellStocks';
-import StockForm from './components/portfolio/StockForm';
+
 import OAuthCallback from './components/Auth/OAuthCallback';
 import NotFound from './components/ErrorBoundary/NotFound';
 import CookieConsent from './CookieConsent';
@@ -25,6 +24,7 @@ import MarginTrading from './components/Header/Navigation/MarginTrading';
 import SpotTrading from './components/Header/Navigation/SpotTrading';
 import OptionsTrading from './components/Header/Navigation/trading/OptionsTrading';
 import BuyStocks from './components/pages/BuyStocks/BuyStocks';
+import { PortfolioDashboard } from './components/portfolio/PortfolioDashboard';
 
 // Create a QueryClient instance
 const queryClient = new QueryClient({
@@ -108,7 +108,7 @@ const router = createBrowserRouter([
         <div className="relative">
           <DynamicBackground sections={backgroundSections} currentSection={0} />
           <div className="relative z-10">
-            <PortfolioDashboard />
+            <PortfolioDashboard/>
           </div>
         </div>
       </AppLayout>
@@ -116,8 +116,7 @@ const router = createBrowserRouter([
   },
   { path: "/auth/callback", element: <OAuthCallback /> },
   { path: "/:type/:symbol", element: <TransactionPage /> }, 
-  { path: "/portfolio/add", element: <StockForm /> },
-  { path: "/portfolio/edit/:id", element: <StockForm /> },
+  // { path: "/portfolio/", element: <PortfolioPage /> },
   { path: "/transaction/all", element: <AllStocks /> },
   { path: "/stock/buy", element: <BuyStocks /> },
   { path: "/stock/sell", element: <SellStocks /> },

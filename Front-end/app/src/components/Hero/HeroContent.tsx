@@ -6,12 +6,12 @@ const HeroContent: React.FC = () => {
   
 
   return (
-    <div className="relative mt-20">
+    <div className="relative mt-20 mb-40">
       {/* Subtle gradient background */}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-black/95 to-black/90" />
         
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
           className="relative max-w-[1200px] mx-auto px-8"
         >
@@ -29,7 +29,7 @@ const HeroContent: React.FC = () => {
 
             {/* Heading */}
             <motion.h1
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
               className="text-5xl lg:text-7xl font-medium tracking-tight text-white mb-8"
@@ -42,7 +42,7 @@ const HeroContent: React.FC = () => {
 
             {/* Description */}
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 0 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
               className="text-xl text-white/70 mb-12 font-light leading-relaxed"
@@ -55,23 +55,24 @@ const HeroContent: React.FC = () => {
 
           {/* CTA Buttons */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 0 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-            className="flex flex-wrap gap-6"
+            transition={{ delay: 0 }}
+            className="flex flex-wrap gap-4"
           >
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="px-10 py-4  bg-white rounded-full text-black tracking-wide flex items-center gap-2 hover:bg-white/90 transition-all duration-300"
+              className="px-6 py-3 bg-white rounded-full text-black text-sm tracking-wide flex items-center gap-2 hover:bg-white/90 transition-all duration-300"
             >
               Start Trading
-              <ArrowRight className="w-6 h-8" />
+              <ArrowRight className="w-4 h-4" />
             </motion.button>
+
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="px-10 py-4 bg-white/[0.03] rounded-full text-white font-medium tracking-wide hover:bg-white/[0.08] transition-all duration-300"
+              className="px-6 py-3 bg-white/[0.1] rounded-full text-white text-sm font-medium tracking-wide hover:bg-white/[0.08] transition-all duration-300"
             >
               Learn More
             </motion.button>

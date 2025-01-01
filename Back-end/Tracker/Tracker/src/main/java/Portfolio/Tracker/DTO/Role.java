@@ -1,4 +1,4 @@
-package Portfolio.Tracker.Entity;
+package Portfolio.Tracker.DTO;
 
 public enum Role {
     ROLE_USER,

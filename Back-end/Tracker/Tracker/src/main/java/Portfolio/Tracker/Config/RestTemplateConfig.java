@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import java.time.Duration;
 
 @Configuration
@@ -18,7 +17,8 @@ public class RestTemplateConfig {
             .setReadTimeout(Duration.ofSeconds(5))
             .additionalInterceptors(
                 (request, body, execution) -> {
-                    // Add any default headers or authentication if needed
+                    // Add common headers
+                    request.getHeaders().add("Accept", "application/json");
                     return execution.execute(request, body);
                 }
             )
@@ -29,4 +29,4 @@ public class RestTemplateConfig {
     public RestTemplateBuilder restTemplateBuilder() {
         return new RestTemplateBuilder();
     }
-} 
+}

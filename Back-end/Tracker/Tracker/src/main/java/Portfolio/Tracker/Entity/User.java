@@ -1,5 +1,7 @@
 package Portfolio.Tracker.Entity;
 
+import Portfolio.Tracker.DTO.AuthProvider;
+import Portfolio.Tracker.DTO.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;

@@ -150,7 +150,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
                 <motion.div
                   initial={{ opacity: 0, x: 0 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1 }}
+                  transition={{ delay: 0 }}
                   className="relative aspect-[16/9] overflow-hidden rounded-lg"
                 >
                   <img
@@ -323,7 +323,7 @@ const NavItem: React.FC<{
               initial={{ opacity: 0, y: 0 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0 }}
               className="bg-black/95 backdrop-blur-xl border-t border-white/10"
             >
               {children}
@@ -361,7 +361,7 @@ const NavLink: React.FC<{
           "group flex flex-col gap-0.5 p-4 rounded-lg hover:bg-white/5 transition-all duration-200",
           className
         )}
-        whileHover={{ x: 8 }}
+        whileHover={{ x: 0 }}
         onClick={handleClick}
       >
         <div className="flex items-center gap-3">

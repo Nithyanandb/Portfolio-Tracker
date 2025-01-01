@@ -108,12 +108,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               <div className="relative mx-auto w-24 h-24">
                 <motion.div
                   animate={{ rotate: 360 }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
                   className="absolute inset-0 rounded-full border-t-2 border-blue-500"
                 />
                 <motion.div
                   animate={{ rotate: -360 }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                  transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
                   className="absolute inset-3 rounded-full border-t-2 border-purple-500"
                 />
                 <motion.div
@@ -138,7 +138,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               exit={{ scale: 0.95 }}
               className={cn(
                 "relative z-0 w-full max-w-md rounded-2xl",
-                "bg-black/40 backdrop-blur-xl border border-white/10 p-8",
+                "bg-white/10 backdrop-blur-xl  p-8",
                 (isAuthenticating || success) && "opacity-0 pointer-events-none"
               )}
             >
@@ -151,7 +151,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 </button>
 
                 <motion.h2 
-                  initial={{ y: -20, opacity: 0 }}
+                  initial={{ y: -5, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   className="text-3xl font-medium text-white mb-2 tracking-tight"
                 >
@@ -159,7 +159,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 </motion.h2>
                 
                 <motion.p 
-                  initial={{ y: -10, opacity: 0 }}
+                  initial={{ y: 0, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.1 }}
                   className="text-white/60 mb-8"

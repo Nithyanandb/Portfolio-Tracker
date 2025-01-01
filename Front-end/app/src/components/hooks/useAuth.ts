@@ -104,28 +104,37 @@ export const useAuth = () => {
   const loginWithGithub = () => {
     handleOAuthPopup('http://localhost:2000/oauth2/authorization/github');
   };
-
   const logout = useCallback(async () => {
     try {
       const authData = localStorage.getItem('auth');
       if (authData) {
         const { token } = JSON.parse(authData);
-        await fetch('http://localhost:2000/auth/logout', {
+        const response = await fetch('http://localhost:2000/auth/logout', {
           method: 'POST',
-          credentials: 'include',
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include'
         });
+  
+        if (!response.ok) {
+          throw new Error('Logout failed');
+        }
       }
       
+      // Clear auth state regardless of API response
       setUser(null);
       setToken(null);
       localStorage.removeItem('auth');
       toast.success('Successfully signed out!');
     } catch (error) {
       console.error('Logout error:', error);
-      toast.error('Failed to sign out');
+      // Still clear local state on error
+      setUser(null);
+      setToken(null);
+      localStorage.removeItem('auth');
+      toast.error('Error during logout');
     }
   }, [setUser, setToken]);
 

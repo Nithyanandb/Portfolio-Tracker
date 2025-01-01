@@ -8,7 +8,7 @@ import StockRecommendations from './StockRecommendations';
 const StockDashboard: React.FC = () => {
   const { data: recommendations, refetch, isRefetching } = useQuery({
     queryKey: ['stock-recommendations'],
-    queryFn: () => fetch(API_CONFIG.getEndpointUrl('RECOMMENDATIONS')).then(res => res.json()),
+    // queryFn: () => fetch(API_CONFIG.getEndpointUrl('RECOMMENDATIONS')).then(res => res.json()),
     refetchInterval: API_CONFIG.CACHE_DURATION,
   });
 

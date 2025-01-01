@@ -68,7 +68,7 @@ const Footer = () => (
 
           {/* Country Selector */}
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-400 font-light">United States</span>
+            <span className="text-sm text-gray-400 font-light">IN</span>
           </div>
         </div>
       </div>
