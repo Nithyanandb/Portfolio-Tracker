@@ -9,7 +9,7 @@ import AuthModal from '../Auth/AuthModal';
 import StockTicker from './StockTicker/StockTicker';
 import { SearchPopover } from './SearchPopover';
 import { stocks } from './StockTicker/stockData';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Header: React.FC = () => {
   const { user, logout, isAuthenticated, isAuthenticating } = useAuth();
@@ -35,6 +35,15 @@ const Header: React.FC = () => {
       navigate('/portfolio');
     };
 
+    export const Header: React.FC = () => {
+      const location = useLocation();
+      
+      // Array of paths where we want to show the stock ticker
+      const showTickerPaths = ['/'];
+      
+      // Check if current path should show ticker
+      const shouldShowTicker = showTickerPaths.includes(location.pathname);
+    
 
     return (
       <motion.header
@@ -44,6 +53,19 @@ const Header: React.FC = () => {
           backdropFilter: `blur(${headerBlur}px)`
         }}
       >
+         {/* Only render StockTicker if we're on the allowed paths */}
+         {shouldShowTicker && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="py-2"
+          >
+            <StockTicker />
+          </motion.div>
+        )}
+
+
         <div className="relative bg-black/80">
           {/* Premium gradient line */}
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />

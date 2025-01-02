@@ -40,7 +40,7 @@ const StockDashboard: React.FC = () => {
   ];
 
   return (
-    <div className="relative w-full bg-black/90 backdrop-blur-2xl ">
+    <div className="w-full">
       <div className="flex items-center justify-between p-6 border-b border-white/10">
         <div className="flex items-center gap-3">
           <LineChart className="w-4 h-4 text-white/90" />
@@ -53,7 +53,7 @@ const StockDashboard: React.FC = () => {
           whileTap={{ scale: 0.95 }}
           onClick={() => refetch()}
           disabled={isRefetching}
-          className="p-2 bg-white/5 hover:bg-white/10 transition-all duration-300"
+          className="p-2 bg-white/5 hover:bg-white/10 transition-all duration-300 rounded-lg"
         >
           <RefreshCw className={`w-3 h-3 text-white/90 ${isRefetching ? 'animate-spin' : ''}`} />
         </motion.button>

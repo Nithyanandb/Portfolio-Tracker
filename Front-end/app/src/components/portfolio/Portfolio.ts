@@ -47,12 +47,11 @@ export interface PortfolioHolding {
 }
 
 export interface PortfolioStats {
+  dailyPerformance: Array<{
+    date: string;
+    value: number;
+  }>;
   totalInvestment: number;
-  currentValue: number;
-  todaysPnL: number;
-  totalPnL: number;
-  totalPnLPercentage: number;
-  dailyPerformance: DailyPerformance[];
 }
 
 export interface DailyPerformance {

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Area } from '@ant-design/plots';
 import { motion } from 'framer-motion';
 import { PortfolioTable } from './PortfolioTable';
 import { TransactionModal } from './TransactionModal';
-import { formatMoney, formatPercent, Portfolio, PortfolioStats } from './Portfolio';
+import { Portfolio, PortfolioStats } from './Portfolio';
 import { getPortfolio, getPortfolioStats } from './portfolioApi';
 import WatchlistManager from '../Hero/WatchlistManager';
 import MarketOverview from '../Hero/MarketOverview';
-import { PortfolioChart } from './PortfolioChart';
+import { PortfolioPerformance } from './PortfolioPerformance';
+import StockDashboard from '../Stock/StockDashboard';
 import TrendingStocks from '../Hero/TrendingStocks';
 
 export const performanceData = [
@@ -17,6 +17,14 @@ export const performanceData = [
   { date: '2024-01-04', value: 10800 },
   { date: '2024-01-05', value: 11000 }
 ];
+
+export interface PortfolioStats {
+  dailyPerformance: Array<{
+    date: string;
+    value: number;
+  }>;
+  totalInvestment: number;
+}
 
 export const PortfolioDashboard: React.FC = () => {
   const [portfolio, setPortfolio] = useState<Portfolio[]>([]);
@@ -43,9 +51,9 @@ export const PortfolioDashboard: React.FC = () => {
         getPortfolioStats()
       ]);
       
-      if (portfolioRes.data.success && statsRes.data.success) {
-        setPortfolio(portfolioRes.data.data);
-        setStats(statsRes.data.data);
+      if (portfolioRes.data?.success && statsRes.data?.success) {
+        setPortfolio(portfolioRes.data.data || []);
+        setStats(statsRes.data.data || null);
       } else {
         setError('Failed to fetch portfolio data');
       }
@@ -58,9 +66,11 @@ export const PortfolioDashboard: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-32 w-32 " />
-    </div>;
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white/20" />
+      </div>
+    );
   }
 
   if (error) {
@@ -93,86 +103,18 @@ export const PortfolioDashboard: React.FC = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        {/* Portfolio Value Chart */}
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-          <div className="flex justify-between items-center mb-6">
-            <div>
-              <h2 className="text-2xl font-semibold text-gray-900">
-                {formatMoney(stats?.totalValue || 0)}
-              </h2>
-              <p className={`text-sm ${(stats?.todayChange ?? 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {formatPercent(stats?.todayChange ?? 0)} today
-              </p>
-            </div>
-            <div className="flex gap-4">
-              {timeframes.map((timeframe) => (
-                <button
-                  key={timeframe}
-                  onClick={() => setActiveTimeframe(timeframe)}
-                  className={`text-sm ${activeTimeframe === timeframe ? 'text-gray-900' : 'text-gray-600 hover:text-gray-900'}`}
-                >
-                  {timeframe}
-                </button>
-              ))}
-            </div>
-          </div>
-          <PortfolioChart 
-            data={performanceData}
-            timeframes={timeframes}
-            activeTimeframe={activeTimeframe}
-            onTimeframeChange={setActiveTimeframe}
-          />
+        {/* Portfolio Performance Section */}
+        <div className="mb-8">
+          <PortfolioPerformance stats={stats} />
         </div>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-xl shadow-sm p-6"
-          >
-            <h3 className="text-sm font-medium text-gray-500">Portfolio Value</h3>
-            <p className="text-2xl font-semibold mt-2">{formatMoney(stats?.totalValue || 0)}</p>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-xl shadow-sm p-6"
-          >
-            <h3 className="text-sm font-medium text-gray-500">Day's P&L</h3>
-            <p className={`text-2xl font-semibold mt-2 ${(stats?.todayChange ?? 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              {formatMoney(stats?.todayChange || 0)}
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-xl shadow-sm p-6"
-          >
-            <h3 className="text-sm font-medium text-gray-500">Total Return</h3>
-            <p className={`text-2xl font-semibold mt-2 ${(stats?.totalReturn ?? 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              {formatPercent(stats?.totalReturn || 0)}
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-xl shadow-sm p-6"
-          >
-            <h3 className="text-sm font-medium text-gray-500">Positions</h3>
-            <p className="text-2xl font-semibold mt-2">{stats?.totalPositions || 0}</p>
-          </motion.div>
-        </div>
-
-        {/* Holdings & Watchlist Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <div className="bg-black rounded-xl shadow-sm">
-              <div className="px-6 py-4 ">
-                <h2 className="text-lg font-semibold text-gray-900">Holdings</h2>
+        {/* Stock Dashboard & Holdings Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+          {/* Left Column - Holdings */}
+          <div className="lg:col-span-2 space-y-8">
+            <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10">
+              <div className="p-6">
+                <h2 className="text-lg font-medium text-white">Holdings</h2>
               </div>
               <PortfolioTable
                 data={portfolio}
@@ -181,25 +123,36 @@ export const PortfolioDashboard: React.FC = () => {
               />
             </div>
           </div>
-          
-          <div>
-            <div className="bg-black rounded-xl shadow-sm mb-6">
-              <TrendingStocks />
+
+          {/* Right Column - Stock Dashboard */}
+          <div className="space-y-8">
+            <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
+              <StockDashboard />
             </div>
             
-            <div className="bg-black rounded-xl shadow-sm">
-              <WatchlistManager watchlist={[]} onRemove={function (id: string): Promise<void> {
-                throw new Error('Function not implemented.');
-              } } onUpdate={function (id: string, data: any): Promise<void> {
-                throw new Error('Function not implemented.');
-              } } onAdd={function (symbol: string): Promise<void> {
-                throw new Error('Function not implemented.');
-              } } />
+            <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
+              <WatchlistManager 
+                watchlist={[]} 
+                onRemove={async (id) => {}} 
+                onUpdate={async (id, data) => {}} 
+                onAdd={async (symbol) => {}} 
+              />
             </div>
+          </div>
+        </div>
+
+        {/* Market Overview Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
+            <MarketOverview />
+          </div>
+          <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
+            <TrendingStocks />
           </div>
         </div>
       </main>
 
+      {/* Transaction Modal */}
       <TransactionModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
