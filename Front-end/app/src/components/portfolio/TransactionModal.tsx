@@ -1,103 +1,66 @@
-import React, { useState } from 'react';
-import { Dialog } from '@headlessui/react';
+import React from 'react';
 import { motion } from 'framer-motion';
 
 interface TransactionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: TransactionData) => void;
   type: 'BUY' | 'SELL';
-  symbol?: string;
-  currentPrice?: number;
-}
-
-interface TransactionData {
   symbol: string;
-  quantity: number;
-  price: number;
+  currentPrice?: number;
+  onSubmit: (type: 'BUY' | 'SELL', symbol: string) => void;
 }
 
 export const TransactionModal: React.FC<TransactionModalProps> = ({
   isOpen,
   onClose,
-  onSubmit,
   type,
   symbol,
-  currentPrice
+  currentPrice,
+  onSubmit,
 }) => {
-  const [quantity, setQuantity] = useState<number>(0);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit({
-      symbol: symbol || '',
-      quantity,
-      price: currentPrice || 0
-    });
-    onClose();
-  };
+  if (!isOpen) return null;
 
   return (
-    <Dialog
-      open={isOpen}
-      onClose={onClose}
-      className="fixed z-50 inset-0 overflow-y-auto"
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black/50 flex items-center justify-center p-4"
+      onClick={onClose}
     >
-      <div className="flex items-center justify-center min-h-screen">
-        <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="relative bg-white rounded-lg max-w-md w-full mx-4 p-6"
-        >
-          <Dialog.Title className="text-lg font-medium">
-            {type} {symbol}
-          </Dialog.Title>
-          <form onSubmit={handleSubmit} className="mt-4">
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Quantity
-                </label>
-                <input
-                  type="number"
-                  min="1"
-                  value={quantity}
-                  onChange={(e) => setQuantity(Number(e.target.value))}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Price
-                </label>
-                <input
-                  type="number"
-                  value={currentPrice}
-                  disabled
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm bg-gray-50"
-                />
-              </div>
-              <div className="flex justify-end space-x-3">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700"
-                >
-                  Confirm {type}
-                </button>
-              </div>
-            </div>
-          </form>
-        </motion.div>
-      </div>
-    </Dialog>
+      <motion.div
+        initial={{ y: 50 }}
+        animate={{ y: 0 }}
+        exit={{ y: 50 }}
+        className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 w-full max-w-md"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 className="text-xl font-semibold text-white mb-4">{type} {symbol}</h2>
+        <div className="space-y-4">
+          <div className="flex justify-between">
+            <span className="text-gray-400">Current Price</span>
+            <span className="text-white">₹{currentPrice?.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-400">Quantity</span>
+            <input
+              type="number"
+              className="bg-white/10 text-white rounded-lg px-3 py-1.5 w-20"
+              placeholder="0"
+            />
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-400">Total</span>
+            <span className="text-white">₹0.00</span>
+          </div>
+          <button
+            className="w-full bg-green-500/10 text-green-400 rounded-lg py-2.5 text-sm font-medium hover:bg-green-500/20 transition-colors"
+            onClick={() => onSubmit(type, symbol)}
+          >
+            {type}
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 };

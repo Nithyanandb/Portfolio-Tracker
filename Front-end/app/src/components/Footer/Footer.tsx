@@ -1,12 +1,12 @@
 import React from 'react';
-
+import { Logo } from '../Header/Logo';
 const Footer = () => (
   <footer className="relative bg-black pt-24 pb-12">
     <div className="max-w-7xl mx-auto px-6">
       {/* Main Footer Content */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
         <div className="space-y-6">
-          <img src="/capx-logo.svg" alt="CapX" className="h-8 w-auto" />
+       <Logo/>
           <p className="text-gray-400 text-sm leading-relaxed font-light">
             Your trusted partner in the world of finance. Experience the future of trading with CapX.
           </p>

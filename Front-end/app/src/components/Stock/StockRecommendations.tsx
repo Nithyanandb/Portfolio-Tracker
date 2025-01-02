@@ -89,13 +89,12 @@ const StockRecommendations: React.FC<StockRecommendationsProps> = ({ recommendat
         </div>
         <div className="flex items-center space-x-3 text-sm text-gray-400">
           <Clock className="w-4 h-4" />
-          <span>Last updated: {recommendations[0]?.lastUpdated}</span>
+        
         </div>
       </div>
 
       {/* Refined timeframe selector */}
       <div className="flex items-center gap-6 mb-8">
-        <span className="text-sm font-medium text-gray-400">Timeframe:</span>
         <div className="flex gap-2 p-1 bg-white/[0.03] rounded-lg backdrop-blur-xl">
           {timeframes.map((timeframe) => (
             <button

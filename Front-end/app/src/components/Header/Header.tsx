@@ -30,19 +30,17 @@ const Header: React.FC = () => {
 
   
     const navigate = useNavigate();
-
+    const location = useLocation();
+  
     const handleProfileClick = () => {
       navigate('/portfolio');
     };
-
-    export const Header: React.FC = () => {
-      const location = useLocation();
-      
-      // Array of paths where we want to show the stock ticker
-      const showTickerPaths = ['/'];
-      
-      // Check if current path should show ticker
-      const shouldShowTicker = showTickerPaths.includes(location.pathname);
+        
+    // Array of paths where we want to show the stock ticker
+    const showTickerPaths = ['/'];
+        
+    // Check if current path should show ticker
+    const shouldShowTicker = showTickerPaths.includes(location.pathname);
     
 
     return (
@@ -53,17 +51,7 @@ const Header: React.FC = () => {
           backdropFilter: `blur(${headerBlur}px)`
         }}
       >
-         {/* Only render StockTicker if we're on the allowed paths */}
-         {shouldShowTicker && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="py-2"
-          >
-            <StockTicker />
-          </motion.div>
-        )}
+        
 
 
         <div className="relative bg-black/80">
@@ -170,24 +158,7 @@ const Header: React.FC = () => {
             </div>
           </div>
 
-          {/* Stock Ticker with enhanced styling */}
-          <motion.div
-            className="absolute left-0 right-0 overflow-hidden"
-            style={{
-              y: tickerY,
-              opacity: tickerOpacity,
-              scale: tickerScale
-            }}
-          >
-            <motion.div
-              className="container mx-auto"
-              style={{
-                transform: waveEffect.get() ? `translate3d(0, ${Math.sin(Date.now() / 1000) * waveEffect.get()}px, 0)` : 'none'
-              }}
-            >
-              <StockTicker stocks={stocks} />
-            </motion.div>
-          </motion.div>
+        
         </div>
 
         {/* Authentication Loading Overlay */}
@@ -209,9 +180,30 @@ const Header: React.FC = () => {
                 </p>
               </div>
             </motion.div>
+
+            
           )}
         </AnimatePresence>
-
+ {/* Only render StockTicker if we're on the allowed paths */}
+ {shouldShowTicker && (
+            <motion.div
+            className="absolute left-0 right-0 overflow-hidden"
+            style={{
+              y: tickerY,
+              opacity: tickerOpacity,
+              scale: tickerScale
+            }}
+          >
+            <motion.div
+              className="container mx-auto"
+              style={{
+                transform: waveEffect.get() ? `translate3d(0, ${Math.sin(Date.now() / 1000) * waveEffect.get()}px, 0)` : 'none'
+              }}
+            >
+              <StockTicker stocks={stocks} />
+            </motion.div>
+          </motion.div>
+        )}
         <AuthModal
           isOpen={isAuthModalOpen}
           onClose={() => setIsAuthModalOpen(false)}

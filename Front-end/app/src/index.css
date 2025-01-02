@@ -1,12 +1,7 @@
 /* Tailwind Imports */
-@import 'tailwindcss/base';
-@import './styles/base.css';
-
-@import 'tailwindcss/components';
-@import './styles/components.css';
-
-@import 'tailwindcss/utilities';
-@import './styles/utilities.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* CSS Variables */
 :root {
@@ -22,6 +17,28 @@
   color-scheme: dark;
   background-color: var(--background-dark);
   color: var(--text-primary);
+}
+
+/* Global Background */
+.global-background {
+  background-color: #0f0f0f; /* Fallback color */
+  background-image: url('https://images.unsplash.com/photo-1639322537228-f710d846310a');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* Optional: Makes the background fixed */
+}
+
+/* Optional: Add a gradient overlay for better readability */
+.global-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(15, 15, 15, 0.9), rgba(15, 15, 15, 0.7));
+  z-index: -1;
 }
 
 /* Gradient Background */
@@ -94,7 +111,7 @@
   @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500;
 }
 
-
+/* Custom Scrollbar */
 .custom-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
@@ -117,6 +134,7 @@
   background-color: rgba(255, 255, 255, 0.3);
 }
 
+/* Smooth Scroll */
 html {
   scroll-behavior: smooth;
 }
@@ -131,7 +149,7 @@ body {
   transition: all 0.25s ease-out;
 }
 
-/* Add these styles to your CSS */
+/* Gradient Animation */
 @keyframes gradient {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -142,7 +160,7 @@ body {
   scroll-behavior: smooth;
 }
 
-/* Smooth scrollbar */
+/* Smooth Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -160,20 +178,20 @@ body {
   background: rgba(59, 130, 246, 0.3);
 }
 
-/* Remove snap scrolling */
+/* Remove Snap Scrolling */
 .space-y-32 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
   margin-top: calc(12rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(12rem * var(--tw-space-y-reverse));
 }
 
-/* Custom slow scroll behavior */
+/* Custom Slow Scroll Behavior */
 .scroll-container {
   scroll-behavior: smooth;
   transition: scroll-behavior 0.8s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-/* Smooth scrollbar with slower tracking */
+/* Smooth Scrollbar with Slower Tracking */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -192,7 +210,7 @@ body {
   background: rgba(59, 130, 246, 0.3);
 }
 
-/* Add smooth transition for all animations */
+/* Add Smooth Transition for All Animations */
 * {
   transition-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
 }

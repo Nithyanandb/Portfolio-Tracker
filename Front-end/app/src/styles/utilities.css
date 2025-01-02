@@ -12,3 +12,8 @@
     scrollbar-color: rgba(239, 45, 26, 0.3) transparent;
   }
 }
+
+
+body {
+  @apply bg-black text-white;
+}

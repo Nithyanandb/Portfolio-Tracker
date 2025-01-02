@@ -4,7 +4,9 @@ import Portfolio.Tracker.DTO.AuthRequest;
 import Portfolio.Tracker.DTO.AuthResponse;
 import Portfolio.Tracker.DTO.AuthProvider;
 import Portfolio.Tracker.DTO.Role;
+import Portfolio.Tracker.Entity.LoginActivity;
 import Portfolio.Tracker.Entity.User;
+import Portfolio.Tracker.Repository.LoginActivityRepository;
 import Portfolio.Tracker.Repository.UserRepository;
 import Portfolio.Tracker.Security.JwtTokenProvider;
 import Portfolio.Tracker.Service.UserService;
@@ -23,6 +25,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Map;
 
@@ -32,6 +35,7 @@ import java.util.Map;
 public class UserServiceImpl implements UserService {
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;
+    private final LoginActivityRepository loginActivityRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
@@ -48,56 +52,59 @@ public class UserServiceImpl implements UserService {
                 .roles(Collections.singleton(Role.ROLE_USER))
                 .provider(AuthProvider.LOCAL)
                 .build();
-        
+
         User savedUser = userRepository.save(user);
         Authentication auth = new UsernamePasswordAuthenticationToken(
-            savedUser.getEmail(), null, savedUser.getAuthorities());
+                savedUser.getEmail(), null, savedUser.getAuthorities());
         String token = jwtTokenProvider.generateToken(auth);
-        
+
         return AuthResponse.builder()
-            .token(token)
-            .email(savedUser.getEmail())
-            .name(savedUser.getName())
-            .provider(AuthProvider.LOCAL.toString())
-            .roles(savedUser.getRoles().stream()
-                .map(Role::name)
-                .toList())
-            .build();
+                .token(token)
+                .email(savedUser.getEmail())
+                .name(savedUser.getName())
+                .provider(AuthProvider.LOCAL.toString())
+                .roles(savedUser.getRoles().stream()
+                        .map(Role::name)
+                        .toList())
+                .build();
     }
 
     @Override
     public AuthResponse login(AuthRequest request) {
         Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
-        
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User user = getCurrentUser();
         String token = jwtTokenProvider.generateToken(authentication);
-        
+
+        // Record login activity
+        recordLoginActivity(user);
+
         return AuthResponse.builder()
-            .token(token)
-            .email(user.getEmail())
-            .name(user.getName())
-            .provider(user.getProvider().toString())
-            .roles(user.getRoles().stream()
-                .map(Role::name)
-                .toList())
-            .build();
+                .token(token)
+                .email(user.getEmail())
+                .name(user.getName())
+                .provider(user.getProvider().toString())
+                .roles(user.getRoles().stream()
+                        .map(Role::name)
+                        .toList())
+                .build();
     }
 
     @Override
     public AuthResponse processOAuthPostLogin(OAuth2AuthenticationToken token) {
         OAuth2User oauth2User = token.getPrincipal();
         Map<String, Object> attributes = oauth2User.getAttributes();
-        
+
         String email = extractEmail(attributes);
         String name = extractName(attributes);
         AuthProvider provider = AuthProvider.valueOf(token.getAuthorizedClientRegistrationId().toUpperCase());
-        
+
         User user = userRepository.findByEmail(email)
-            .orElseGet(() -> createOAuthUser(email, name, provider));
-        
+                .orElseGet(() -> createOAuthUser(email, name, provider));
+
         // Update user information if needed
         if (name != null && !name.equals(user.getName())) {
             user.setName(name);
@@ -105,19 +112,32 @@ public class UserServiceImpl implements UserService {
         }
 
         String jwtToken = jwtTokenProvider.generateTokenForOAuth2(
-            email, 
-            token.getAuthorities()
+                email,
+                token.getAuthorities()
         );
 
+        // Record login activity
+        recordLoginActivity(user);
+
         return AuthResponse.builder()
-            .token(jwtToken)
-            .email(user.getEmail())
-            .name(user.getName())
-            .provider(user.getProvider().toString())
-            .roles(user.getRoles().stream()
-                .map(Role::name)
-                .toList())
-            .build();
+                .token(jwtToken)
+                .email(user.getEmail())
+                .name(user.getName())
+                .provider(user.getProvider().toString())
+                .roles(user.getRoles().stream()
+                        .map(Role::name)
+                        .toList())
+                .build();
+    }
+
+    private void recordLoginActivity(User user) {
+        LocalDate today = LocalDate.now();
+        LoginActivity activity = loginActivityRepository.findByUserAndDate(user, today)
+                .orElse(new LoginActivity());
+        activity.setUser(user);
+        activity.setDate(today);
+        activity.setCount(activity.getCount() + 1);
+        loginActivityRepository.save(activity);
     }
 
     private String extractEmail(Map<String, Object> attributes) {
@@ -125,13 +145,13 @@ public class UserServiceImpl implements UserService {
         if (email != null && !email.isEmpty()) {
             return email;
         }
-        
+
         // GitHub fallback
         String login = (String) attributes.get("login");
         if (login != null) {
             return login + "@github.com";
         }
-        
+
         throw new RuntimeException("Could not extract email from OAuth2 attributes");
     }
 
@@ -140,24 +160,24 @@ public class UserServiceImpl implements UserService {
         if (name != null && !name.isEmpty()) {
             return name;
         }
-        
+
         // GitHub fallback
         String login = (String) attributes.get("login");
         if (login != null) {
             return login;
         }
-        
+
         return "User"; // Default fallback
     }
 
     private User createOAuthUser(String email, String name, AuthProvider provider) {
         User user = User.builder()
-            .email(email)
-            .name(name)
-            .provider(provider)
-            .roles(Collections.singleton(Role.ROLE_USER))
-            .build();
-        
+                .email(email)
+                .name(name)
+                .provider(provider)
+                .roles(Collections.singleton(Role.ROLE_USER))
+                .build();
+
         return userRepository.save(user);
     }
 
@@ -173,14 +193,15 @@ public class UserServiceImpl implements UserService {
             }
         }
     }
+
     @Override
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
             throw new RuntimeException("No authentication found");
         }
-        
+
         return userRepository.findByEmail(authentication.getName())
-            .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 }

@@ -12,7 +12,6 @@ import AppLayout from './components/Layout/AppLayout';
 import Hero from './components/Hero/Hero';
 import Features from './components/Features/Features';
 import Security from './components/Security/Security';
-import TransactionPage from './components/pages/TransactionPage';
 import AllStocks from './components/pages/AllStocks';
 import SellStocks from './components/pages/SellStocks';
 
@@ -26,6 +25,8 @@ import SpotTrading from './components/Header/Navigation/SpotTrading';
 import OptionsTrading from './components/Header/Navigation/trading/OptionsTrading';
 import BuyStocks from './components/pages/BuyStocks/BuyStocks';
 import { PortfolioDashboard } from './components/portfolio/PortfolioDashboard';
+import { Stock } from '@ant-design/plots';
+import StockMarket from './components/Stock/StocksPage/StockMarket';
 
 // Create a QueryClient instance
 const queryClient = new QueryClient({
@@ -118,8 +119,17 @@ const router = createBrowserRouter([
     ),
   },
   { path: "/auth/callback", element: <OAuthCallback /> },
-  { path: "/:type/:symbol", element: <TransactionPage /> }, 
-  // { path: "/portfolio/", element: <PortfolioPage /> },
+
+
+
+  { path: "/stock/all", 
+    element:  <QueryClientProvider client={queryClient}>
+    <StockMarket />
+  </QueryClientProvider>
+   },
+
+
+
   { path: "/transaction/all", element: <AllStocks /> },
   { path: "/stock/buy", element: <BuyStocks /> },
   { path: "/stock/sell", element: <SellStocks /> },
@@ -137,6 +147,7 @@ const router = createBrowserRouter([
 // Main App component with enhanced providers and styling
 function App() {
   return (
+    <div className="global-background min-h-screen">
     <ErrorBoundary>
       <CookieConsent/>
       <QueryClientProvider client={queryClient}>
@@ -149,6 +160,7 @@ function App() {
         </AuthProvider>
       </QueryClientProvider>
     </ErrorBoundary>
+    </div>
   );
 }
 

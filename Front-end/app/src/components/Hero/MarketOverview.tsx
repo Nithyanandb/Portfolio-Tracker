@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useMarketContext } from '../../context/MarketContext';
+
 
 const MarketOverview: React.FC = () => {
   const { marketData } = useMarketContext();
@@ -44,3 +44,7 @@ const MarketOverview: React.FC = () => {
 };
 
 export default MarketOverview;
+
+function useMarketContext(): { marketData: any; } {
+  throw new Error('Function not implemented.');
+}

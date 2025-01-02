@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 
-// Update the Portfolio interface to match PortfolioResponse
 export interface Portfolio {
   id: number;
   symbol: string;
@@ -13,6 +12,20 @@ export interface Portfolio {
   totalReturn: number;
   purchaseDate: string;
 }
+
+export interface PortfolioStats {
+  dailyPerformance: Array<{
+    date: string;
+    value: number;
+  }>;
+  totalInvestment: number;
+}
+
+export interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+}
+
 export interface Transaction {
   id: number;
   symbol: string;
@@ -24,11 +37,7 @@ export interface Transaction {
   status: string;
 }
 
-export interface ApiResponse<T> {
-  success: boolean;
-  message: string;
-  data: T;
-}
+
 export interface PortfolioHolding {
   name: ReactNode;
 
@@ -46,13 +55,6 @@ export interface PortfolioHolding {
 
 }
 
-export interface PortfolioStats {
-  dailyPerformance: Array<{
-    date: string;
-    value: number;
-  }>;
-  totalInvestment: number;
-}
 
 export interface DailyPerformance {
   date: string;

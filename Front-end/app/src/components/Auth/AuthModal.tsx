@@ -5,6 +5,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
 import { useAuth } from '../hooks/useAuth';
 import { cn } from '../../utils/cn';
+import SecureConnection from './SecureConnection';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -126,9 +127,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 <h3 className="text-2xl font-light tracking-wide text-white">
                   Verifying Credentials
                 </h3>
-                <p className="mt-2 text-sm text-white/60 tracking-wider">
-                  Establishing secure connection...
-                </p>
+             <SecureConnection/>
               </div>
             </motion.div>
           ) : (
@@ -138,7 +137,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               exit={{ scale: 0.95 }}
               className={cn(
                 "relative z-0 w-full max-w-md rounded-2xl",
-                "bg-white/10 backdrop-blur-xl  p-8",
+                "bg-white/5 backdrop-blur-5xl  px-12 py-5",
                 (isAuthenticating || success) && "opacity-0 pointer-events-none"
               )}
             >
@@ -160,8 +159,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 
                 <motion.p 
                   initial={{ y: 0, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.1 }}
+                  animate={{ y: 0, opacity: 10 }}
+                  transition={{ delay: 0 }}
                   className="text-white/60 mb-8"
                 >
                   {authMode === 'login' 
@@ -171,7 +170,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
                 {error && (
                   <motion.div 
-                    initial={{ opacity: 0, y: -10 }}
+                    initial={{ opacity: 0, y: -5 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-500 text-sm"
                   >

@@ -29,6 +29,10 @@ export const getPortfolio = () =>
 export const getPortfolioStats = () => 
   api.get<ApiResponse<PortfolioStats>>('/portfolio/stats');
 
+// Fetch login activity data
+export const fetchLoginActivity = () => 
+  api.get<ApiResponse<{ date: string; count: number }[]>>('/api/user/login-activity');
+
 // Add error handling
 api.interceptors.response.use(
   response => response,
@@ -42,8 +46,4 @@ api.interceptors.response.use(
   }
 );
 
-
-
-
 export default api;
-

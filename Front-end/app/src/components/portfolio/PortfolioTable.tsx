@@ -15,7 +15,7 @@ export const PortfolioTable: React.FC<PortfolioTableProps> = ({
 }) => {
   if (!data || data.length === 0) {
     return (
-      <div className="text-center py-12 bg-white/5 backdrop-blur-xl rounded-2xl">
+      <div className="text-center py-12 ">
         <p className="text-gray-400 text-lg font-medium">No holdings found</p>
         <p className="text-gray-500 text-sm mt-2">Start your investment journey today</p>
       </div>
@@ -27,7 +27,7 @@ export const PortfolioTable: React.FC<PortfolioTableProps> = ({
   };
 
   return (
-    <div className="overflow-hidden rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10">
+    <div className="overflow-hidden backdrop-blur-xl ">
       <table className="w-full">
         <thead>
           <tr className="border-b border-white/10">
@@ -98,4 +98,3 @@ export const PortfolioTable: React.FC<PortfolioTableProps> = ({
     </div>
   );
 };
-

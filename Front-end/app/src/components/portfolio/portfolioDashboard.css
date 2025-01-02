@@ -1,0 +1,57 @@
+/* Custom styles for react-calendar-heatmap */
+.react-calendar-heatmap {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .react-calendar-heatmap .color-empty {
+    fill: #161b22;
+  }
+  
+  .react-calendar-heatmap .color-custom-0 {
+    fill: #0e4429;
+  }
+  
+  .react-calendar-heatmap .color-custom-1 {
+    fill: #006d32;
+  }
+  
+  .react-calendar-heatmap .color-custom-2 {
+    fill: #26a641;
+  }
+  
+  .react-calendar-heatmap .color-custom-3 {
+    fill: #39d353;
+  }
+  
+  .react-calendar-heatmap .color-custom-4 {
+    fill: #7ee787;
+  }
+  
+  .react-calendar-heatmap text {
+    font-size: 10px;
+    fill: #8b949e;
+  }
+  
+  .react-calendar-heatmap .react-calendar-heatmap-small-text {
+    font-size: 5px;
+  }
+  
+  .react-calendar-heatmap rect:hover {
+    stroke: #8b949e;
+    stroke-width: 1px;
+  }
+
+  /* portfolioDashboard.css */
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .grid-container {
+    grid-template-columns: 2fr 1fr;
+  }
+}
