@@ -1,17 +1,17 @@
 import { ReactNode } from "react";
 
 export interface Portfolio {
-  id: number;
+  id: string;
   symbol: string;
   name: string;
-  shares: number;
-  averagePrice: number;
+  quantity: number;
+  avgBuyPrice: number;
   currentPrice: number;
-  marketValue: number;
-  totalReturn: number;
-  change: number;
+  totalValue: number;
+  profitLoss: number;
+  profitLossPercentage: number;
+  lastUpdated: string;
 }
-
 
 export interface Transaction {
   id: number;
@@ -46,15 +46,28 @@ export interface PortfolioHolding {
 
 }
 
-
-
-
-
 export interface PortfolioStats {
-  totalValue: number;
-  todayChange: number;
-  totalReturn: number;
-  totalPositions: number;
+  totalInvestment: number;
+  currentValue: number;
+  todaysPnL: number;
+  totalPnL: number;
+  totalPnLPercentage: number;
+  dailyPerformance: DailyPerformance[];
+}
+
+export interface DailyPerformance {
+  date: string;
+  value: number;
+  change: number;
+}
+
+export interface PortfolioAction {
+  id: string;
+  type: 'BUY' | 'SELL';
+  symbol: string;
+  quantity: number;
+  price: number;
+  timestamp: string;
 }
 
 export const formatMoney = (value: number): string => {

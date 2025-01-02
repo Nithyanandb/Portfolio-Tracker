@@ -1,9 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { PortfolioHolding } from './Portfolio';
+import { Portfolio } from './Portfolio';
 
 interface PortfolioListProps {
-  holdings: PortfolioHolding[];
+  holdings: Portfolio[];
 }
 
 export const PortfolioList: React.FC<PortfolioListProps> = ({ holdings }) => {
@@ -26,10 +26,10 @@ export const PortfolioList: React.FC<PortfolioListProps> = ({ holdings }) => {
                 {holding.quantity} shares
               </p>
               <p className="text-sm text-white/60">
-                Avg Price: ₹{holding.averagePrice.toFixed(2)}
+                Avg Price: ₹{holding.avgBuyPrice.toFixed(2)}
               </p>
               <p className="text-sm text-emerald-400">
-                Value: ₹{(holding.quantity * holding.currentPrice).toFixed(2)}
+                Value: ₹{holding.totalValue.toFixed(2)}
               </p>
             </div>
           </div>

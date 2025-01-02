@@ -76,9 +76,11 @@ export const StockDetail: React.FC<StockDetailProps> = ({ stock, onBuyClick, loa
           ))}
         </div>
 
-        {/* Chart */}
-        <div className="flex-1 bg-black/20 rounded-xl p-2 backdrop-blur-sm mb-4">
-          <StockChart stock={stock} timeFrame={timeFrame} />
+        {/* Chart Container */}
+        <div className="flex-1 bg-black/20 rounded-xl p-4 backdrop-blur-sm mb-4">
+          <div className="h-full">
+            <StockChart stock={stock} timeFrame={timeFrame} />
+          </div>
         </div>
 
         {/* Compact Stats Grid */}

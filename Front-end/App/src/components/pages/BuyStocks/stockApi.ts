@@ -53,3 +53,60 @@ export interface Stock {
       openPrice: stockPrices[symbol] * 0.995
     }));
   };
+  
+  export interface HistoricalData {
+    time: string;
+    price: number;
+  }
+  
+  export const fetchHistoricalData = async (
+    symbol: string, 
+    timeFrame: string
+  ): Promise<HistoricalData[]> => {
+    // In a real app, this would fetch from your backend
+    const currentPrice = stockPrices[symbol];
+    const points = getTimeFramePoints(timeFrame);
+    const data: HistoricalData[] = [];
+  
+    for (let i = points; i >= 0; i--) {
+      const time = getTimeForPoint(i, timeFrame);
+      const randomVariation = (Math.random() - 0.5) * 2;
+      const price = currentPrice * (1 + randomVariation / 100);
+  
+      data.push({
+        time: time.toISOString(),
+        price: Number(price.toFixed(2))
+      });
+    }
+  
+    return data;
+  };
+  
+  const getTimeFramePoints = (timeFrame: string): number => {
+    switch (timeFrame) {
+      case '1D': return 24;
+      case '1W': return 7;
+      case '1M': return 30;
+      case '3M': return 90;
+      case '1Y': return 365;
+      case 'ALL': return 1095;
+      default: return 24;
+    }
+  };
+  
+  const getTimeForPoint = (point: number, timeFrame: string): Date => {
+    const date = new Date();
+    switch (timeFrame) {
+      case '1D':
+        date.setHours(date.getHours() - point);
+        break;
+      case '1W':
+      case '1M':
+      case '3M':
+      case '1Y':
+      case 'ALL':
+        date.setDate(date.getDate() - point);
+        break;
+    }
+    return date;
+  };

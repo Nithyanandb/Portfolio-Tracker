@@ -5,6 +5,7 @@ import { AuthProvider } from './components/Auth/AuthContext';
 import { MarketProvider } from './context/MarketContext';
 import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
 import DynamicBackground from './components/background/DynamicBackground';
+import { ProtectedRoute } from './components/routes/ProtectedRoute';
 
 // Page Components
 import AppLayout from './components/Layout/AppLayout';
@@ -104,14 +105,16 @@ const router = createBrowserRouter([
   {
     path: "/portfolio",
     element: (
-      <AppLayout d={undefined}>
-        <div className="relative">
-          <DynamicBackground sections={backgroundSections} currentSection={0} />
-          <div className="relative z-10">
-            <PortfolioDashboard/>
+      <ProtectedRoute>
+        <AppLayout d={undefined}>
+          <div className="relative">
+            <DynamicBackground sections={backgroundSections} currentSection={0} />
+            <div className="relative z-10">
+              <PortfolioDashboard/>
+            </div>
           </div>
-        </div>
-      </AppLayout>
+        </AppLayout>
+      </ProtectedRoute>
     ),
   },
   { path: "/auth/callback", element: <OAuthCallback /> },

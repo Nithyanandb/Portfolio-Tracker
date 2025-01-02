@@ -49,7 +49,7 @@ export const useAuth = () => {
 
   const handleOAuthPopup = (url: string) => {
     setIsAuthenticating(true);
-    const width = 500;
+    const width = 800;
     const height = 600;
     const left = window.screenX + (window.outerWidth - width) / 2;
     const top = window.screenY + (window.outerHeight - height) / 2;

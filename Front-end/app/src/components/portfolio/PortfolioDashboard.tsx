@@ -22,6 +22,8 @@ export const performanceData = [
 export const PortfolioDashboard: React.FC = () => {
   const [portfolio, setPortfolio] = useState<Portfolio[]>([]);
   const [stats, setStats] = useState<PortfolioStats | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStock, setSelectedStock] = useState<string>('');
   const [transactionType, setTransactionType] = useState<'BUY' | 'SELL'>('BUY');
@@ -34,16 +36,37 @@ export const PortfolioDashboard: React.FC = () => {
 
   const fetchData = async () => {
     try {
+      setIsLoading(true);
       const [portfolioRes, statsRes] = await Promise.all([
         getPortfolio(),
         getPortfolioStats()
       ]);
-      setPortfolio(portfolioRes.data.data);
-      setStats(statsRes.data.data);
-    } catch (error) {
-      console.error('Failed to fetch portfolio data:', error);
+      
+      if (portfolioRes.data.success && statsRes.data.success) {
+        setPortfolio(portfolioRes.data.data);
+        setStats(statsRes.data.data);
+      } else {
+        setError('Failed to fetch portfolio data');
+      }
+    } catch (err) {
+      setError('An error occurred while fetching data');
+      console.error(err);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  if (isLoading) {
+    return <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900" />
+    </div>;
+  }
+
+  if (error) {
+    return <div className="flex items-center justify-center min-h-screen">
+      <div className="text-red-500">{error}</div>
+    </div>;
+  }
 
   const handleTransaction = (type: 'BUY' | 'SELL', symbol: string) => {
     setTransactionType(type);
