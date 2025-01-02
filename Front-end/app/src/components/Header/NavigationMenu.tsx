@@ -141,9 +141,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
             href="/trading" 
             label="Trading" 
             isHovered={hoveredMenu === 'trading'}
-            onMouseEnter={() => handleMouseEnter('trading')}
-            onMouseLeave={handleMouseLeave}
-          >
+              onMouseEnter={() => handleMouseEnter('trading')}
+              onMouseLeave={handleMouseLeave}
+            >
             <div className="container mx-auto grid grid-cols-2 gap-8 p-12">
               {/* Left Side - Trading Image */}
               <div className="space-y-6">

@@ -1,18 +1,18 @@
 import { ReactNode } from "react";
 
+// Update the Portfolio interface to match PortfolioResponse
 export interface Portfolio {
-  id: string;
+  id: number;
   symbol: string;
   name: string;
-  quantity: number;
-  avgBuyPrice: number;
+  shares: number;
+  value: number;
+  change: number;
+  averagePrice: number;
   currentPrice: number;
-  totalValue: number;
-  profitLoss: number;
-  profitLossPercentage: number;
-  lastUpdated: string;
+  totalReturn: number;
+  purchaseDate: string;
 }
-
 export interface Transaction {
   id: number;
   symbol: string;

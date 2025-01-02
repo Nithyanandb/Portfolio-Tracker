@@ -47,10 +47,12 @@ export const StockDetail: React.FC<StockDetailProps> = ({ stock, onBuyClick, loa
 
         {/* Compact Price Section */}
         <div className="flex items-center gap-4 mb-4">
-          <span className="text-4xl font-medium">₹{(stock.price * 83).toFixed(2)}</span>
+          <span className="text-4xl font-medium">
+            ${stock.price.toFixed(2)}
+          </span>
           <motion.span
             animate={{
-              color: (stock.change || 0) >= 0 ? "rgb(34, 197, 94)" : "rgb(239, 68, 68)"
+              color: stock.change >= 0 ? "rgb(34, 197, 94)" : "rgb(239, 68, 68)"
             }}
             className="flex items-center text-lg"
           >
@@ -102,4 +104,4 @@ export const StockDetail: React.FC<StockDetailProps> = ({ stock, onBuyClick, loa
       </motion.div>
     </AnimatePresence>
   );
-}; 
+};

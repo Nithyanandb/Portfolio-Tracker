@@ -59,77 +59,80 @@ const Header: React.FC = () => {
                 <div className="flex items-center gap-6">
                   <SearchPopover />
                   {isAuthenticated ? (
-                   <div 
-                   className="relative"
-                   onMouseEnter={() => setIsUserMenuOpen(true)}
-                   onMouseLeave={() => setIsUserMenuOpen(false)}
-                 >
-                   <motion.button
-                     className="flex items-center gap-3 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 transition-all duration-300 cursor-pointer"
-                     whileHover={{ scale: 1.02 }}
-                     whileTap={{ scale: 0.98 }}
-                   >
-                     <div className="flex flex-col items-start">
-                       <span className="text-sm text-white/90 font-light tracking-wide">
-                         {user?.name}
-                       </span>
-                     </div>
-                     <motion.div
-                       animate={{ rotate: isUserMenuOpen ? 180 : 0 }}
-                       transition={{ duration: 0.2 }}
-                     >
-                       <ChevronDown className="w-4 h-4 text-white/40" />
-                     </motion.div>
-                   </motion.button>
-                 
-                   <AnimatePresence>
-                     {isUserMenuOpen && (
-                       <motion.div
-                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                         transition={{ duration: 0.2 }}
-                         className="absolute right-0 mt-2 w-48 py-2 bg-black/90 backdrop-blur-xl rounded-lg border border-white/10 shadow-xl"
-                       >
-                         {user?.roles?.includes('ADMIN') && (
-                           <div className="px-4 py-2 mb-2">
-                             <span className="px-2 py-1 text-xs bg-blue-500/20 text-blue-400 rounded-full">
-                               Admin
-                             </span>
-                           </div>
-                         )}
+                    <div 
+                      className="relative"
+                      onMouseEnter={() => setIsUserMenuOpen(true)}
+                      onMouseLeave={() => setIsUserMenuOpen(false)}
+                    >
+                      <motion.button
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-full text-white/90 hover:text-white transition-colors duration-200"
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
+                      >
+                        <span className="text-sm font-medium">{user?.name}</span>
+                        <motion.div
+                          animate={{ rotate: isUserMenuOpen ? 180 : 0 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <ChevronDown className="w-4 h-4 opacity-60" />
+                        </motion.div>
+                      </motion.button>
 
-                         <motion.button
-                           onClick={handleProfileClick}
-                           whileHover={{ x: 4, backgroundColor: 'rgba(255,255,255,0.1)' }}
-                           className="w-full px-4 py-2 text-sm text-white-400 hover:text-red-300 flex items-center gap-2 cursor-pointer transition-colors"
-                         >
-                           <Briefcase className="w-4 h-4" />
-                           Portfolio
-                         </motion.button>
-                         
-                         <motion.button
-                          whileHover={{ x: 4, backgroundColor: 'rgba(255,255,255,0.1)' }}
-                           className="w-full px-4 py-2 text-sm text-white-400 hover:text-red-300 flex items-center gap-2 cursor-pointer transition-colors"
-                         >
-                           <Settings className="w-4 h-4" />
-                           Settings
-                         </motion.button>
-                         
-                         <div className="my-2 border-t border-white/10" />
-                         
-                         <motion.button
-                           onClick={logout}
-                           whileHover={{ x: 4, backgroundColor: 'rgba(255,255,255,0.1)' }}
-                           className="w-full px-4 py-2 text-sm text-red-400 hover:text-red-300 flex items-center gap-2 cursor-pointer transition-colors"
-                         >
-                           <LogOut className="w-4 h-4" />
-                           Logout
-                         </motion.button>
-                       </motion.div>
-                     )}
-                   </AnimatePresence>
-                 </div>
+                      <AnimatePresence>
+                        {isUserMenuOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                            transition={{ 
+                              duration: 0.2,
+                              ease: [0.4, 0, 0.2, 1]
+                            }}
+                            className="absolute right-0 mt-2 w-[280px] py-2 origin-top-right bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl"
+                          >
+                            {user?.roles?.includes('ADMIN') && (
+                              <div className="px-4 py-2 mb-1">
+                                <span className="px-2 py-1 text-[11px] font-medium bg-blue-500/10 text-blue-400 rounded-full">
+                                  Admin Access
+                                </span>
+                              </div>
+                            )}
+
+                            <div className="px-3 py-2">
+                              <motion.button
+                                onClick={handleProfileClick}
+                                className="w-full p-2 text-[13px] text-white/90 hover:text-white rounded-xl hover:bg-white/10 flex items-center gap-3 transition-all duration-200"
+                                whileHover={{ x: 2 }}
+                              >
+                                <Briefcase className="w-[18px] h-[18px] opacity-70" />
+                                <span className="font-medium">Portfolio</span>
+                              </motion.button>
+
+                              <motion.button
+                                className="w-full p-2 text-[13px] text-white/90 hover:text-white rounded-xl hover:bg-white/10 flex items-center gap-3 transition-all duration-200"
+                                whileHover={{ x: 2 }}
+                              >
+                                <Settings className="w-[18px] h-[18px] opacity-70" />
+                                <span className="font-medium">Settings</span>
+                              </motion.button>
+                            </div>
+
+                            <div className="my-2 border-t border-white/[0.08]" />
+
+                            <div className="px-3 py-2">
+                              <motion.button
+                                onClick={logout}
+                                className="w-full p-2 text-[13px] text-red-400 hover:text-red-300 rounded-xl hover:bg-red-500/10 flex items-center gap-3 transition-all duration-200"
+                                whileHover={{ x: 2 }}
+                              >
+                                <LogOut className="w-[18px] h-[18px] opacity-70" />
+                                <span className="font-medium">Sign Out</span>
+                              </motion.button>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
                   ) : (
                     <motion.button
                       whileHover={{ scale: 1.02 }}
@@ -207,7 +210,7 @@ const Header: React.FC = () => {
       whileHover={{ x: 4 }}
       className={`w-full px-4 py-2 text-sm hover:bg-white/5 flex items-center gap-2 ${className}`}
       style={style}
-      className={`w-full px-4 py-2 text-sm hover:bg-white/5 flex items-center gap-2 ${className}`}
+     
     >
       <Icon className="w-4 h-4" />
       {text}

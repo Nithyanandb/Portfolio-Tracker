@@ -1,6 +1,6 @@
 import React from 'react';
-import { Portfolio } from './Portfolio';
 import { ArrowUp, ArrowDown } from 'lucide-react';
+import { Portfolio } from './Portfolio';
 
 interface PortfolioTableProps {
   data: Portfolio[];
@@ -33,11 +33,12 @@ export const PortfolioTable: React.FC<PortfolioTableProps> = ({
           <tr className="border-b border-white/10">
             <th className="py-4 px-6 text-xs font-medium text-gray-400 text-left">Instrument</th>
             <th className="py-4 px-6 text-xs font-medium text-gray-400 text-right">Qty.</th>
-            <th className="py-4 px-6 text-xs font-medium text-gray-400 text-right">Avg.</th>
-            <th className="py-4 px-6 text-xs font-medium text-gray-400 text-right">LTP</th>
+            <th className="py-4 px-6 text-xs font-medium text-gray-400 text-right">Avg. Price</th>
+            <th className="py-4 px-6 text-xs font-medium text-gray-400 text-right">Current Price</th>
             <th className="py-4 px-6 text-xs font-medium text-gray-400 text-right">Current Value</th>
             <th className="py-4 px-6 text-xs font-medium text-gray-400 text-right">P&L</th>
             <th className="py-4 px-6 text-xs font-medium text-gray-400 text-center">Actions</th>
+            <th className="py-4 px-6 text-xs font-medium text-gray-400 text-center">Last Updated</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-white/5">
@@ -50,24 +51,23 @@ export const PortfolioTable: React.FC<PortfolioTableProps> = ({
                 </div>
               </td>
               <td className="py-4 px-6 text-right font-mono text-white">
-                {holding.quantity}
+                {holding.shares}
               </td>
               <td className="py-4 px-6 text-right font-mono text-white">
-                ₹{formatNumber(holding.avgBuyPrice)}
+                ₹{formatNumber(holding.averagePrice)}
               </td>
               <td className="py-4 px-6 text-right font-mono text-white">
                 ₹{formatNumber(holding.currentPrice)}
               </td>
               <td className="py-4 px-6 text-right font-mono text-white">
-                ₹{formatNumber(holding.totalValue)}
+                ₹{formatNumber(holding.value)}
               </td>
               <td className="py-4 px-6 text-right">
                 <div className={`flex items-center justify-end gap-1.5 font-mono
-                  ${(holding.profitLoss ?? 0) >= 0 ? 'text-green-400' : 'text-red-400'}`}
+                  ${(holding.totalReturn ?? 0) >= 0 ? 'text-green-400' : 'text-red-400'}`}
                 >
-                  {(holding.profitLoss ?? 0) >= 0 ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
-                  <span>₹{formatNumber(Math.abs(holding.profitLoss ?? 0))}</span>
-                  <span className="text-xs">({formatNumber(holding.profitLossPercentage)}%)</span>
+                  {(holding.totalReturn ?? 0) >= 0 ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
+                  <span>₹{formatNumber(Math.abs(holding.totalReturn ?? 0))}</span>
                 </div>
               </td>
               <td className="py-4 px-6">
@@ -88,6 +88,9 @@ export const PortfolioTable: React.FC<PortfolioTableProps> = ({
                   </button>
                 </div>
               </td>
+              <td className="py-4 px-6 text-right font-mono text-white">
+                {holding.purchaseDate}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -95,3 +98,4 @@ export const PortfolioTable: React.FC<PortfolioTableProps> = ({
     </div>
   );
 };
+

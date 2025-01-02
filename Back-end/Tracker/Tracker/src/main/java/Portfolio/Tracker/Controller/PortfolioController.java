@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/portfolio")
-@RequiredArgsConstructorQ
+@RequiredArgsConstructor
 public class PortfolioController {
     private final PortfolioService portfolioService;
 

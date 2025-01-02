@@ -7,9 +7,8 @@ import { formatMoney, formatPercent, Portfolio, PortfolioStats } from './Portfol
 import { getPortfolio, getPortfolioStats } from './portfolioApi';
 import WatchlistManager from '../Hero/WatchlistManager';
 import MarketOverview from '../Hero/MarketOverview';
-import Header from '../Header/Header';
-
-
+import { PortfolioChart } from './PortfolioChart';
+import TrendingStocks from '../Hero/TrendingStocks';
 
 export const performanceData = [
   { date: '2024-01-01', value: 10000 },
@@ -27,6 +26,8 @@ export const PortfolioDashboard: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStock, setSelectedStock] = useState<string>('');
   const [transactionType, setTransactionType] = useState<'BUY' | 'SELL'>('BUY');
+  const [activeTimeframe, setActiveTimeframe] = useState('1D');
+  const timeframes = ['1D', '1W', '1M', '1Y', 'ALL'];
 
   useEffect(() => {
     fetchData();
@@ -58,7 +59,7 @@ export const PortfolioDashboard: React.FC = () => {
 
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900" />
+      <div className="animate-spin rounded-full h-32 w-32 " />
     </div>;
   }
 
@@ -75,10 +76,9 @@ export const PortfolioDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-black">
       {/* Header */}
-      <Header />
-      <header className="bg-white border-b border-gray-200">
+      <header className="bg-black">
         <div className="container mx-auto px-4 py-6">
           <div className="flex justify-between items-center">
             <h1 className="text-3xl font-semibold text-gray-900">Portfolio</h1>
@@ -105,25 +105,22 @@ export const PortfolioDashboard: React.FC = () => {
               </p>
             </div>
             <div className="flex gap-4">
-              <button className="text-sm text-gray-600 hover:text-gray-900">1D</button>
-              <button className="text-sm text-gray-600 hover:text-gray-900">1W</button>
-              <button className="text-sm text-gray-600 hover:text-gray-900">1M</button>
-              <button className="text-sm text-gray-600 hover:text-gray-900">1Y</button>
-              <button className="text-sm text-gray-600 hover:text-gray-900">ALL</button>
+              {timeframes.map((timeframe) => (
+                <button
+                  key={timeframe}
+                  onClick={() => setActiveTimeframe(timeframe)}
+                  className={`text-sm ${activeTimeframe === timeframe ? 'text-gray-900' : 'text-gray-600 hover:text-gray-900'}`}
+                >
+                  {timeframe}
+                </button>
+              ))}
             </div>
           </div>
-          <Area
-            data={Performance}
-            height={300}
-            xField="date"
-            yField="value"
-            line={{
-              smooth: true,
-              color: '#1d4ed8'
-            }}
-            style={{
-              fill: 'l(270) 0:#1d4ed880 1:#1d4ed810',
-            }}
+          <PortfolioChart 
+            data={performanceData}
+            timeframes={timeframes}
+            activeTimeframe={activeTimeframe}
+            onTimeframeChange={setActiveTimeframe}
           />
         </div>
 
@@ -173,8 +170,8 @@ export const PortfolioDashboard: React.FC = () => {
         {/* Holdings & Watchlist Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl shadow-sm">
-              <div className="px-6 py-4 border-b border-gray-200">
+            <div className="bg-black rounded-xl shadow-sm">
+              <div className="px-6 py-4 ">
                 <h2 className="text-lg font-semibold text-gray-900">Holdings</h2>
               </div>
               <PortfolioTable
@@ -186,17 +183,11 @@ export const PortfolioDashboard: React.FC = () => {
           </div>
           
           <div>
-            <div className="bg-white rounded-xl shadow-sm mb-6">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Market Overview</h2>
-              </div>
-              <MarketOverview marketData={[]} isLoading={false} />
+            <div className="bg-black rounded-xl shadow-sm mb-6">
+              <TrendingStocks />
             </div>
             
-            <div className="bg-white rounded-xl shadow-sm">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Watchlist</h2>
-              </div>
+            <div className="bg-black rounded-xl shadow-sm">
               <WatchlistManager watchlist={[]} onRemove={function (id: string): Promise<void> {
                 throw new Error('Function not implemented.');
               } } onUpdate={function (id: string, data: any): Promise<void> {
@@ -220,3 +211,17 @@ export const PortfolioDashboard: React.FC = () => {
     </div>
   );
 };
+
+// Update the Portfolio interface to match PortfolioResponse
+export interface Portfolio {
+  id: number;
+  symbol: string;
+  name: string;
+  shares: number;
+  value: number;
+  change: number;
+  averagePrice: number;
+  currentPrice: number;
+  totalReturn: number;
+  purchaseDate: string;
+}

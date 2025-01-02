@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Search, TrendingUp, ArrowUp, ArrowDown, RefreshCcw, Clock, BarChart2, Globe, DollarSign } from 'lucide-react';
 import { Stock, fetchStocks } from './stockApi';
 import { StockChart } from './StockChart';
@@ -33,27 +33,26 @@ export const BuyStocks: React.FC = () => {
     }, 3000);
   };
 
-
-  const loadStocks = async () => {
+  const loadStocks = useCallback(async () => {
     setLoading(true);
     try {
       const fetchedStocks = await fetchStocks();
       setStocks(fetchedStocks);
-      // Remove default selection
-      setSelectedStockDetail(null);
+      setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load stocks');
+      setError('Failed to load stocks');
+      console.error(err);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadStocks();
-    // Update prices every second
-    const interval = setInterval(loadStocks, 1000);
+    // Update every 10 seconds to respect API rate limits
+    const interval = setInterval(loadStocks, 10000);
     return () => clearInterval(interval);
-  }, []);
+  }, [loadStocks]);
 
   useEffect(() => {
     const interval = setInterval(() => {
