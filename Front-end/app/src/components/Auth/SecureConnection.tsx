@@ -1,15 +1,33 @@
-import React from 'react';
-import './SecureConnection.css'
-const SecureConnection = () => {
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+
+const SecureConnection: React.FC = () => {
+  const [step, setStep] = useState(0);
+  const steps = [
+    'Initializing secure connection...',
+    'Verifying device integrity...',
+    'Confirming secure location...',
+    'Setting up encryption...'
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setStep(current => (current + 1) % steps.length);
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <p className="mt-3 text-100 text-white tracking-wider">
-      Establishing secure connection
-      <span className="jumping-dots">
-        <span className="dot">.</span>
-        <span className="dot">.</span>
-        <span className="dot">.</span>
-      </span>
-    </p>
+    <motion.p
+      key={step}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      className="text-white/60 text-sm mt-2"
+    >
+      {steps[step]}
+    </motion.p>
   );
 };
 
