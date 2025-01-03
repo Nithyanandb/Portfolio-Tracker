@@ -1,99 +1,78 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Search, TrendingUp, ArrowUp, ArrowDown, RefreshCcw, Clock, BarChart2, Globe, DollarSign } from 'lucide-react';
-import { Stock, fetchStocks } from './stockApi';
-import { StockChart } from './StockChart';
-import { Check } from 'lucide-react';
+import { Search, ArrowUp, ArrowDown, Globe, DollarSign, Check } from 'lucide-react'; // Add Check here
 import { BuyModal } from './BuyModal';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header/Header';
 import { StockDetail } from './StockDetail';
 import { useAuth } from '@/components/hooks/useAuth';
+import { symbols } from '../../Stock/StocksPage/symbols';
+import { LoadingSpinner } from '../../ui/LoadingSpinner';
+
+
+
 
 export const BuyStocks: React.FC = () => {
-  const [stocks, setStocks] = useState<Stock[]>([]);
+  const [stocks, setStocks] = useState(symbols); // Use the imported symbols array
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-  const [refreshing, setRefreshing] = useState(false);
-  const [selectedStockDetail, setSelectedStockDetail] = useState<Stock | null>(null);
+  const [selectedStock, setSelectedStock] = useState<typeof symbols[0] | null>(null);
+  const [selectedStockDetail, setSelectedStockDetail] = useState<typeof symbols[0] | null>(null);
   const [priceChanges, setPriceChanges] = useState<Record<string, number>>({});
-  const [sortBy, setSortBy] = useState<'gainers' | 'losers' | 'all'>('all');
   const [stockDetailLoading, setStockDetailLoading] = useState(false);
-  const [retryCount, setRetryCount] = useState(0);
-  const [timeFrame, setTimeFrame] = useState('1D');
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   const handleTransactionSuccess = () => {
     setShowSuccessPopup(true);
-    loadStocks();
     setTimeout(() => {
       setShowSuccessPopup(false);
     }, 3000);
   };
 
-  const loadStocks = useCallback(async () => {
+  useEffect(() => {
+    // Simulate loading data with a 2-second delay
     setLoading(true);
-    try {
-      const fetchedStocks = await fetchStocks();
-      setStocks(fetchedStocks);
-      setError(null);
-    } catch (err) {
-      setError('Failed to load stocks');
-      console.error(err);
-    } finally {
+    const timer = setTimeout(() => {
+      setStocks(symbols); // Set the stocks to the imported symbols array
       setLoading(false);
-    }
+    }, 4000);
+
+    return () => clearTimeout(timer); // Cleanup timer on unmount
   }, []);
 
   useEffect(() => {
-    loadStocks();
-    // Update every 10 seconds to respect API rate limits
-    const interval = setInterval(loadStocks, 10000);
-    return () => clearInterval(interval);
-  }, [loadStocks]);
-
-  useEffect(() => {
     const interval = setInterval(() => {
-      setStocks(prevStocks => {
-        const newStocks = prevStocks.map(stock => {
+      setStocks((prevStocks) =>
+        prevStocks.map((stock) => {
           const change = (Math.random() - 0.5) * 2; // Random price change
-          const newPrice = stock.price + change;
-          
+          const newPrice = (stock.price || 100) + change; // Default price if not set
+
           // Update price changes
-          setPriceChanges(prev => ({
+          setPriceChanges((prev) => ({
             ...prev,
-            [stock.symbol]: change
+            [stock.symbol]: change,
           }));
 
           return {
             ...stock,
-            price: newPrice
+            price: newPrice,
+            change,
+            changePercent: (change / (stock.price || 100)) * 100,
           };
-        });
-
-        // Sort stocks based on price changes
-        return [...newStocks].sort((a, b) => {
-          const changeA = priceChanges[a.symbol] || 0;
-          const changeB = priceChanges[b.symbol] || 0;
-          return Math.abs(changeB) - Math.abs(changeA);
-        });
-      });
+        })
+      );
     }, 5000); // Update every 5 seconds
 
     return () => clearInterval(interval);
   }, []);
 
-
-
-  const handleStockSelect = async (stock: Stock) => {
+  const handleStockSelect = async (stock: typeof symbols[0]) => {
     setStockDetailLoading(true);
     setSelectedStockDetail(stock);
-    
+
     try {
-      // Fetch additional stock details if needed
-      const detailedStock = { ...stock }; // Add API call here if needed
+      // Simulate fetching additional details (replace with API call if needed)
+      const detailedStock = { ...stock };
       setSelectedStockDetail(detailedStock);
     } catch (error) {
       console.error('Failed to load stock details:', error);
@@ -103,14 +82,12 @@ export const BuyStocks: React.FC = () => {
     }
   };
 
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-900 to-black text-white">
       {/* Tesla-inspired fixed header */}
-      <Header/>
+      <Header />
       <div>
         <div className="mt-32 absolute flex z-20 px-8 justify-end w-full">
-         
           {selectedStockDetail && (
             <button
               onClick={() => setSelectedStock(selectedStockDetail)}
@@ -125,7 +102,7 @@ export const BuyStocks: React.FC = () => {
 
       <div className="flex h-screen pt-20">
         {/* Sidebar */}
-        <div className="w-96 bg-black/30 border-r border-white/10 overflow-hidden">
+        <div className="w-98 bg-black/30 border-r border-white/10 overflow-hidden">
           <div className="p-6">
             <div className="relative mb-6">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/40" size={20} />
@@ -137,44 +114,48 @@ export const BuyStocks: React.FC = () => {
                 className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-white/20"
               />
             </div>
-            
+
             {/* Stock List with real-time updates */}
-            <div className="space-y-4 overflow-y-auto h-[calc(100vh-200px)]">
-              {stocks.map((stock) => (
-                <motion.div
-                  key={stock.symbol}
-                  layout
-                  className={`p-4 rounded-xl cursor-pointer transition-all ${
-                    selectedStockDetail?.symbol === stock.symbol
-                      ? 'bg-white/10'
-                      : 'bg-black/20 hover:bg-white/5'
-                  }`}
-                  onClick={() => handleStockSelect(stock)}
-                >
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-medium">{stock.symbol}</h3>
-                      <p className="text-sm text-white/60">{stock.name}</p>
+            <div className="space-y-4 overflow-y-auto w-[400px] h-[calc(100vh-200px)]">
+              {loading ? (
+                <LoadingSpinner /> // Show loading spinner while data is loading
+              ) : (
+                stocks.map((stock) => (
+                  <motion.div
+                    key={stock.symbol}
+                    layout
+                    className={`p-4 rounded-xl cursor-pointer transition-all ${
+                      selectedStockDetail?.symbol === stock.symbol
+                        ? 'bg-white/10'
+                        : 'bg-black/20 hover:bg-white/5'
+                    }`}
+                    onClick={() => handleStockSelect(stock)}
+                  >
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-medium">{stock.symbol}</h3>
+                        <p className="text-sm text-white/60">{stock.name}</p>
+                      </div>
+                      <motion.div
+                        animate={{
+                          color: (stock.changePercent || 0) >= 0 ? '#34D399' : '#EF4444',
+                        }}
+                        className="text-right"
+                      >
+                        <p className="font-medium">₹{(stock.price || 0).toFixed(2)}</p>
+                        <p className="text-sm flex items-center gap-1">
+                          {(stock.changePercent !== undefined) && (
+                            <>
+                              {(stock.changePercent >= 0) ? <ArrowUp size={12} /> : <ArrowDown size={12} />}
+                              {Math.abs(stock.changePercent).toFixed(2)}%
+                            </>
+                          )}
+                        </p>
+                      </motion.div>
                     </div>
-                    <motion.div
-                      animate={{
-                        color: stock.change !== undefined && stock.change >= 0 ? "#34D399" : "#EF4444"
-                      }}
-                      className="text-right"
-                    >
-                      <p className="font-medium">₹{(stock.price * 83).toFixed(2)}</p>
-                      <p className="text-sm flex items-center gap-1">
-                        {stock.change !== undefined && (
-                          <>
-                            {stock.change >= 0 ? <ArrowUp size={12} /> : <ArrowDown size={12} />}
-                            {Math.abs(stock.change).toFixed(2)}%
-                          </>
-                        )}
-                      </p>
-                    </motion.div>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                ))
+              )}
             </div>
           </div>
         </div>
@@ -182,9 +163,7 @@ export const BuyStocks: React.FC = () => {
         {/* Main Content */}
         <div className="flex-1 overflow-y-auto">
           {stockDetailLoading ? (
-            <div className="h-full flex items-center justify-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
-            </div>
+            <LoadingSpinner /> // Show loading spinner while stock details are loading
           ) : selectedStockDetail ? (
             <StockDetail
               stock={selectedStockDetail}
@@ -220,14 +199,13 @@ export const BuyStocks: React.FC = () => {
         )}
       </AnimatePresence>
 
-
       {/* Buy Modal */}
       {selectedStock && (
         <BuyModal
           stock={selectedStock}
           onClose={() => setSelectedStock(null)}
           onSuccess={handleTransactionSuccess}
-        /> 
+        />
       )}
     </div>
   );

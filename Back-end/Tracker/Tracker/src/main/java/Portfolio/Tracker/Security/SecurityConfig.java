@@ -49,7 +49,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/auth/**", "/oauth2/**", "/error").permitAll()
-                        .requestMatchers("/api/user/record-login", "/api/user/login-activity").authenticated() // Allow access to login activity endpoints
+                        .requestMatchers("/record/login", "/record/activity").authenticated() // Allow access to login activity endpoints
                         .requestMatchers("/portfolio/**").authenticated()
                         .requestMatchers("/transaction/**").authenticated()
                         .anyRequest().authenticated()

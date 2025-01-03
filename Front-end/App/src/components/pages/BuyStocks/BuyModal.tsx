@@ -35,7 +35,7 @@ export const BuyModal: React.FC<BuyModalProps> = ({ stock, onClose, onSuccess })
 
   return (
     <>
-    <div className="fixed inset-0 bg-black/30 backdrop-blur-xl z-50 flex items-center justify-center">
+    <div className="fixed inset-0 bg-white/5 backdrop-blur-xl z-50 flex items-center justify-center">
       <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-8 bg-black w-[30%] h-auto max-w-xl shadow-2xl">
         <div className="flex justify-between items-center bg-black mb-8">
           <h2 className="text-2xl font-semibold bg-black text-white">{stock.name}</h2>

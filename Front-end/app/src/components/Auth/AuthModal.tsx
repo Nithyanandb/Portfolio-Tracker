@@ -191,7 +191,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
-                    <label className="block text-sm font-medium text-white/60 mb-1.5">
+                    <label className="block z-20 text-sm font-medium text-white/60 mb-1.5">
                       Email
                     </label>
                     <input
@@ -199,7 +199,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className={cn(
-                        "w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white",
+                        "w-full z-20 bg-white/5  rounded-lg px-4 py-2.5 text-white",
                         "focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50",
                         "transition-all duration-200 ease-in-out"
                       )}
@@ -208,7 +208,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-white/60 mb-1.5">
+                    <label className="block z-20 text-sm font-medium text-white/60 mb-1.5">
                       Password
                     </label>
                     <input
@@ -216,7 +216,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className={cn(
-                        "w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white",
+                        "w-full z-20 bg-white/5 rounded-lg px-4 py-2.5 text-white",
                         "focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50",
                         "transition-all duration-200 ease-in-out"
                       )}
@@ -272,7 +272,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                       className={cn(
                         "flex items-center justify-center gap-3 px-4 py-3",
                         "bg-white/5 hover:bg-white/10 transition-all duration-200",
-                        "rounded-lg border border-white/10 group",
+                        "rounded-lg  group",
                         isAuthenticating && "opacity-50 cursor-not-allowed"
                       )}
                     >
@@ -290,7 +290,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                       className={cn(
                         "flex items-center justify-center gap-3 px-4 py-3",
                         "bg-white/5 hover:bg-white/10 transition-all duration-200",
-                        "rounded-lg border border-white/10 group",
+                        "rounded-lg  group",
                         isAuthenticating && "opacity-50 cursor-not-allowed"
                       )}
                     >

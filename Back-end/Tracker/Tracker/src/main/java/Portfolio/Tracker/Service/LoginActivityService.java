@@ -27,6 +27,6 @@ public class LoginActivityService {
     }
 
     public List<LoginActivity> getLoginActivity(User user) {
-        return loginActivityRepository.findByUserOrderByDateAsc(user); // Fetch all activities
+        return loginActivityRepository.findByUserOrderByDateAsc(user);
     }
 }

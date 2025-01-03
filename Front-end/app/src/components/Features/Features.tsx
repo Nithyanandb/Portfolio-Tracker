@@ -6,8 +6,8 @@ const features = [
   {
     title: "Portfolio",
     gradient: "Tracking",
-    description: "real-time monitoring of your investments. precise. powerful. personalized.",
-    image: "https://media.assettype.com/bloombergquint%2Fimport%2F6c20i81g_stocks-generic_625x300_21_February_23.jpg?w=732",
+    description: "Real-time monitoring of your investments. Precise. Powerful. Personalized.",
+    image: "https://infraon.io/blog/wp-content/uploads/2023/07/marketing-data-analysis-datadriven-marketing-concepts-competitor-analysis-min.jpg",
     stats: [
       { label: "LATENCY", value: "< 1s" },
       { label: "DATA POINTS", value: "1M+" },
@@ -17,7 +17,7 @@ const features = [
   {
     title: "Market",
     gradient: "Intelligence",
-    description: "AI-driven insights. predictive analytics. real-time decisions.",
+    description: "AI-driven insights. Predictive analytics. Real-time decisions.",
     image: "https://researchworld.com/uploads/attachments/cm2d73ps00qab69tdc9pnizbd-gettyimages-1448152453.max.jpg",
     stats: [
       { label: "AI MODELS", value: "15+" },
@@ -28,7 +28,7 @@ const features = [
   {
     title: "Lightning",
     gradient: "Execution",
-    description: "instant trades. zero latency. maximum efficiency.",
+    description: "Instant trades. Zero Latency. Maximum Efficiency.",
     image: "https://miro.medium.com/v2/resize:fit:1400/0*DXFfpfxSOxeHdm_M",
     stats: [
       { label: "SPEED", value: "0.01s" },
@@ -95,10 +95,10 @@ const Features = () => {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="group relative px-8 py-4 bg-white rounded-full text-black text-lg 
+                  className="group relative px-4 py-2 bg-white rounded-full text-black text-lg 
                     font-medium tracking-wide flex items-center gap-2 overflow-hidden transition-all duration-300"
                 >
-                  <span className="relative z-10">Explore feature</span>
+                  <span className="relative z-10">Explore Feature</span>
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform relative z-10" />
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 
                     opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
@@ -123,7 +123,7 @@ const Features = () => {
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 
                     to-purple-500/20 mix-blend-overlay" />
                   
-                  {/* Glass card overlay */}
+                  {/* Glass card overlay
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -144,7 +144,7 @@ const Features = () => {
                         </p>
                       </div>
                     </div>
-                  </motion.div>
+                  </motion.div> */}
                 </div>
               </motion.div>
             </div>

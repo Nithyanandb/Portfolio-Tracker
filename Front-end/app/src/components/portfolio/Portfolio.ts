@@ -11,7 +11,6 @@ export interface Portfolio {
   currentPrice: number;
   totalReturn: number;
   purchaseDate: string;
- lastUpdated : string;
 }
 
 export interface PortfolioStats {

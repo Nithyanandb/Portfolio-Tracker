@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ApiResponse, Portfolio, PortfolioStats, LoginActivityData } from './Portfolio';
+import { ApiResponse, Portfolio, PortfolioStats, LoginActivityData, ActivityStats } from './Portfolio';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:2000';
 
@@ -16,6 +16,7 @@ api.interceptors.request.use(config => {
   const authData = localStorage.getItem('auth');
   if (authData) {
     const { token } = JSON.parse(authData);
+    console.log('Token being sent:', token); // Debugging: Log the token
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

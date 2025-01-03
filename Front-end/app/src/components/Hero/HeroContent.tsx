@@ -14,13 +14,12 @@ const HeroContent: React.FC = () => {
   
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-[calc(100vh-80px)] px-4 mt-20">
+    <div className="relative w-full flex flex-col items-center justify-center min-h-[calc(100vh-80px)] px-4 mt-20">
       {/* Enhanced Grok-style background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-black via-black/95 to-black/90" />
         
-        {/* Side palette effect */}
-        <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-blue-500/5 via-purple-500/5 to-transparent" />
+     
         
         {/* Primary glow effects */}
         <div className="absolute inset-0">
@@ -54,13 +53,12 @@ const HeroContent: React.FC = () => {
           <span className="inline-block hover:text-purple-400 transition-colors duration-300">t</span>
           <span className="inline-block hover:text-purple-400 transition-colors duration-300">e</span>
           <span className="inline-block hover:text-purple-400 transition-colors duration-300">r</span>
-          <br />
+          &nbsp;
           <span className="inline-block hover:text-pink-400 transition-colors duration-300">W</span>
           <span className="inline-block hover:text-pink-400 transition-colors duration-300">i</span>
           <span className="inline-block hover:text-pink-400 transition-colors duration-300">t</span>
           <span className="inline-block hover:text-pink-400 transition-colors duration-300">h</span>
-          &nbsp;
-          <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-transparent bg-clip-text">
+          &nbsp;<span className="inline-block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-transparent bg-clip-text">
             AI intelligence
           </span>
         </motion.h1>

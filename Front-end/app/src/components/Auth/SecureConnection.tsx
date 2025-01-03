@@ -21,10 +21,10 @@ const SecureConnection: React.FC = () => {
   return (
     <motion.p
       key={step}
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 0 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      className="text-white/60 text-sm mt-2"
+      exit={{ opacity: 0, y: 0 }}
+      className="text-white/80 text-sm mt-2"
     >
       {steps[step]}
     </motion.p>

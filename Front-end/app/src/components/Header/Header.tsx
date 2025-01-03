@@ -95,7 +95,7 @@ const Header: React.FC = () => {
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: 8, scale: 0.98 }}
                             transition={{ 
-                              duration: 0.2,
+                              duration: 1,
                               ease: [0.4, 0, 0.2, 1]
                             }}
                             className="absolute right-0 mt-2 w-[280px] py-2 origin-top-right bg-gray-900/90 backdrop-blur-xl "

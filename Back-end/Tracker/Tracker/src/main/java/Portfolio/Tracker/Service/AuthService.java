@@ -93,11 +93,10 @@ public class AuthService {
                 .build();
     }
 
-    // OAuth2 Login Processing
     public AuthResponseDTO processOAuth2Login(OAuth2AuthenticationToken token) {
         OAuth2User oauth2User = token.getPrincipal();
         String email = extractEmail(oauth2User, token.getAuthorizedClientRegistrationId());
-        
+
         User user = userRepository.findByEmail(email)
                 .map(existingUser -> updateExistingUser(existingUser, oauth2User, token.getAuthorizedClientRegistrationId()))
                 .orElseGet(() -> createOAuth2User(oauth2User, token.getAuthorizedClientRegistrationId()));

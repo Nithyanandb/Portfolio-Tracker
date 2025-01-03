@@ -11,6 +11,7 @@ import StockDashboard from '../Stock/StockDashboard';
 import TrendingStocks from '../Hero/TrendingStocks';
 import { Portfolio, PortfolioStats } from './Portfolio';
 import { useAuth } from '../hooks/useAuth';
+import { BuyModal } from '../pages/BuyStocks/BuyModal'; // Import the BuyModal component
 import './portfolioDashboard.css';
 
 export const PortfolioDashboard: React.FC = () => {
@@ -23,6 +24,7 @@ export const PortfolioDashboard: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStock, setSelectedStock] = useState<string>('');
   const [transactionType, setTransactionType] = useState<'BUY' | 'SELL'>('BUY');
+  const [buyModalStock, setBuyModalStock] = useState<{ symbol: string; name: string; price: number } | null>(null); // State for BuyModal
   const { isAuthenticated, user, token } = useAuth();
 
   useEffect(() => {
@@ -43,12 +45,17 @@ export const PortfolioDashboard: React.FC = () => {
     try {
       setIsLoading(true);
       setError(null);
+
+      console.log('Fetching data with token:', token); // Debugging: Log the token
+
       const [portfolioRes, statsRes, loginActivityRes] = await Promise.all([
         portfolioApi.getPortfolio(),
         portfolioApi.getPortfolioStats(),
         portfolioApi.getLoginActivity()
       ]);
-      
+
+      console.log('Login Activity Response:', loginActivityRes); // Debugging: Log the response
+
       if (portfolioRes.data?.success && statsRes.data?.success) {
         setPortfolio(portfolioRes.data.data || []);
         setStats(statsRes.data.data || null);
@@ -62,8 +69,8 @@ export const PortfolioDashboard: React.FC = () => {
         setWeeklyLoginActivity(weeklyData);
       }
     } catch (err) {
+      console.error('Error fetching data:', err); // Debugging: Log the error
       setError('An error occurred while fetching data');
-      console.error(err);
     } finally {
       setIsLoading(false);
     }
@@ -96,6 +103,38 @@ export const PortfolioDashboard: React.FC = () => {
     return data.filter((entry) => new Date(entry.date) >= oneYearAgo);
   };
 
+  const handleBuy = async (transactionData: {
+    stockSymbol: string;
+    stockName: string;
+    quantity: number;
+    price: number;
+  }) => {
+    try {
+      const response = await fetch('http://localhost:2000/transaction/buy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(transactionData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to process transaction');
+      }
+
+      console.log('Transaction successful');
+    } catch (error) {
+      console.error('Transaction failed:', error);
+    }
+  };
+
+  const handleTransaction = (type: 'BUY' | 'SELL', symbol: string) => {
+    setTransactionType(type);
+    setSelectedStock(symbol);
+    setIsModalOpen(true);
+  };
+
   if (!isAuthenticated) {
     return (
       <div style={{ minHeight: '100vh', backgroundColor: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -119,12 +158,6 @@ export const PortfolioDashboard: React.FC = () => {
       </div>
     );
   }
-
-  const handleTransaction = (type: 'BUY' | 'SELL', symbol: string) => {
-    setTransactionType(type);
-    setSelectedStock(symbol);
-    setIsModalOpen(true);
-  };
 
   return (
     <div className='pt-32' style={{ minHeight: '100vh', backgroundColor: '#000', color: '#fff', display: 'flex' }}>
@@ -153,45 +186,21 @@ export const PortfolioDashboard: React.FC = () => {
             }
           }}
         />
-       
-  
-        {/* <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '1rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <div style={{ width: '12px', height: '12px', backgroundColor: '#161b22' }} />
-            <span style={{ fontSize: '0.875rem', color: '#8b949e' }}>No activity</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <div style={{ width: '12px', height: '12px', backgroundColor: '#0e4429' }} />
-            <span style={{ fontSize: '0.875rem', color: '#8b949e' }}>1 login</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <div style={{ width: '12px', height: '12px', backgroundColor: '#006d32' }} />
-            <span style={{ fontSize: '0.875rem', color: '#8b949e' }}>2 logins</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <div style={{ width: '12px', height: '12px', backgroundColor: '#26a641' }} />
-            <span style={{ fontSize: '0.875rem', color: '#8b949e' }}>3 logins</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <div style={{ width: '12px', height: '12px', backgroundColor: '#39d353' }} />
-            <span style={{ fontSize: '0.875rem', color: '#8b949e' }}>4+ logins</span>
-          </div>
-        </div>*/}
-      </div> 
- 
+      </div>
+
       {/* Main Content */}
-      <div style={{ flex: 1, padding: '2rem' }}>
+      <div style={{ flex: 1, padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
         {/* Header */}
-        <header style={{ marginBottom: '2rem', display: 'inline-flex', justifyContent: 'space-between', alignItems: 'center'}}>
-           {user && (
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4rem' }}>
+        <header style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          {user && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4rem' }}>
               <span style={{ fontSize: '1.875rem', fontWeight: '600', color: '#f3f4f6' }}>Welcome, {user.name}</span>
             </div>
           )}
         </header>
 
         {/* Holdings Table */}
-        <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(20px)', borderRadius: '1rem', border: '1px solid rgba(255, 255, 255, 0.1)', marginBottom: '2rem' }}>
+        <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(20px)', borderRadius: '1rem', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
           <div style={{ padding: '1.5rem' }}>
             <h2 style={{ fontSize: '1.125rem', fontWeight: '500', color: '#fff' }}>Holdings</h2>
           </div>
@@ -203,22 +212,25 @@ export const PortfolioDashboard: React.FC = () => {
         </div>
 
         {/* Stock Dashboard & Watchlist */}
-        <div className="grid-container">
-          <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(20px)', borderRadius: '1rem', border: '1px solid rgba(255, 255, 255, 0.1)', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', gap: '2rem' }}>
+          {/* Stock Dashboard */}
+          <div style={{ flex: 2, backgroundColor: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(20px)', borderRadius: '1rem', border: '1px solid rgba(255, 255, 255, 0.1)', overflow: 'hidden' }}>
             <StockDashboard />
           </div>
-          <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(20px)', borderRadius: '1rem', border: '1px solid rgba(255, 255, 255, 0.1)', overflow: 'hidden' }}>
-            <WatchlistManager 
-              watchlist={[]} 
-              onRemove={async (id) => {}} 
-              onUpdate={async (id, data) => {}} 
-              onAdd={async (symbol) => {}} 
+
+          {/* Watchlist Manager */}
+          <div style={{ flex: 1, backgroundColor: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(20px)', borderRadius: '1rem', border: '1px solid rgba(255, 255, 255, 0.1)', overflow: 'hidden' }}>
+            <WatchlistManager
+              watchlist={[]}
+              onRemove={async (id) => {}}
+              onUpdate={async (id, data) => {}}
+              onAdd={async (symbol) => {}}
             />
           </div>
         </div>
 
         {/* Trending Stocks */}
-        <div style={{ marginTop: '2rem' }}>
+        <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(20px)', borderRadius: '1rem', border: '1px solid rgba(255, 255, 255, 0.1)', padding: '1.5rem' }}>
           <TrendingStocks />
         </div>
       </div>
@@ -232,6 +244,27 @@ export const PortfolioDashboard: React.FC = () => {
         currentPrice={portfolio.find(p => p.symbol === selectedStock)?.currentPrice}
         onSubmit={handleTransaction}
       />
+
+      {/* Buy Modal */}
+      {buyModalStock && (
+        <BuyModal
+          stock={{
+            symbol: buyModalStock.symbol,
+            name: buyModalStock.name,
+            price: typeof buyModalStock.price === 'number' ? buyModalStock.price : 0,
+          }}
+          onClose={() => setBuyModalStock(null)}
+          onSuccess={() => {
+            handleBuy({
+              stockSymbol: buyModalStock.symbol,
+              stockName: buyModalStock.name,
+              quantity: 1,
+              price: typeof buyModalStock.price === 'number' ? buyModalStock.price : 0,
+            });
+            setBuyModalStock(null);
+          }}
+        />
+      )}
     </div>
   );
 };

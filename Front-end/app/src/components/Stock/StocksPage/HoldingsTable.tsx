@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { BuyModal } from '@/components/pages/BuyStocks/BuyModal';
-import { SuccessModal } from './SuccessModal'; // Import the SuccessModal
-import { motion, AnimatePresence } from 'framer-motion'; // Import motion and AnimatePresence
-import { Check } from 'lucide-react'; // Import the Check icon
+import { SuccessModal } from './SuccessModal';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Check, Loader2 } from 'lucide-react'; // Import Loader2 for the loading spinner
 
 interface StockHolding {
   symbol: string;
@@ -14,7 +14,7 @@ interface StockHolding {
   lowPrice?: number;
   openPrice?: number;
   previousClose?: number;
-  name?: string; // Add company name
+  name?: string;
 }
 
 interface HoldingsTableProps {
@@ -26,7 +26,7 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ holdings }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedStock, setSelectedStock] = useState<StockHolding | null>(null);
-  const [showSuccessPopup, setShowSuccessPopup] = useState<boolean>(false); // Track popup visibility
+  const [showSuccessPopup, setShowSuccessPopup] = useState<boolean>(false);
   const API_KEY = 'ctre6q9r01qhb16mmh70ctre6q9r01qhb16mmh7g'; // Replace with your Finnhub API key
 
   useEffect(() => {
@@ -35,7 +35,6 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ holdings }) => {
       try {
         const updated = await Promise.all(
           holdings.map(async (holding) => {
-            // Fetch quote data
             const quoteResponse = await fetch(
               `https://finnhub.io/api/v1/quote?symbol=${holding.symbol}&token=${API_KEY}`
             );
@@ -86,14 +85,12 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ holdings }) => {
         throw new Error(errorData.message || 'Failed to process transaction');
       }
 
-      // Show success popup
       setShowSuccessPopup(true);
       setTimeout(() => {
         setShowSuccessPopup(false);
-      }, 3000); // Hide popup after 3 seconds
+      }, 3000);
       console.log('Transaction completed successfully!');
     } catch (error) {
-      // Show error message
       setError('Transaction failed. Please try again.');
       console.error('Transaction failed:', error);
     }
@@ -133,44 +130,82 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ holdings }) => {
             <tr
               key={holding.symbol}
               className="border-b border-white/10 hover:bg-white/5 cursor-pointer"
-              onClick={() => setSelectedStock(holding)} // Open BuyModal on row click
+              onClick={() => setSelectedStock(holding)}
             >
               <td className="px-6 py-4 font-medium">{holding.symbol}</td>
               <td className="px-6 py-4 text-gray-300">{holding.name ?? 'N/A'}</td>
               <td className="px-6 py-4">{holding.quantity}</td>
-              <td className="px-6 py-4">${holding.currentPrice?.toFixed(2) ?? 'N/A'}</td>
+              <td className="px-6 py-4">
+                {holding.currentPrice === undefined ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  `$${holding.currentPrice.toFixed(2)}`
+                )}
+              </td>
               <td className={`px-6 py-4 ${(holding.change ?? 0) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                ${holding.change?.toFixed(2) ?? 'N/A'}
+                {holding.change === undefined ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  `$${holding.change.toFixed(2)}`
+                )}
               </td>
               <td className={`px-6 py-4 ${(holding.changePercent ?? 0) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                {holding.changePercent?.toFixed(2) ?? 'N/A'}%
+                {holding.changePercent === undefined ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  `${holding.changePercent.toFixed(2)}%`
+                )}
               </td>
-              <td className="px-6 py-4">${holding.highPrice?.toFixed(2) ?? 'N/A'}</td>
-              <td className="px-6 py-4">${holding.lowPrice?.toFixed(2) ?? 'N/A'}</td>
-              <td className="px-6 py-4">${holding.openPrice?.toFixed(2) ?? 'N/A'}</td>
-              <td className="px-6 py-4">${holding.previousClose?.toFixed(2) ?? 'N/A'}</td>
+              <td className="px-6 py-4">
+                {holding.highPrice === undefined ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  `$${holding.highPrice.toFixed(2)}`
+                )}
+              </td>
+              <td className="px-6 py-4">
+                {holding.lowPrice === undefined ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  `$${holding.lowPrice.toFixed(2)}`
+                )}
+              </td>
+              <td className="px-6 py-4">
+                {holding.openPrice === undefined ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  `$${holding.openPrice.toFixed(2)}`
+                )}
+              </td>
+              <td className="px-6 py-4">
+                {holding.previousClose === undefined ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  `$${holding.previousClose.toFixed(2)}`
+                )}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
 
       {selectedStock && (
-  <BuyModal
-    stock={{
-      symbol: selectedStock.symbol,
-      name: selectedStock.name || selectedStock.symbol,
-      price: selectedStock.currentPrice || 0,
-    }}
-    onClose={() => setSelectedStock(null)}
-    onBuy={handleBuy}
-    onSuccess={() => {
-      setShowSuccessPopup(true); // Show the success popup
-      setTimeout(() => {
-        setShowSuccessPopup(false); // Hide the popup after 3 seconds
-      }, 3000);
-    }}
-  />
-)}
+        <BuyModal
+          stock={{
+            symbol: selectedStock.symbol,
+            name: selectedStock.name || selectedStock.symbol,
+            price: selectedStock.currentPrice || 0,
+          }}
+          onClose={() => setSelectedStock(null)}
+          onBuy={handleBuy}
+          onSuccess={() => {
+            setShowSuccessPopup(true);
+            setTimeout(() => {
+              setShowSuccessPopup(false);
+            }, 3000);
+          }}
+        />
+      )}
 
       {/* Success Popup */}
       <AnimatePresence>

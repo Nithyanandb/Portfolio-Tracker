@@ -43,8 +43,8 @@ const StockDashboard: React.FC = () => {
   ];
 
   return (
-    <div className="w-full">
-      <div className="flex items-center justify-between p-6 border-b border-white/10">
+    <div className="w-full " >
+      <div className="flex items-center bg-black justify-between p-4 border-b border-white/10">
         <div className="flex items-center gap-3">
           <LineChart className="w-4 h-4 text-white/90" />
           <h2 className="text-white/90 text-xs tracking-[0.2em] font-light">

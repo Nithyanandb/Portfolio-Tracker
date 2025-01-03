@@ -6,6 +6,9 @@ import { useAuth } from '../hooks/useAuth';
 import { portfolioApi } from './portfolioApi';
 import { LoginActivityData, ActivityStats } from './Portfolio';
 import { toast } from 'react-hot-toast';
+import { ActivityHeatmap } from './ActivityHeatmap';
+import { ActivityChart } from './ActivityChart'; // Import the component
+import { ActivityCard } from './ActivityCard';
 
 export const PortfolioPerformance: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
@@ -14,19 +17,49 @@ export const PortfolioPerformance: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Transformation function
+  const transformActivityStats = (backendStats: any): ActivityStats => {
+    if (!backendStats) {
+      throw new Error('Backend stats data is undefined');
+    }
+
+    const mostActiveDayCount = Math.max(...backendStats.lastSevenDaysCounts);
+    const mostActiveDayIndex = backendStats.lastSevenDaysCounts.indexOf(mostActiveDayCount);
+    const mostActiveDayDate = new Date();
+    mostActiveDayDate.setDate(mostActiveDayDate.getDate() - (6 - mostActiveDayIndex));
+
+    return {
+      totalLogins: backendStats.totalLogins,
+      averagePerDay: backendStats.totalLogins / 7,
+      mostActiveDay: {
+        date: mostActiveDayDate.toISOString().split('T')[0],
+        count: mostActiveDayCount,
+      },
+      lastSevenDays: {
+        dates: Array.from({ length: 7 }, (_, i) => {
+          const date = new Date();
+          date.setDate(date.getDate() - (6 - i));
+          return date.toISOString().split('T')[0];
+        }),
+        counts: backendStats.lastSevenDaysCounts,
+      },
+    };
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       if (!isAuthenticated) return;
-      
+
       try {
         setIsLoading(true);
         const [activityRes, statsRes] = await Promise.all([
           portfolioApi.getLoginActivity(),
-          portfolioApi.getActivityStats()
+          portfolioApi.getActivityStats(),
         ]);
 
         setLoginActivity(activityRes.data.data);
-        setActivityStats(statsRes.data.data);
+        const transformedStats = transformActivityStats(statsRes.data.data);
+        setActivityStats(transformedStats);
       } catch (err) {
         setError('Failed to fetch activity data');
         toast.error('Error loading activity data');
@@ -40,7 +73,7 @@ export const PortfolioPerformance: React.FC = () => {
 
   if (!isAuthenticated) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10"
@@ -48,6 +81,14 @@ export const PortfolioPerformance: React.FC = () => {
         <p className="text-gray-400">Please log in to view your activity.</p>
       </motion.div>
     );
+  }
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
   }
 
   return (
@@ -59,11 +100,10 @@ export const PortfolioPerformance: React.FC = () => {
           title="Today's Logins"
           value={activityStats?.lastSevenDays.counts[6] || 0}
         />
-        {/* ... other stat cards ... */}
       </div>
 
       {/* Activity Heatmap */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10"
@@ -84,5 +124,3 @@ export const PortfolioPerformance: React.FC = () => {
     </div>
   );
 };
-
-// ... ActivityCard, ActivityHeatmap, and ActivityChart components ...

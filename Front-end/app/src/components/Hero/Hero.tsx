@@ -41,10 +41,10 @@ const Hero: React.FC = () => {
         animate={{ opacity: 1 }}
         className="relative z-10"
       >
-        <div className="container mx-auto px-4 lg:px-8">
+        <div className="container px-0 lg:px-0">
           {/* Hero Content Section */}
           <div className="flex justify-center items-center min-h-screen">
-            <div className="w-full max-w-7xl">
+            <div className="w-full max-w-full">
               <HeroContent />
             </div>
           </div>
