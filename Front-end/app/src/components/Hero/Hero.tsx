@@ -41,12 +41,18 @@ const Hero: React.FC = () => {
         animate={{ opacity: 1 }}
         className="relative z-10"
       >
-        <div className="container mx-auto px-4 lg:px-8 pt-24">
-          <div className="grid lg:grid-cols-12 gap-8">
+        <div className="container mx-auto px-4 lg:px-8">
+          {/* Hero Content Section */}
+          <div className="flex justify-center items-center min-h-screen">
+            <div className="w-full max-w-7xl">
+              <HeroContent />
+            </div>
+          </div>
+
+          {/* Market Data Grid */}
+          <div className="grid lg:grid-cols-12 gap-8 mt-8">
             {/* Left Column - Main Content */}
             <div className="lg:col-span-8 space-y-8">
-              <HeroContent />
-
               {/* Market Watch Section */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -57,7 +63,7 @@ const Hero: React.FC = () => {
                 <MarketWatch />
               </motion.div>
 
-              {/* Market Metrics with enhanced styling */}
+              {/* Market Metrics */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -68,7 +74,7 @@ const Hero: React.FC = () => {
                 <MarketGraph symbol={'AAPL'}/>
               </motion.div>
 
-              {/* World Indices with premium effects */}
+              {/* World Indices */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -81,8 +87,8 @@ const Hero: React.FC = () => {
 
             {/* Right Column - Dashboard */}
             <div className="lg:col-span-4">
-              <div className="sticky top-24 mt-[130%] space-y-8">
-                {/* Market Dashboard with glass effect */}
+              <div className="sticky top-24 space-y-8">
+                {/* Market Dashboard */}
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -92,7 +98,7 @@ const Hero: React.FC = () => {
                   <MarketDashboard />
                 </motion.div>
 
-                {/* Stock Recommendations with premium styling */}
+                {/* Stock Dashboard */}
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -102,7 +108,7 @@ const Hero: React.FC = () => {
                   <StockDashboard />
                 </motion.div>
 
-                {/* Watchlist Manager with enhanced effects */}
+                {/* Watchlist Manager */}
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
