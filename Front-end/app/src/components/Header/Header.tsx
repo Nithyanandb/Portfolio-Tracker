@@ -98,7 +98,7 @@ const Header: React.FC = () => {
                               duration: 0.2,
                               ease: [0.4, 0, 0.2, 1]
                             }}
-                            className="absolute right-0 mt-2 w-[280px] py-2 origin-top-right bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl"
+                            className="absolute right-0 mt-2 w-[280px] py-2 origin-top-right bg-gray-900/90 backdrop-blur-xl "
                           >
                             {user?.roles?.includes('ADMIN') && (
                               <div className="px-4 py-2 mb-1">
@@ -111,16 +111,16 @@ const Header: React.FC = () => {
                             <div className="px-3 py-2">
                               <motion.button
                                 onClick={handleProfileClick}
-                                className="w-full p-2 text-[13px] text-white/90 hover:text-white rounded-xl hover:bg-white/10 flex items-center gap-3 transition-all duration-200"
-                                whileHover={{ x: 2 }}
+                                className="w-full p-2 text-[13px] text-white/70 hover:text-white  flex items-center gap-3 transition-all duration-200"
+                                
                               >
                                 <Briefcase className="w-[18px] h-[18px] opacity-70" />
                                 <span className="font-medium">Portfolio</span>
                               </motion.button>
 
                               <motion.button
-                                className="w-full p-2 text-[13px] text-white/90 hover:text-white rounded-xl hover:bg-white/10 flex items-center gap-3 transition-all duration-200"
-                                whileHover={{ x: 2 }}
+                                className="w-full p-2 text-[13px] text-white/70 hover:text-white flex items-center gap-3 transition-all duration-200"
+                              
                               >
                                 <Settings className="w-[18px] h-[18px] opacity-70" />
                                 <span className="font-medium">Settings</span>
@@ -132,8 +132,8 @@ const Header: React.FC = () => {
                             <div className="px-3 py-2">
                               <motion.button
                                 onClick={logout}
-                                className="w-full p-2 text-[13px] text-red-400 hover:text-red-300 rounded-xl hover:bg-red-500/10 flex items-center gap-3 transition-all duration-200"
-                                whileHover={{ x: 2 }}
+                                className="w-full p-2 text-[13px] text-red-400 hover:text-red-300 hover:bg-red-500/10 flex items-center gap-3 transition-all duration-200"
+                          
                               >
                                 <LogOut className="w-[18px] h-[18px] opacity-70" />
                                 <span className="font-medium">Sign Out</span>

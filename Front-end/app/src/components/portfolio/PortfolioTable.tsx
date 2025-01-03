@@ -89,7 +89,7 @@ export const PortfolioTable: React.FC<PortfolioTableProps> = ({
                 </div>
               </td>
               <td className="py-4 px-6 text-right font-mono text-white">
-                {holding.purchaseDate}
+                {holding.lastUpdated}
               </td>
             </tr>
           ))}

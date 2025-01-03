@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -20,4 +22,5 @@ public class PortfolioResponse {
     private double currentPrice;
     private double totalReturn;
     private String purchaseDate;
+    private LocalDateTime lastUpdated;
 }
