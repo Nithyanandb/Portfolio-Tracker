@@ -130,7 +130,7 @@ export const PortfolioDashboard: React.FC = () => {
     <div className='pt-32' style={{ minHeight: '100vh', backgroundColor: '#000', color: '#fff', display: 'flex' }}>
       {/* Sidebar */}
       <div style={{ width: '650px', backgroundColor: '#111', padding: '1.5rem', borderRight: '1px solid rgba(255, 255, 255, 0.1)' }}>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: '600', color: '#fff', marginBottom: '1.5rem' }}>Login Activity</h2>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: '600', color: '#fff', marginBottom: '1.5rem' }}>Contributions</h2>
         <CalendarHeatmap
           startDate={new Date(new Date().setFullYear(new Date().getFullYear() - 1))} // Last 1 year
           endDate={new Date()}
@@ -153,10 +153,9 @@ export const PortfolioDashboard: React.FC = () => {
             }
           }}
         />
-        {/* Portfolio Performance */}
-        <PortfolioPerformance stats={{ dailyPerformance: loginActivity }} />
-        {/* Legend */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '1rem' }}>
+       
+  
+        {/* <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '1rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <div style={{ width: '12px', height: '12px', backgroundColor: '#161b22' }} />
             <span style={{ fontSize: '0.875rem', color: '#8b949e' }}>No activity</span>
@@ -177,9 +176,9 @@ export const PortfolioDashboard: React.FC = () => {
             <div style={{ width: '12px', height: '12px', backgroundColor: '#39d353' }} />
             <span style={{ fontSize: '0.875rem', color: '#8b949e' }}>4+ logins</span>
           </div>
-        </div>
-      </div>
-
+        </div>*/}
+      </div> 
+ 
       {/* Main Content */}
       <div style={{ flex: 1, padding: '2rem' }}>
         {/* Header */}

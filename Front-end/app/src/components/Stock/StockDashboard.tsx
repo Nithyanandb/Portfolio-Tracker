@@ -19,7 +19,8 @@ const StockDashboard: React.FC = () => {
       price: '182.63',
       change: '+1.25%',
       recommendation: 'BUY',
-      analysis: 'Strong momentum with new product launches'
+      analysis: 'Strong momentum with new product launches',
+      pe: 'N/A'
     },
     {
       symbol: 'MSFT',
@@ -27,7 +28,8 @@ const StockDashboard: React.FC = () => {
       price: '337.22',
       change: '-0.45%',
       recommendation: 'HOLD',
-      analysis: 'Stable growth in cloud services'
+      analysis: 'Stable growth in cloud services',
+      pe: 'N/A'
     },
     {
       symbol: 'GOOGL',
@@ -35,7 +37,8 @@ const StockDashboard: React.FC = () => {
       price: '125.23',
       change: '+2.1%',
       recommendation: 'BUY',
-      analysis: 'AI initiatives driving growth'
+      analysis: 'AI initiatives driving growth',
+      pe: 'N/A'
     }
   ];
 
@@ -53,7 +56,7 @@ const StockDashboard: React.FC = () => {
           whileTap={{ scale: 0.95 }}
           onClick={() => refetch()}
           disabled={isRefetching}
-          className="p-2 bg-white/5 hover:bg-white/10 transition-all duration-300 rounded-lg"
+          className="p-2 bg-white/5 hover:bg-white transition-all duration-300 rounded-lg"
         >
           <RefreshCw className={`w-3 h-3 text-white/90 ${isRefetching ? 'animate-spin' : ''}`} />
         </motion.button>

@@ -81,7 +81,7 @@ const Hero: React.FC = () => {
 
             {/* Right Column - Dashboard */}
             <div className="lg:col-span-4">
-              <div className="sticky top-24 space-y-8">
+              <div className="sticky top-24 mt-[130%] space-y-8">
                 {/* Market Dashboard with glass effect */}
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}

@@ -120,7 +120,7 @@ const StockRecommendations: React.FC<StockRecommendationsProps> = ({ recommendat
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="relative group rounded-2xl backdrop-blur-xl bg-white/[0.02] hover:bg-white/[0.04] 
+            className="relative group  backdrop-blur-xl 
               transition-all duration-500 overflow-hidden"
           >
             <div className="p-6">

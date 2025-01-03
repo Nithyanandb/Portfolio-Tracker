@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { symbols } from './symbols';
 import { BuyModal } from '@/components/pages/BuyStocks/BuyModal';
-
+import { SuccessModal } from './SuccessModal'; // Import the SuccessModal
+import { motion, AnimatePresence } from 'framer-motion'; // Import motion and AnimatePresence
+import { Check } from 'lucide-react'; // Import the Check icon
 
 interface StockHolding {
   symbol: string;
@@ -25,6 +26,7 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ holdings }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedStock, setSelectedStock] = useState<StockHolding | null>(null);
+  const [showSuccessPopup, setShowSuccessPopup] = useState<boolean>(false); // Track popup visibility
   const API_KEY = 'ctre6q9r01qhb16mmh70ctre6q9r01qhb16mmh7g'; // Replace with your Finnhub API key
 
   useEffect(() => {
@@ -84,12 +86,18 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ holdings }) => {
         throw new Error(errorData.message || 'Failed to process transaction');
       }
 
+      // Show success popup
+      setShowSuccessPopup(true);
+      setTimeout(() => {
+        setShowSuccessPopup(false);
+      }, 3000); // Hide popup after 3 seconds
       console.log('Transaction completed successfully!');
     } catch (error) {
+      // Show error message
+      setError('Transaction failed. Please try again.');
       console.error('Transaction failed:', error);
     }
   };
-
 
   if (loading) {
     return <div className="text-center py-4 text-gray-400">Loading...</div>;
@@ -147,16 +155,41 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ holdings }) => {
       </table>
 
       {selectedStock && (
-        <BuyModal
-          stock={{
-            symbol: selectedStock.symbol,
-            name: selectedStock.name || selectedStock.symbol,
-            price: selectedStock.currentPrice || 0,
-          }}
-          onClose={() => setSelectedStock(null)}
-          onBuy={handleBuy}
-        />
-      )}
+  <BuyModal
+    stock={{
+      symbol: selectedStock.symbol,
+      name: selectedStock.name || selectedStock.symbol,
+      price: selectedStock.currentPrice || 0,
+    }}
+    onClose={() => setSelectedStock(null)}
+    onBuy={handleBuy}
+    onSuccess={() => {
+      setShowSuccessPopup(true); // Show the success popup
+      setTimeout(() => {
+        setShowSuccessPopup(false); // Hide the popup after 3 seconds
+      }, 3000);
+    }}
+  />
+)}
+
+      {/* Success Popup */}
+      <AnimatePresence>
+        {showSuccessPopup && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            className="fixed bottom-8 right-8 z-50"
+          >
+            <div className="bg-green-500 text-white px-6 py-4 rounded-xl shadow-xl flex items-center gap-3">
+              <div className="bg-white/20 rounded-full p-1">
+                <Check className="w-4 h-4" />
+              </div>
+              <span>Transaction completed successfully!</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

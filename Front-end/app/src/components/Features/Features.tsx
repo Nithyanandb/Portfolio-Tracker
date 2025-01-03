@@ -57,9 +57,9 @@ const Features = () => {
                 transition={{ duration: 0.8 }}
                 className="flex-1 max-w-xl"
               >
-                <h2 className="text-4xl sm:text-5xl font-medium tracking-tight 
+                <h2 className="text-4xl sm:text-5xl  font-medium tracking-tight 
                   bg-gradient-to-r from-white via-white to-white/60 bg-clip-text 
-                  text-transparent mb-6"
+                  text-transparent mb-4"
                 >
                   {feature.title}
                 </h2>

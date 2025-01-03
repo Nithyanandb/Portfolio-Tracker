@@ -1,171 +1,179 @@
-import React, { useEffect, useState } from 'react';
-import { Area } from '@ant-design/plots';
-import { Stock } from './stockApi';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import {
+  AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
+  CartesianGrid
+} from 'recharts';
 
 interface StockChartProps {
-  stock: Stock;
-  timeFrame: string;
+  symbol: string;
+  onTimeframeChange?: (timeframe: string) => void;
 }
 
-interface ChartData {
-  time: string;
-  price: number;
-}
+const generateRandomPrice = (basePrice: number, volatility: number = 0.005) => {
+  const change = basePrice * volatility * (Math.random() - 0.5);
+  return basePrice + change;
+};
 
-export const StockChart: React.FC<StockChartProps> = ({ stock, timeFrame }) => {
-  const [data, setData] = useState<ChartData[]>([]);
+const generateStockData = (timeframe: string, basePrice: number = 100) => {
+  const dataPoints: { date: string; price: number }[] = [];
+  const periods = {
+    '1D': 24,
+    '1W': 7 * 24,
+    '1M': 30,
+    '3M': 90,
+    '1Y': 252,
+    '5Y': 1260
+  }[timeframe] || 24;
 
-  useEffect(() => {
-    generateChartData();
-  }, [stock, timeFrame]);
+  let currentPrice = basePrice;
+  const now = new Date();
 
-  const generateChartData = () => {
-    const currentPrice = stock.price;
-    const points = getTimeFramePoints(timeFrame);
-    const historicalData: ChartData[] = [];
+  for (let i = 0; i < periods; i++) {
+    const date = new Date(now);
     
-    for (let i = points; i >= 0; i--) {
-      const time = getTimeForPoint(i, timeFrame);
-      const randomVariation = (Math.random() - 0.5) * 2;
-      const price = currentPrice * (1 + randomVariation / 100);
-      
-      historicalData.push({
-        time: time.toLocaleString(),
-        price: Number(price.toFixed(2))
-      });
+    if (timeframe === '1D') {
+      date.setHours(date.getHours() - i);
+    } else if (timeframe === '1W') {
+      date.setHours(date.getHours() - i);
+    } else {
+      date.setDate(date.getDate() - i);
     }
-    
-    setData(historicalData);
+
+    currentPrice = generateRandomPrice(currentPrice);
+
+    dataPoints.unshift({
+      date: date.toISOString(),
+      price: Number(currentPrice.toFixed(2))
+    });
+  }
+
+  return dataPoints;
+};
+
+export const StockChart: React.FC<StockChartProps> = ({ 
+  symbol, 
+  onTimeframeChange 
+}) => {
+  const [timeframe, setTimeframe] = useState('1D');
+
+  // Generate data based on symbol
+  const basePrice = {
+    'AAPL': 150,
+    'MSFT': 380,
+    'GOOGL': 140,
+    'TSLA': 250,
+    'NVDA': 800
+  }[symbol] || 100;
+
+  const stockData = generateStockData(timeframe, basePrice);
+
+  const handleTimeframeChange = (tf: string) => {
+    setTimeframe(tf);
+    onTimeframeChange?.(tf);
   };
 
-  const getTimeFramePoints = (tf: string): number => {
-    switch (tf) {
-      case '1D': return 24;
-      case '1W': return 7;
-      case '1M': return 30;
-      case '3M': return 90;
-      case '1Y': return 365;
-      case 'ALL': return 1095;
-      default: return 24;
-    }
-  };
+  const priceChange = stockData[stockData.length - 1].price - stockData[0].price;
+  const priceChangePercent = ((priceChange / stockData[0].price) * 100).toFixed(2);
 
-  const getTimeForPoint = (point: number, tf: string): Date => {
-    const date = new Date();
-    switch (tf) {
-      case '1D':
-        date.setHours(date.getHours() - point);
-        break;
-      case '1W':
-        date.setDate(date.getDate() - point);
-        break;
-      case '1M':
-        date.setDate(date.getDate() - point);
-        break;
-      case '3M':
-        date.setDate(date.getDate() - point);
-        break;
-      case '1Y':
-        date.setDate(date.getDate() - point);
-        break;
-      case 'ALL':
-        date.setDate(date.getDate() - point);
-        break;
-    }
-    return date;
-  };
-
-  const config = {
-    data,
-    xField: 'time',
-    yField: 'price',
-    smooth: true,
-    animation: true,
-    xAxis: {
-      type: 'time',
-      tickCount: 5,
-      label: {
-        style: {
-          fill: '#ffffff80',
-          fontSize: 12,
-        },
-      },
-      grid: {
-        line: {
-          style: {
-            stroke: '#ffffff10',
-          },
-        },
-      },
-    },
-    yAxis: {
-      label: {
-        formatter: (v: string) => `₹${Number(v).toLocaleString()}`,
-        style: {
-          fill: '#ffffff80',
-          fontSize: 12,
-        },
-      },
-      grid: {
-        line: {
-          style: {
-            stroke: '#ffffff10',
-          },
-        },
-      },
-    },
-    tooltip: {
-      customContent: (title: string, items: any[]) => {
-        if (!items?.length) return '';
-        const data = items[0];
-        return `
-          <div style="padding: 8px 12px;">
-            <div style="color: white;">${title}</div>
-            <div style="color: #1677ff;">₹${Number(data?.value).toLocaleString()}</div>
-          </div>
-        `;
-      },
-    },
-    areaStyle: () => {
-      return {
-        fill: 'l(270) 0:#1677ff00 0.5:#1677ff40 1:#1677ff',
-      };
-    },
-  };
+  const timeframes = ['1D', '1W', '1M', '3M', '1Y', '5Y'];
 
   return (
-    <div className="w-full h-full min-h-[400px]">
-      <Area {...config} />
-    </div>
+    <motion.div
+      key={symbol}
+      initial={{ opacity: 0, y: 0 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="relative h-[400px] bg-black/40 backdrop-blur-xl rounded-2xl p-6"
+    >
+      {/* Header with price change */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h3 className="text-xl font-medium text-white">{symbol}</h3>
+          <div className={`text-sm ${priceChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+            {priceChange >= 0 ? '+' : ''}{priceChangePercent}%
+          </div>
+        </div>
+        
+        {/* Timeframe selector */}
+        <div className="flex gap-2">
+          {timeframes.map((tf) => (
+            <button
+              key={tf}
+              onClick={() => handleTimeframeChange(tf)}
+              className={`px-3 py-1 rounded-full text-sm transition-all ${
+                timeframe === tf 
+                  ? 'bg-white/10 text-white' 
+                  : 'text-white/60 hover:text-white'
+              }`}
+            >
+              {tf}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Chart */}
+      <ResponsiveContainer width="100%" height="100%" style={{position: 'sticky', top: 0}}>
+        <AreaChart data={stockData}>
+          <defs>
+            <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#60A5FA" stopOpacity={0.3}/>
+              <stop offset="95%" stopColor="#60A5FA" stopOpacity={0}/>
+            </linearGradient>
+          </defs>
+          
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="rgba(255,255,255,0.1)"
+            vertical={false}
+          />
+          
+          <XAxis
+            dataKey="date"
+            tickFormatter={(date) => {
+              const d = new Date(date);
+              if (timeframe === '1D') {
+                return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              } else {
+                return d.toLocaleDateString([], { day: 'numeric', month: 'short' });
+              }
+            }}
+            stroke="rgba(255,255,255,0.5)"
+            tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 12 }}
+          />
+          
+          <YAxis
+            domain={['auto', 'auto']}
+            stroke="rgba(255,255,255,0.5)"
+            tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 12 }}
+            tickFormatter={(value) => `$${value}`}
+          />
+          
+          <Tooltip
+          
+            contentStyle={{
+              
+              backgroundColor: 'rgba(0,0,0,0.9)',
+              border: 'none',
+              backdropFilter: 'blur(10px)',
+              padding: '12px',
+              borderRadius: '8px'
+            }}
+            labelFormatter={(date) => new Date(date).toLocaleString()}
+          />
+          
+          <Area
+          className='fixed'
+            type="monotone"
+            dataKey="price"
+            stroke="#60A5FA"
+            fill="url(#colorPrice)"
+            strokeWidth={2}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    </motion.div>
   );
 };
 
-export const getPortfolioHoldings = async () => {
-  const response = await fetch(`${API_BASE_URL}/portfolio`, {
-    headers: {
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
-    }
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch portfolio');
-  }
-
-  const data = await response.json();
-  return data.data;
-};
-
-export const getPortfolioStats = async () => {
-  const response = await fetch(`${API_BASE_URL}/portfolio/stats`, {
-    headers: {
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
-    }
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch portfolio stats');
-  }
-
-  const data = await response.json();
-  return data.data;
-};
+export default StockChart;
