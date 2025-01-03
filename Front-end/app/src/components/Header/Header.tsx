@@ -145,7 +145,7 @@ const Header: React.FC = () => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setIsAuthModalOpen(true)}
-                    className="px-6 py-2 bg-white rounded-full text-black text-sm font-medium tracking-wide hover:bg-white/90 transition-all duration-300"
+                    className="px-6 py-2 z-20  bg-white rounded-full text-black text-sm font-medium tracking-wide hover:bg-white/90 transition-all duration-300"
                   >
                     Sign In
                   </motion.button>

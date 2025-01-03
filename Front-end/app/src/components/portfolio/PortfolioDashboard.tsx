@@ -4,13 +4,13 @@ import CalendarHeatmap from 'react-calendar-heatmap';
 import 'react-calendar-heatmap/dist/styles.css';
 import { PortfolioTable } from './PortfolioTable';
 import { TransactionModal } from './TransactionModal';
-import { getPortfolio, getPortfolioStats, fetchLoginActivity } from './portfolioApi';
+import { portfolioApi } from './portfolioApi';
 import WatchlistManager from '../Hero/WatchlistManager';
 import { PortfolioPerformance } from './PortfolioPerformance';
 import StockDashboard from '../Stock/StockDashboard';
 import TrendingStocks from '../Hero/TrendingStocks';
 import { Portfolio, PortfolioStats } from './Portfolio';
-import { useAuth } from '../hooks/useAuth'; // Import the useAuth hook
+import { useAuth } from '../hooks/useAuth';
 import './portfolioDashboard.css';
 
 export const PortfolioDashboard: React.FC = () => {
@@ -23,7 +23,7 @@ export const PortfolioDashboard: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStock, setSelectedStock] = useState<string>('');
   const [transactionType, setTransactionType] = useState<'BUY' | 'SELL'>('BUY');
-  const { isAuthenticated, user, token } = useAuth(); // Get authentication details
+  const { isAuthenticated, user, token } = useAuth();
 
   useEffect(() => {
     if (isAuthenticated && user && token) {
@@ -44,9 +44,9 @@ export const PortfolioDashboard: React.FC = () => {
       setIsLoading(true);
       setError(null);
       const [portfolioRes, statsRes, loginActivityRes] = await Promise.all([
-        getPortfolio(token), // Pass token to getPortfolio
-        getPortfolioStats(token), // Pass token to getPortfolioStats
-        fetchLoginActivity(token) // Pass token to fetchLoginActivity
+        portfolioApi.getPortfolio(),
+        portfolioApi.getPortfolioStats(),
+        portfolioApi.getLoginActivity()
       ]);
       
       if (portfolioRes.data?.success && statsRes.data?.success) {
@@ -56,9 +56,9 @@ export const PortfolioDashboard: React.FC = () => {
         setError('Failed to fetch portfolio data');
       }
 
-      if (loginActivityRes.data) {
-        setLoginActivity(loginActivityRes.data);
-        const weeklyData = aggregateWeeklyLoginActivity(loginActivityRes.data);
+      if (loginActivityRes.data?.success) {
+        setLoginActivity(loginActivityRes.data.data);
+        const weeklyData = aggregateWeeklyLoginActivity(loginActivityRes.data.data);
         setWeeklyLoginActivity(weeklyData);
       }
     } catch (err) {

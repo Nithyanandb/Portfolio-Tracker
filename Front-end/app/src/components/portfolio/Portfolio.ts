@@ -98,3 +98,26 @@ export const formatPercent = (value: number): string => {
   }).format(value / 100);
 
 };
+
+export interface LoginActivityData {
+  date: string;
+  count: number;
+  details?: {
+    browser: string;
+    platform: string;
+    location?: string;
+  };
+}
+
+export interface ActivityStats {
+  totalLogins: number;
+  averagePerDay: number;
+  mostActiveDay: {
+    date: string;
+    count: number;
+  };
+  lastSevenDays: {
+    dates: string[];
+    counts: number[];
+  };
+}
