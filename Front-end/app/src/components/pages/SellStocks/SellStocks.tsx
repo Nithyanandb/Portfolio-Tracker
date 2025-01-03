@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, ArrowUp, ArrowDown, Globe, DollarSign, Check } from 'lucide-react';
-import { BuyModal } from './BuyModal';
+import { SellModal } from './SellModal';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header/Header';
-import { StockDetail } from './StockDetail';
+import { LoadingSpinner } from '../../ui/LoadingSpinner';
 import { useAuth } from '@/components/hooks/useAuth';
 import { symbols } from '../../Stock/StocksPage/symbols';
-import { LoadingSpinner } from '../../ui/LoadingSpinner';
+import { StockDetail } from '../BuyStocks/StockDetail';
 
-export const BuyStocks: React.FC = () => {
+export const SellStocks: React.FC = () => {
   const [stocks, setStocks] = useState(symbols);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -76,6 +76,7 @@ export const BuyStocks: React.FC = () => {
     }
   };
 
+  // Filter stocks based on search term
   const filteredStocks = stocks.filter(
     (stock) =>
       stock.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -93,13 +94,14 @@ export const BuyStocks: React.FC = () => {
               className="px-8 py-3 bg-white text-black font-medium rounded-full hover:bg-white/90 transition-all flex items-center gap-2"
             >
               <DollarSign size={20} />
-              Buy {selectedStockDetail.symbol}
+              Sell {selectedStockDetail.symbol}
             </button>
           )}
         </div>
       </div>
 
       <div className="flex h-screen pt-20">
+        {/* Sidebar */}
         <div className="w-98 bg-black/30 border-r border-white/10 overflow-hidden">
           <div className="p-6">
             <div className="relative mb-6">
@@ -113,6 +115,7 @@ export const BuyStocks: React.FC = () => {
               />
             </div>
 
+            {/* Stock List with real-time updates */}
             <div className="space-y-4 overflow-y-auto w-[400px] h-[calc(100vh-200px)]">
               {loading ? (
                 <LoadingSpinner />
@@ -157,13 +160,14 @@ export const BuyStocks: React.FC = () => {
           </div>
         </div>
 
+        {/* Main Content */}
         <div className="flex-1 overflow-y-auto">
           {stockDetailLoading ? (
             <LoadingSpinner />
           ) : selectedStockDetail ? (
             <StockDetail
               stock={selectedStockDetail}
-              onBuyClick={setSelectedStock}
+              onSellClick={setSelectedStock} // Changed to onSellClick
               loading={loading}
             />
           ) : (
@@ -195,8 +199,9 @@ export const BuyStocks: React.FC = () => {
         )}
       </AnimatePresence>
 
+      {/* Sell Modal */}
       {selectedStock && (
-        <BuyModal
+        <SellModal
           stock={selectedStock}
           onClose={() => setSelectedStock(null)}
           onSuccess={handleTransactionSuccess}
@@ -206,4 +211,4 @@ export const BuyStocks: React.FC = () => {
   );
 };
 
-export default BuyStocks;
+export default SellStocks;

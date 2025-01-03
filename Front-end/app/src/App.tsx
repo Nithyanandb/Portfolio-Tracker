@@ -12,11 +12,8 @@ import AppLayout from './components/Layout/AppLayout';
 import Hero from './components/Hero/Hero';
 import Features from './components/Features/Features';
 import Security from './components/Security/Security';
-import AllStocks from './components/pages/AllStocks';
-import SellStocks from './components/pages/SellStocks';
 import OAuthCallback from './components/Auth/OAuthCallback';
 import NotFound from './components/ErrorBoundary/NotFound';
-import CookieConsent from './CookieConsent';
 import {
   FundamentalAnalysisPage,
   LearnPage,
@@ -30,6 +27,9 @@ import OptionsTrading from './components/Header/Navigation/trading/OptionsTradin
 import BuyStocks from './components/pages/BuyStocks/BuyStocks';
 import { PortfolioDashboard } from './components/portfolio/PortfolioDashboard';
 import StockMarket from './components/Stock/StocksPage/StockMarket';
+import About from './components/Header/About/About';
+import CookieConsent from './CookieConsent';
+import SellStocks from './components/pages/SellStocks/SellStocks';
 
 // Create a QueryClient instance
 const queryClient = new QueryClient({
@@ -131,23 +131,25 @@ const router = createBrowserRouter(
         </QueryClientProvider>
       ),
     },
-    { path: '/transaction/all', element: <AllStocks /> },
+
     { path: '/stock/buy', element: <BuyStocks /> },
-    { path: '/stock/sell', element: <SellStocks /> },
+
     { path: '/learn/basics', element: <LearnPage /> },
+    { path: '/stock/sell', element: <SellStocks /> },
     { path: '/learn/strategies', element: <TradingStrategiesPage /> },
     { path: '/learn/technical', element: <TechnicalAnalysisPage /> },
     { path: '/learn/fundamental', element: <FundamentalAnalysisPage /> },
     { path: '/trading/futures', element: <FuturesTrading /> },
     { path: '/trading/margin', element: <MarginTrading /> },
+    { path: '/about', element: <About/> },
     { path: '/trading/spot', element: <SpotTrading /> },
     { path: '/trading/options', element: <OptionsTrading /> },
     { path: '*', element: <NotFound /> },
   ],
   {
     future: {
-      v7_startTransition: true, // Opt into React.startTransition behavior
-      v7_relativeSplatPath: true, // Opt into new relative splat path behavior
+      v7_startTransition: true,
+      v7_relativeSplatPath: true, 
     },
   }
 );

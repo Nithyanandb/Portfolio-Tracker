@@ -80,14 +80,14 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
                   className="relative aspect-[16/9] overflow-hidden"
                 >
                   <img
-                    src="holderimage.com/800x600"
+                    src="https://www.ft.com/__origami/service/image/v2/images/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2F72274a20-82a5-4e50-9834-f46dabaa10a6.jpg?source=next-article&fit=scale-down&quality=highest&width=700&dpr=1"
                     alt="Markets Overview"
                     className="w-full h-full border-bottom-10 border-bottom-white/10 rounded-lg"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-6">
                     <h3 className="text-2xl font-light text-white tracking-wide">
-                      Real-time market analysis and tracking
+                      Market Analysis and Insights
                     </h3>
                   </div>
                 </motion.div>
@@ -115,7 +115,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-white/60 uppercase tracking-wider mb-4">
+                  <h3 className="text-sm font-medium text-white/60 uppercase tracking-wider -mt-[20px] mb-4">
                     Market Indices
                   </h3>
                   <div className="grid gap-2">
@@ -154,7 +154,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
                   className="relative aspect-[16/9] overflow-hidden rounded-lg"
                 >
                   <img
-                    src="/api/placeholder/800/600"
+                    src="https://zerodha.com/static/images/console-app.png"
                     alt="Trading Platform"
                     className="object-cover w-full h-full"
                   />
@@ -236,7 +236,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
                   className="relative aspect-[16/9] overflow-hidden rounded-lg"
                 >
                   <img
-                    src="/api/placeholder/800/600"
+                    src="https://profitmart.in/wp-content/uploads/2023/06/basic-stock-market.jpg"
                     alt="Learning Resources"
                     className="object-cover w-full h-full"
                   />

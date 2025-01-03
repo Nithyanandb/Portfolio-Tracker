@@ -94,8 +94,9 @@ const Header: React.FC = () => {
                             initial={{ opacity: 0, y: 8, scale: 0.98 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                            whileHover={{ scale: 1.01 }}
                             transition={{ 
-                              duration: 1,
+                              duration: 0,
                               ease: [0.4, 0, 0.2, 1]
                             }}
                             className="absolute right-0 mt-2 w-[280px] py-2 origin-top-right bg-gray-900/90 backdrop-blur-xl "

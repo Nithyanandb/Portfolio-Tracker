@@ -49,7 +49,7 @@ export const useAuth = () => {
 
   const handleOAuthPopup = (url: string) => {
     setIsAuthenticating(true);
-    const width = 800;
+    const width = 950;
     const height = 600;
     const left = window.screenX + (window.outerWidth - width) / 2;
     const top = window.screenY + (window.outerHeight - height) / 2;
@@ -66,7 +66,7 @@ export const useAuth = () => {
           clearInterval(checkPopup);
           setIsAuthenticating(false);
         }
-      }, 1000);
+      }, 5000);
 
       const handleMessage = (event: MessageEvent) => {
         if (event.origin === window.location.origin) {

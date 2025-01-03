@@ -88,9 +88,9 @@ export const StockDetail: React.FC<StockDetailProps> = ({ stock, onBuyClick, loa
         {/* Compact Stats Grid */}
         <div className="grid grid-cols-3 gap-3">
           {[
-            { icon: <Activity size={16} />, label: 'Volume', value: (stock.volume || 0).toLocaleString() },
-            { icon: <TrendingUp size={16} />, label: 'High', value: `₹${(stock.high * 83 || 0).toFixed(2)}` },
-            { icon: <BarChart2 size={16} />, label: 'Low', value: `₹${(stock.low * 83 || 0).toFixed(2)}` }
+            { icon: <Activity size={16} />, label: 'Volume', value: (stock.change || 0).toLocaleString() },
+            { icon: <TrendingUp size={16} />, label: 'High', value: `₹${(stock.high || 0).toFixed(2)}` },
+            { icon: <BarChart2 size={16} />, label: 'Low', value: `₹${(stock.low || 0).toFixed(2)}` }
           ].map((stat, index) => (
             <div key={index} className="bg-white/5 backdrop-blur-sm rounded-xl p-3">
               <div className="flex items-center gap-1 text-white/60 mb-1 text-xs">

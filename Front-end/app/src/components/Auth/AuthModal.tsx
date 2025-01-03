@@ -89,7 +89,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div className="fixed inset-0 z-50 flex items-center justify-center">
+        <motion.div className="fixed inset-0 z-20 flex items-center justify-center">
           <div className="absolute inset-0 bg-black/90 backdrop-blur-xl">
             <div className="absolute inset-0 opacity-10" 
                  style={{

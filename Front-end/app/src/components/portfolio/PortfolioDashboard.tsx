@@ -6,12 +6,11 @@ import { PortfolioTable } from './PortfolioTable';
 import { TransactionModal } from './TransactionModal';
 import { portfolioApi } from './portfolioApi';
 import WatchlistManager from '../Hero/WatchlistManager';
-import { PortfolioPerformance } from './PortfolioPerformance';
 import StockDashboard from '../Stock/StockDashboard';
 import TrendingStocks from '../Hero/TrendingStocks';
 import { Portfolio, PortfolioStats } from './Portfolio';
 import { useAuth } from '../hooks/useAuth';
-import { BuyModal } from '../pages/BuyStocks/BuyModal'; // Import the BuyModal component
+import { BuyModal } from '../pages/BuyStocks/BuyModal';
 import './portfolioDashboard.css';
 
 export const PortfolioDashboard: React.FC = () => {
@@ -24,14 +23,49 @@ export const PortfolioDashboard: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStock, setSelectedStock] = useState<string>('');
   const [transactionType, setTransactionType] = useState<'BUY' | 'SELL'>('BUY');
-  const [buyModalStock, setBuyModalStock] = useState<{ symbol: string; name: string; price: number } | null>(null); // State for BuyModal
+  const [buyModalStock, setBuyModalStock] = useState<{ symbol: string; name: string; price: number } | null>(null);
   const { isAuthenticated, user, token } = useAuth();
 
+  // Calculate portfolio value and profit/loss
+  const portfolioValue = portfolio.reduce((total, stock) => {
+    return total + (stock.quantity * (stock.currentPrice || 0));
+  }, 0);
+
+  const totalInvested = portfolio.reduce((total, stock) => {
+    return total + (stock.quantity * (stock.averagePrice || 0));
+  }, 0);
+
+  const profitLoss = portfolioValue - totalInvested;
+  const profitLossPercentage = ((profitLoss / totalInvested) * 100).toFixed(2);
+
+  // Fetch real-time stock prices periodically
+  useEffect(() => {
+    const fetchStockPrices = async () => {
+      try {
+        const updatedPortfolio = await Promise.all(
+          portfolio.map(async (stock) => {
+            const quote = await fetchStockQuote(stock.symbol); // Replace with your API call
+            return {
+              ...stock,
+              currentPrice: quote?.currentPrice || stock.currentPrice,
+            };
+          })
+        );
+        setPortfolio(updatedPortfolio);
+      } catch (err) {
+        console.error('Error fetching stock prices:', err);
+      }
+    };
+
+    const interval = setInterval(fetchStockPrices, 5000); // Update every 5 seconds
+    return () => clearInterval(interval);
+  }, [portfolio]);
+
+  // Fetch portfolio data on mount or auth change
   useEffect(() => {
     if (isAuthenticated && user && token) {
       fetchData();
     } else {
-      // Reset state if the user is not authenticated
       setPortfolio([]);
       setStats(null);
       setLoginActivity([]);
@@ -39,22 +73,18 @@ export const PortfolioDashboard: React.FC = () => {
       setIsLoading(false);
       setError(null);
     }
-  }, [isAuthenticated, user, token]); // Re-fetch when auth state changes
+  }, [isAuthenticated, user, token]);
 
   const fetchData = async () => {
     try {
       setIsLoading(true);
       setError(null);
 
-      console.log('Fetching data with token:', token); // Debugging: Log the token
-
       const [portfolioRes, statsRes, loginActivityRes] = await Promise.all([
         portfolioApi.getPortfolio(),
         portfolioApi.getPortfolioStats(),
         portfolioApi.getLoginActivity()
       ]);
-
-      console.log('Login Activity Response:', loginActivityRes); // Debugging: Log the response
 
       if (portfolioRes.data?.success && statsRes.data?.success) {
         setPortfolio(portfolioRes.data.data || []);
@@ -69,7 +99,7 @@ export const PortfolioDashboard: React.FC = () => {
         setWeeklyLoginActivity(weeklyData);
       }
     } catch (err) {
-      console.error('Error fetching data:', err); // Debugging: Log the error
+      console.error('Error fetching data:', err);
       setError('An error occurred while fetching data');
     } finally {
       setIsLoading(false);
@@ -82,8 +112,8 @@ export const PortfolioDashboard: React.FC = () => {
     data.forEach((entry) => {
       const date = new Date(entry.date);
       const weekStart = new Date(date);
-      weekStart.setDate(date.getDate() - date.getDay()); // Start of the week (Sunday)
-      const weekKey = weekStart.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+      weekStart.setDate(date.getDate() - date.getDay());
+      const weekKey = weekStart.toISOString().split('T')[0];
 
       if (!weeklyData[weekKey]) {
         weeklyData[weekKey] = 0;
@@ -123,7 +153,8 @@ export const PortfolioDashboard: React.FC = () => {
         throw new Error(errorData.message || 'Failed to process transaction');
       }
 
-      console.log('Transaction successful');
+      // Update portfolio after successful transaction
+      fetchData();
     } catch (error) {
       console.error('Transaction failed:', error);
     }
@@ -165,14 +196,14 @@ export const PortfolioDashboard: React.FC = () => {
       <div style={{ width: '650px', backgroundColor: '#111', padding: '1.5rem', borderRight: '1px solid rgba(255, 255, 255, 0.1)' }}>
         <h2 style={{ fontSize: '1.25rem', fontWeight: '600', color: '#fff', marginBottom: '1.5rem' }}>Contributions</h2>
         <CalendarHeatmap
-          startDate={new Date(new Date().setFullYear(new Date().getFullYear() - 1))} // Last 1 year
+          startDate={new Date(new Date().setFullYear(new Date().getFullYear() - 1))}
           endDate={new Date()}
           values={filterLastYearData(weeklyLoginActivity)}
           classForValue={(value) => {
             if (!value) {
               return 'color-empty';
             }
-            return `color-custom-${Math.min(value.count, 4)}`; // Scale counts to 4 levels
+            return `color-custom-${Math.min(value.count, 4)}`;
           }}
           tooltipDataAttrs={(value) => ({
             'data-tooltip': value
@@ -190,13 +221,26 @@ export const PortfolioDashboard: React.FC = () => {
 
       {/* Main Content */}
       <div style={{ flex: 1, padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-        {/* Header */}
+        {/* Header with Portfolio Value */}
         <header style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           {user && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '4rem' }}>
               <span style={{ fontSize: '1.875rem', fontWeight: '600', color: '#f3f4f6' }}>Welcome, {user.name}</span>
             </div>
           )}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+            <span style={{ fontSize: '1.5rem', fontWeight: '600', color: '#f3f4f6' }}>
+              Portfolio Value: ₹{portfolioValue.toLocaleString()}
+            </span>
+            <span
+              style={{
+                fontSize: '1rem',
+                color: profitLoss >= 0 ? '#34D399' : '#EF4444',
+              }}
+            >
+              {profitLoss >= 0 ? '+' : '-'}₹{Math.abs(profitLoss).toLocaleString()} ({profitLossPercentage}%)
+            </span>
+          </div>
         </header>
 
         {/* Holdings Table */}
@@ -213,12 +257,9 @@ export const PortfolioDashboard: React.FC = () => {
 
         {/* Stock Dashboard & Watchlist */}
         <div style={{ display: 'flex', gap: '2rem' }}>
-          {/* Stock Dashboard */}
           <div style={{ flex: 2, backgroundColor: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(20px)', borderRadius: '1rem', border: '1px solid rgba(255, 255, 255, 0.1)', overflow: 'hidden' }}>
             <StockDashboard />
           </div>
-
-          {/* Watchlist Manager */}
           <div style={{ flex: 1, backgroundColor: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(20px)', borderRadius: '1rem', border: '1px solid rgba(255, 255, 255, 0.1)', overflow: 'hidden' }}>
             <WatchlistManager
               watchlist={[]}
@@ -267,4 +308,10 @@ export const PortfolioDashboard: React.FC = () => {
       )}
     </div>
   );
+};
+
+// Mock function to fetch stock quotes (replace with your API call)
+const fetchStockQuote = async (symbol: string) => {
+  // Replace with your API call to fetch the latest stock price
+  return { currentPrice: Math.random() * 1000 }; // Mock data
 };

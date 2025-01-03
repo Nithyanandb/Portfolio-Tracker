@@ -17,7 +17,6 @@ const HeroContent: React.FC = () => {
     <div className="relative w-full flex flex-col items-center justify-center min-h-[calc(100vh-80px)] px-4 mt-20">
       {/* Enhanced Grok-style background */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-black/95 to-black/90" />
         
      
         
