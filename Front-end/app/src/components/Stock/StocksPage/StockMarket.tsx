@@ -33,10 +33,6 @@ const StockMarket: React.FC = () => {
               </div>
             </div>
             
-            <SearchBar 
-              searchTerm={searchTerm}
-              onSearchChange={setSearchTerm}
-            />
           </div>
 
           <SegmentSelector

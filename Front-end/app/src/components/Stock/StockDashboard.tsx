@@ -1,3 +1,4 @@
+// StockDashboard.tsx
 import React from 'react';
 import { motion } from 'framer-motion';
 import { LineChart, RefreshCw } from 'lucide-react';
@@ -5,7 +6,12 @@ import { useQuery } from '@tanstack/react-query';
 import { API_CONFIG } from '../../config/API_CONFIG';
 import StockRecommendations from './StockRecommendations';
 
-const StockDashboard: React.FC = () => {
+interface StockDashboardProps {
+  onBuy: (symbol: string) => void;
+  onSell: (symbol: string) => void;
+}
+
+const StockDashboard: React.FC<StockDashboardProps> = ({ onBuy, onSell }) => {
   const { data: recommendations, refetch, isRefetching } = useQuery({
     queryKey: ['stock-recommendations'],
     // queryFn: () => fetch(API_CONFIG.getEndpointUrl('RECOMMENDATIONS')).then(res => res.json()),
@@ -43,7 +49,7 @@ const StockDashboard: React.FC = () => {
   ];
 
   return (
-    <div className="w-full " >
+    <div className="w-full">
       <div className="flex items-center bg-black justify-between p-4 border-b border-white/10">
         <div className="flex items-center gap-3">
           <LineChart className="w-4 h-4 text-white/90" />
@@ -62,9 +68,14 @@ const StockDashboard: React.FC = () => {
         </motion.button>
       </div>
 
-      <StockRecommendations recommendations={recommendations || mockRecommendations} />
+      <StockRecommendations
+        recommendations={recommendations || mockRecommendations}
+        onBuy={onBuy}
+        onSell={onSell}
+      />
     </div>
   );
 };
+
 
 export default StockDashboard;

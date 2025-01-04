@@ -20,7 +20,7 @@ export const Logo = () => (
     <div className="flex flex-col">
       <span className="text-xl font-bold tracking-[0.1em] bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
         CapX
-      <span className="text-[10px]  ml-[5px] font-light text-white tracking-[0.4em] lowercase">.live</span>
+      {/* <span className="text-[10px]  ml-[5px] font-light text-white tracking-[0.4em] lowercase">.live</span> */}
       </span>
     </div>
   </motion.a>

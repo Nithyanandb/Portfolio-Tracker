@@ -17,7 +17,11 @@ import {
   Building2,
   Laptop,
   Brain,
-  Lightbulb
+  Lightbulb,
+  Globe,
+  Wallet,
+  Info,
+  Menu,
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import AuthModal from '../Auth/AuthModal';
@@ -32,13 +36,14 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
   const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // State for mobile menu
 
   const handleMouseEnter = (menuId: string) => {
     setHoveredMenu(menuId);
   };
 
   const handleMouseLeave = () => {
-    setHoveredMenu(hoveredMenu);
+    setHoveredMenu(MenuId); 
   };
 
   const handleNavigation = (e: React.MouseEvent, href: string) => {
@@ -61,18 +66,33 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
 
   return (
     <>
-      <NavigationMenuPrimitive.Root className={className}>
-        <NavigationMenuPrimitive.List className="flex items-center gap-6">
+     <NavigationMenuPrimitive.Root className={className}>
+        {/* Mobile Menu Toggle */}
+        <div className="md:hidden flex justify-end p-4">
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="text-white/80 hover:text-white transition-colors"
+          >
+            <Menu size={24} />
+          </button>
+        </div>
+
+        {/* Navigation Menu */}
+        <NavigationMenuPrimitive.List
+          className={`flex items-center gap-6 ${isMobileMenuOpen ? 'block' : 'hidden'} md:flex`}
+        >
+          {/* Markets */}
           <NavItem 
             href="/" 
             label="Markets" 
             isHovered={hoveredMenu === 'markets'}
             onMouseEnter={() => handleMouseEnter('markets')}
             onMouseLeave={handleMouseLeave}
+            icon={<BarChart2 size={18} />} // Add icon for Markets
           >
-            <div className="container mx-auto grid grid-cols-2 gap-8 p-12">
+            <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-4 md:p-12">
               {/* Left Side - Markets Content */}
-              <div className="space-y-6">
+              <div className="space-y-6 hidden md:block">
                 <motion.div
                   initial={{ opacity: 0, x: 0 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -94,7 +114,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
               </div>
 
               {/* Right Side - Menu Items */}
-              <div className="space-y-6 grid grid-cols-2 gap-8">
+              <div className="space-y-6 grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
                   <h3 className="text-sm font-medium text-white/60 uppercase tracking-wider mb-4">
                     Stock Market
@@ -137,16 +157,18 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
             </div>
           </NavItem>
 
+          {/* Trading */}
           <NavItem 
             href="/trading" 
             label="Trading" 
             isHovered={hoveredMenu === 'trading'}
-              onMouseEnter={() => handleMouseEnter('trading')}
-              onMouseLeave={handleMouseLeave}
-            >
-            <div className="container mx-auto grid grid-cols-2 gap-8 p-12">
+            onMouseEnter={() => handleMouseEnter('trading')}
+            onMouseLeave={handleMouseLeave}
+            icon={<TrendingUp size={18} />} // Add icon for Trading
+          >
+            <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-4 md:p-12">
               {/* Left Side - Trading Image */}
-              <div className="space-y-6">
+              <div className="space-y-6 hidden md:block">
                 <motion.div
                   initial={{ opacity: 0, x: 0 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -168,7 +190,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
               </div>
 
               {/* Right Side - Trading Options */}
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <h3 className="text-sm font-medium text-white/60 uppercase tracking-wider mb-4">
                     Basic Trading
@@ -219,16 +241,18 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
             </div>
           </NavItem>
 
+          {/* Learn */}
           <NavItem 
             href="/learn" 
             label="Learn" 
             isHovered={hoveredMenu === 'learn'}
             onMouseEnter={() => handleMouseEnter('learn')}
             onMouseLeave={handleMouseLeave}
+            icon={<BookOpen size={18} />} // Add icon for Learn
           >
-            <div className="container mx-auto grid grid-cols-2 gap-8 p-12">
+            <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-4 md:p-12">
               {/* Left Side - Learn Image */}
-              <div className="space-y-6">
+              <div className="space-y-6 hidden md:block">
                 <motion.div
                   initial={{ opacity: 0, x: 0 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -271,20 +295,26 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
             </div>
           </NavItem>
 
-          <SimpleNavLink href="/about">About</SimpleNavLink>
+          {/* About */}
+          <SimpleNavLink href="/about">
+            <div className="flex items-center gap-1.5">
+              <Info size={18} className="text-white/80 hover:text-white" /> {/* Add icon for About */}
+              <span>About</span>
+            </div>
+          </SimpleNavLink>
         </NavigationMenuPrimitive.List>
 
         <NavigationMenuPrimitive.Viewport className="absolute left-0 right-0 top-full" />
       </NavigationMenuPrimitive.Root>
 
-      <AuthModal 
-        isOpen={isAuthModalOpen}
-        onClose={() => {
-          setIsAuthModalOpen(false);
-          setPendingNavigation(null);
-        }}
-        onSuccess={handleAuthSuccess}
-      />
+    <AuthModal  
+      isOpen={isAuthModalOpen}
+      onClose={() => {
+        setIsAuthModalOpen(false);
+        setPendingNavigation(null);
+      }}
+      onSuccess={handleAuthSuccess}
+    />
     </>
   );
 };
@@ -296,15 +326,24 @@ const NavItem: React.FC<{
   isHovered: boolean;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
-}> = ({ href, label, children, isHovered, onMouseEnter, onMouseLeave }) => {
+  icon?: React.ReactElement; // Add icon prop
+}> = ({ href, label, children, isHovered, onMouseEnter, onMouseLeave, icon }) => {
+  const [isDropdownHovered, setIsDropdownHovered] = useState(false);
+
   return (
     <NavigationMenuPrimitive.Item
       onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
+      onMouseLeave={() => {
+        // Only close if neither the button nor the dropdown is hovered
+        if (!isDropdownHovered) {
+          onMouseLeave();
+        }
+      }}
     >
       <NavigationMenuPrimitive.Trigger 
         className="group flex items-center gap-1.5 text-white/80 hover:text-white transition-colors outline-none"
       >
+        {icon && React.cloneElement(icon, { className: "h-4 w-4 text-white/80 group-hover:text-white" })}
         <span className="text-sm font-medium tracking-wide">{label}</span>
         <motion.div
           animate={{ rotate: isHovered ? 180 : 0 }}
@@ -318,6 +357,11 @@ const NavItem: React.FC<{
         {isHovered && (
           <NavigationMenuPrimitive.Content 
             className="absolute left-0 right-0 top-full z-50 w-screen"
+            onMouseEnter={() => setIsDropdownHovered(true)} // Track dropdown hover
+            onMouseLeave={() => {
+              setIsDropdownHovered(false);
+              onMouseLeave(); // Close dropdown when leaving
+            }}
           >
             <motion.div
               initial={{ opacity: 0, y: 0 }}

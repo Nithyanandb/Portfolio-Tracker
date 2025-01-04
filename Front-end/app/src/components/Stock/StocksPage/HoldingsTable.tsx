@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BuyModal } from '@/components/pages/BuyStocks/BuyModal';
-import { SuccessModal } from './SuccessModal';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, Loader2 } from 'lucide-react'; // Import Loader2 for the loading spinner
+import { Check, Loader2, Search } from 'lucide-react'; // Added Search icon for search functionality
 
 interface StockHolding {
   symbol: string;
@@ -27,6 +26,7 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ holdings }) => {
   const [error, setError] = useState<string | null>(null);
   const [selectedStock, setSelectedStock] = useState<StockHolding | null>(null);
   const [showSuccessPopup, setShowSuccessPopup] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>(''); // Added search term state
   const API_KEY = 'ctre6q9r01qhb16mmh70ctre6q9r01qhb16mmh7g'; // Replace with your Finnhub API key
 
   useEffect(() => {
@@ -96,8 +96,19 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ holdings }) => {
     }
   };
 
+  // Filter holdings based on search term
+  const filteredHoldings = updatedHoldings.filter(
+    (holding) =>
+      holding.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (holding.name && holding.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+
   if (loading) {
-    return <div className="text-center py-4 text-gray-400">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+      </div>
+    );
   }
 
   if (error) {
@@ -110,6 +121,18 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ holdings }) => {
 
   return (
     <div className="overflow-x-auto custom-scrollbar">
+      {/* Search Bar */}
+      <div className="relative mb-6">
+        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+        <input
+          type="text"
+          placeholder="Search holdings..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-white/20 text-white"
+        />
+      </div>
+
       <table className="min-w-full bg-black text-white">
         <thead>
           <tr className="border-b border-white/10">
@@ -126,7 +149,7 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ holdings }) => {
           </tr>
         </thead>
         <tbody>
-          {updatedHoldings.map((holding) => (
+          {filteredHoldings.map((holding) => (
             <tr
               key={holding.symbol}
               className="border-b border-white/10 hover:bg-white/5 cursor-pointer"
