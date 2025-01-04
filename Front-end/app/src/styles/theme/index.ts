@@ -73,3 +73,23 @@ export type Theme = typeof theme;
 export type ThemeColor = keyof typeof colors;
 export type ThemeSpace = keyof typeof spacing;
 export type ThemeBreakpoint = keyof typeof theme.breakpoints;
+
+
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        'stock-green': {
+          DEFAULT: '#26a69a', // Zerodha green
+          light: '#26a69a20', // With opacity for backgrounds
+          hover: '#00897b'
+        },
+        'stock-red': {
+          DEFAULT: '#ef5350', // Zerodha red
+          light: '#ef535020', // With opacity for backgrounds
+          hover: '#e53935'
+        }
+      }
+    }
+  }
+}

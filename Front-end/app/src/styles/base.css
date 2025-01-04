@@ -23,3 +23,12 @@
     font-feature-settings: "ss01", "ss02", "cv01", "cv02";
   }
 }
+:root {
+  --stock-green: #26a69a;
+  --stock-green-light: #26a69a20;
+  --stock-green-hover: #00897b;
+  
+  --stock-red: #ef5350;
+  --stock-red-light: #ef535020;
+  --stock-red-hover: #e53935;
+}

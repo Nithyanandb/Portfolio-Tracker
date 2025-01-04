@@ -135,7 +135,9 @@ export const BuyStocks: React.FC = () => {
                       </div>
                       <motion.div
                         animate={{
-                          color: (stock.changePercent || 0) >= 0 ? '#34D399' : '#EF4444',
+                          color: (stock.changePercent || 0) >= 0
+                            ? '#16a34a' // Green for positive change
+                            : '#dc2626', // Red for negative change
                         }}
                         className="text-right"
                       >

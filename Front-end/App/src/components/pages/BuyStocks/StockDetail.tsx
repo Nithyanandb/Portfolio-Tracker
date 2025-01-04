@@ -4,6 +4,8 @@ import { ArrowUp, ArrowDown, Clock, TrendingUp, BarChart2, Activity, Globe } fro
 import { motion, AnimatePresence } from 'framer-motion';
 import { StockChart } from './StockChart';
 
+const API_KEY = "ctre6q9r01qhb16mmh70ctre6q9r01qhb16mmh7g"; // Replace with your API key
+
 interface StockDetailProps {
   stock: Stock | null;
   onBuyClick: (stock: Stock) => void;
@@ -13,7 +15,32 @@ interface StockDetailProps {
 export const StockDetail: React.FC<StockDetailProps> = ({ stock, onBuyClick, loading }) => {
   const [timeFrame, setTimeFrame] = useState<string>('1D');
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [recommendationTrends, setRecommendationTrends] = useState<any[]>([]);
+  const [trendsLoading, setTrendsLoading] = useState<boolean>(false);
 
+  // Fetch recommendation trends when stock changes
+  useEffect(() => {
+    const fetchRecommendationTrends = async () => {
+      if (stock?.symbol) {
+        setTrendsLoading(true);
+        try {
+          const response = await fetch(
+            `https://finnhub.io/api/v1/stock/recommendation?symbol=${stock.symbol}&token=${API_KEY}`
+          );
+          const data = await response.json();
+          setRecommendationTrends(data);
+        } catch (error) {
+          console.error('Failed to fetch recommendation trends:', error);
+        } finally {
+          setTrendsLoading(false);
+        }
+      }
+    };
+
+    fetchRecommendationTrends();
+  }, [stock?.symbol]);
+
+  // Update current time every second
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
@@ -24,6 +51,15 @@ export const StockDetail: React.FC<StockDetailProps> = ({ stock, onBuyClick, loa
   if (loading || !stock) return null;
 
   const timeFrames = ['1D', '1W', '1M', '3M', '1Y', 'ALL'];
+
+  // Color scheme for recommendation trends
+  const trendColors = {
+    strongBuy: '#16a34a', // Bright green
+    buy: '#4ade80',      // Light green
+    hold: '#facc15',     // Yellow
+    sell: '#f87171',     // Light red
+    strongSell: '#dc2626', // Bright red
+  };
 
   return (
     <AnimatePresence mode="wait">
@@ -86,7 +122,7 @@ export const StockDetail: React.FC<StockDetailProps> = ({ stock, onBuyClick, loa
         </div>
 
         {/* Compact Stats Grid */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-3 mb-6">
           {[
             { icon: <Activity size={16} />, label: 'Volume', value: (stock.change || 0).toLocaleString() },
             { icon: <TrendingUp size={16} />, label: 'High', value: `₹${(stock.high || 0).toFixed(2)}` },
@@ -100,6 +136,60 @@ export const StockDetail: React.FC<StockDetailProps> = ({ stock, onBuyClick, loa
               <p className="text-lg font-medium truncate">{stat.value}</p>
             </div>
           ))}
+        </div>
+
+        {/* Recommendation Trends Section */}
+        <div className="bg-black/20 rounded-xl p-4 backdrop-blur-sm">
+          <h3 className="text-lg font-semibold text-white mb-4">Recommendation Trends</h3>
+          {trendsLoading ? (
+            <div className="flex justify-center items-center py-4">
+              <span className="text-white/60">Loading trends...</span>
+            </div>
+          ) : recommendationTrends.length > 0 ? (
+            <div className="space-y-4">
+              {recommendationTrends.map((trend, index) => (
+                <div key={index} className="bg-white/5 rounded-xl p-3">
+                  <p className="text-sm text-white/60 mb-2">Period: {trend.period}</p>
+                  <div className="grid grid-cols-5 gap-2">
+                    <div className="text-center">
+                      <p className="text-xs text-white/60">Strong Buy</p>
+                      <p className="text-lg font-medium" style={{ color: trendColors.strongBuy }}>
+                        {trend.strongBuy}
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-xs text-white/60">Buy</p>
+                      <p className="text-lg font-medium" style={{ color: trendColors.buy }}>
+                        {trend.buy}
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-xs text-white/60">Hold</p>
+                      <p className="text-lg font-medium" style={{ color: trendColors.hold }}>
+                        {trend.hold}
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-xs text-white/60">Sell</p>
+                      <p className="text-lg font-medium" style={{ color: trendColors.sell }}>
+                        {trend.sell}
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-xs text-white/60">Strong Sell</p>
+                      <p className="text-lg font-medium" style={{ color: trendColors.strongSell }}>
+                        {trend.strongSell}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex justify-center items-center py-4">
+              <span className="text-white/60">No recommendation trends available.</span>
+            </div>
+          )}
         </div>
       </motion.div>
     </AnimatePresence>

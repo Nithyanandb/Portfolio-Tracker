@@ -109,7 +109,7 @@ public class AuthService {
                 .name(user.getName())
                 .message("OAuth2 login successful")
                 .build();
-    }
+    }   
 
     private String extractEmail(OAuth2User oauth2User, String registrationId) {
         Map<String, Object> attributes = oauth2User.getAttributes();
