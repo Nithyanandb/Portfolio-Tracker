@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 
 export interface Portfolio {
+  quantity: number;
   id: number;
   symbol: string;
   name: string;

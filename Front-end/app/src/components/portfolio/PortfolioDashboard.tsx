@@ -11,50 +11,67 @@ import StockDashboard from '../Stock/StockDashboard';
 import TrendingStocks from '../Hero/TrendingStocks';
 import { Portfolio, PortfolioStats } from './Portfolio';
 import { useAuth } from '../hooks/useAuth';
-import { BuyModal } from '../pages/BuyStocks/BuyModal'; // Import the BuyModal component
+import { BuyModal } from '../pages/BuyStocks/BuyModal';
 import './portfolioDashboard.css';
 
 export const PortfolioDashboard: React.FC = () => {
   const [portfolio, setPortfolio] = useState<Portfolio[]>([]);
   const [stats, setStats] = useState<PortfolioStats | null>(null);
-  const [loginActivity, setLoginActivity] = useState<{ date: string; count: number }[]>([]);
-  const [weeklyLoginActivity, setWeeklyLoginActivity] = useState<{ date: string; count: number }[]>([]);
+  const [pageViews, setPageViews] = useState<{ date: string; count: number }[]>([]);
+  const [weeklyPageViews, setWeeklyPageViews] = useState<{ date: string; count: number }[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStock, setSelectedStock] = useState<string>('');
   const [transactionType, setTransactionType] = useState<'BUY' | 'SELL'>('BUY');
-  const [buyModalStock, setBuyModalStock] = useState<{ symbol: string; name: string; price: number } | null>(null); // State for BuyModal
+  const [buyModalStock, setBuyModalStock] = useState<{ symbol: string; name: string; price: number } | null>(null);
   const { isAuthenticated, user, token } = useAuth();
 
+  // Calculate portfolio value dynamically
+  const portfolioValue = calculatePortfolioValue(portfolio);
+
+  // Track page views
+  useEffect(() => {
+    if (isAuthenticated) {
+      const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+      const updatedPageViews = [...pageViews];
+      const existingEntryIndex = updatedPageViews.findIndex((entry) => entry.date === today);
+
+      if (existingEntryIndex !== -1) {
+        updatedPageViews[existingEntryIndex].count += 1; // Increment count for today
+      } else {
+        updatedPageViews.push({ date: today, count: 1 }); // Add new entry for today
+      }
+
+      setPageViews(updatedPageViews);
+      const weeklyData = aggregateWeeklyPageViews(updatedPageViews);
+      setWeeklyPageViews(weeklyData);
+    }
+  }, [isAuthenticated]);
+
+  // Fetch portfolio data
   useEffect(() => {
     if (isAuthenticated && user && token) {
       fetchData();
     } else {
-      // Reset state if the user is not authenticated
       setPortfolio([]);
       setStats(null);
-      setLoginActivity([]);
-      setWeeklyLoginActivity([]);
+      setPageViews([]);
+      setWeeklyPageViews([]);
       setIsLoading(false);
       setError(null);
     }
-  }, [isAuthenticated, user, token]); // Re-fetch when auth state changes
+  }, [isAuthenticated, user, token]);
 
   const fetchData = async () => {
     try {
       setIsLoading(true);
       setError(null);
 
-      console.log('Fetching data with token:', token); // Debugging: Log the token
-
-      const [portfolioRes, statsRes, loginActivityRes] = await Promise.all([
+      const [portfolioRes, statsRes] = await Promise.all([
         portfolioApi.getPortfolio(),
         portfolioApi.getPortfolioStats(),
-        portfolioApi.getLoginActivity()
       ]);
-
-      console.log('Login Activity Response:', loginActivityRes); // Debugging: Log the response
 
       if (portfolioRes.data?.success && statsRes.data?.success) {
         setPortfolio(portfolioRes.data.data || []);
@@ -62,21 +79,15 @@ export const PortfolioDashboard: React.FC = () => {
       } else {
         setError('Failed to fetch portfolio data');
       }
-
-      if (loginActivityRes.data?.success) {
-        setLoginActivity(loginActivityRes.data.data);
-        const weeklyData = aggregateWeeklyLoginActivity(loginActivityRes.data.data);
-        setWeeklyLoginActivity(weeklyData);
-      }
     } catch (err) {
-      console.error('Error fetching data:', err); // Debugging: Log the error
+      console.error('Error fetching data:', err);
       setError('An error occurred while fetching data');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const aggregateWeeklyLoginActivity = (data: { date: string; count: number }[]) => {
+  const aggregateWeeklyPageViews = (data: { date: string; count: number }[]) => {
     const weeklyData: { [key: string]: number } = {};
 
     data.forEach((entry) => {
@@ -163,35 +174,49 @@ export const PortfolioDashboard: React.FC = () => {
     <div className='pt-32' style={{ minHeight: '100vh', backgroundColor: '#000', color: '#fff', display: 'flex' }}>
       {/* Sidebar */}
       <div style={{ width: '650px', backgroundColor: '#111', padding: '1.5rem', borderRight: '1px solid rgba(255, 255, 255, 0.1)' }}>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: '600', color: '#fff', marginBottom: '1.5rem' }}>Contributions</h2>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: '600', color: '#fff', marginBottom: '1.5rem' }}>Page Views</h2>
         <CalendarHeatmap
-          startDate={new Date(new Date().setFullYear(new Date().getFullYear() - 1))} // Last 1 year
+          startDate={new Date(new Date().setFullYear(new Date().getFullYear() - 1))}
           endDate={new Date()}
-          values={filterLastYearData(weeklyLoginActivity)}
+          values={filterLastYearData(weeklyPageViews)}
           classForValue={(value) => {
             if (!value) {
               return 'color-empty';
             }
-            return `color-custom-${Math.min(value.count, 4)}`; // Scale counts to 4 levels
+            if (value.count === 0) {
+              return 'color-github-0';
+            } else if (value.count <= 3) {
+              return 'color-github-1';
+            } else if (value.count <= 6) {
+              return 'color-github-2';
+            } else if (value.count <= 9) {
+              return 'color-github-3';
+            } else {
+              return 'color-github-4';
+            }
           }}
           tooltipDataAttrs={(value) => ({
             'data-tooltip': value
-              ? `${value.date}: ${value.count} login${value.count !== 1 ? 's' : ''}`
+              ? `${value.date}: ${value.count} page view${value.count !== 1 ? 's' : ''}`
               : 'No data',
           })}
           showWeekdayLabels={true}
           onClick={(value) => {
             if (value) {
-              alert(`Week of ${value.date}: ${value.count} logins`);
+              alert(`Week of ${value.date}: ${value.count} page views`);
             }
           }}
         />
 
-<div style={{ display: 'flex', gap: '2rem' }}>
+        <div style={{ display: 'flex', gap: '2rem' }}>
           {/* Stock Dashboard */}
           <div style={{ flex: 2, backgroundColor: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(20px)', borderRadius: '1rem', border: '1px solid rgba(255, 255, 255, 0.1)', overflow: 'hidden' }}>
-            <StockDashboard />
+            <StockDashboard
+              onBuy={(symbol) => handleTransaction('BUY', symbol)}
+              onSell={(symbol) => handleTransaction('SELL', symbol)}
+            />
           </div>
+        </div>
       </div>
 
       {/* Main Content */}
@@ -201,6 +226,7 @@ export const PortfolioDashboard: React.FC = () => {
           {user && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '4rem' }}>
               <span style={{ fontSize: '1.875rem', fontWeight: '600', color: '#f3f4f6' }}>Welcome, {user.name}</span>
+              <span style={{ fontSize: '1.25rem', fontWeight: '500', color: '#f3f4f6' }}>Portfolio Value: ${portfolioValue.toFixed(2)}</span>
             </div>
           )}
         </header>
@@ -217,18 +243,14 @@ export const PortfolioDashboard: React.FC = () => {
           />
         </div>
 
-        {/* Stock Dashboard & Watchlist */}
-     
-
-          {/* Watchlist Manager */}
-          <div style={{ flex: 1, backgroundColor: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(20px)', borderRadius: '1rem', border: '1px solid rgba(255, 255, 255, 0.1)', overflow: 'hidden' }}>
-            <WatchlistManager
-              watchlist={[]}
-              onRemove={async (id) => {}}
-              onUpdate={async (id, data) => {}}
-              onAdd={async (symbol) => {}}
-            />
-          </div>
+        {/* Watchlist Manager */}
+        <div style={{ flex: 1, backgroundColor: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(20px)', borderRadius: '1rem', border: '1px solid rgba(255, 255, 255, 0.1)', overflow: 'hidden' }}>
+          <WatchlistManager
+            watchlist={[]}
+            onRemove={async (id) => {}}
+            onUpdate={async (id, data) => {}}
+            onAdd={async (symbol) => {}}
+          />
         </div>
 
         {/* Trending Stocks */}
@@ -243,7 +265,7 @@ export const PortfolioDashboard: React.FC = () => {
         onClose={() => setIsModalOpen(false)}
         type={transactionType}
         symbol={selectedStock}
-        currentPrice={portfolio.find(p => p.symbol === selectedStock)?.currentPrice}
+        currentPrice={portfolio.find((p) => p.symbol === selectedStock)?.currentPrice}
         onSubmit={handleTransaction}
       />
 
@@ -269,4 +291,12 @@ export const PortfolioDashboard: React.FC = () => {
       )}
     </div>
   );
+};
+
+// Function to calculate portfolio value
+const calculatePortfolioValue = (portfolio: Portfolio[]) => {
+  return portfolio.reduce((total, holding) => {
+    const currentPrice = holding.currentPrice || 0;
+    return total + (holding.quantity * currentPrice);
+  }, 0);
 };

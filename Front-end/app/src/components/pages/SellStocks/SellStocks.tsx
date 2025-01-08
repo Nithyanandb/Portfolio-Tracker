@@ -5,19 +5,31 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header/Header';
 import { LoadingSpinner } from '../../ui/LoadingSpinner';
 import { useAuth } from '@/components/hooks/useAuth';
-import { symbols } from '../../Stock/StocksPage/symbols';
 import { StockDetail } from '../BuyStocks/StockDetail';
+import { PortfolioTable } from '../../portfolio/PortfolioTable';
 
 export const SellStocks: React.FC = () => {
-  const [stocks, setStocks] = useState(symbols);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedStock, setSelectedStock] = useState<typeof symbols[0] | null>(null);
-  const [selectedStockDetail, setSelectedStockDetail] = useState<typeof symbols[0] | null>(null);
-  const [priceChanges, setPriceChanges] = useState<Record<string, number>>({});
-  const [stockDetailLoading, setStockDetailLoading] = useState(false);
+  const [selectedStock, setSelectedStock] = useState<Portfolio | null>(null);
+  const [selectedStockDetail, setSelectedStockDetail] = useState<Portfolio | null>(null);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const { user, token } = useAuth();
+
+  // Mock portfolio data (replace with actual data from your backend)
+  const [portfolio, setPortfolio] = useState<Portfolio[]>([
+    {
+      id: 1,
+      symbol: 'MSFT',
+      name: 'Microsoft Corporation',
+      quantity: 1,
+      averagePrice: 423.93,
+      currentPrice: 424.30,
+      totalReturn: 0.09,
+      purchaseDate: '2023-10-01',
+    },
+  ]);
 
   const handleTransactionSuccess = () => {
     setShowSuccessPopup(true);
@@ -29,58 +41,59 @@ export const SellStocks: React.FC = () => {
   useEffect(() => {
     setLoading(true);
     const timer = setTimeout(() => {
-      setStocks(symbols);
       setLoading(false);
-    }, 4000);
+    }, 2000); // Simulate loading delay
 
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setStocks((prevStocks) =>
-        prevStocks.map((stock) => {
-          const change = (Math.random() - 0.5) * 2;
-          const newPrice = (stock.price || 100) + change;
-
-          setPriceChanges((prev) => ({
-            ...prev,
-            [stock.symbol]: change,
-          }));
-
-          return {
-            ...stock,
-            price: newPrice,
-            change,
-            changePercent: (change / (stock.price || 100)) * 100,
-          };
-        })
-      );
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleStockSelect = async (stock: typeof symbols[0]) => {
-    setStockDetailLoading(true);
+  const handleStockSelect = (stock: Portfolio) => {
     setSelectedStockDetail(stock);
+  };
 
+  const handleSell = async (symbol: string, quantity: number) => {
     try {
-      const detailedStock = { ...stock };
-      setSelectedStockDetail(detailedStock);
+      const response = await fetch('http://localhost:2000/transaction/sell', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          stockSymbol: symbol,
+          quantity,
+          price: selectedStockDetail?.currentPrice || 0,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to process transaction');
+      }
+
+      // Update the portfolio after selling
+      setPortfolio((prevPortfolio) =>
+        prevPortfolio.map((holding) => {
+          if (holding.symbol === symbol) {
+            const newQuantity = holding.quantity - quantity;
+            return { ...holding, quantity: newQuantity };
+          }
+          return holding;
+        }).filter((holding) => holding.quantity > 0) // Remove stocks with 0 quantity
+      );
+
+      handleTransactionSuccess();
     } catch (error) {
-      console.error('Failed to load stock details:', error);
-      setError('Failed to load stock details');
-    } finally {
-      setStockDetailLoading(false);
+      console.error('Sell transaction failed:', error);
+      setError('Failed to sell stock');
     }
   };
 
-  // Filter stocks based on search term
-  const filteredStocks = stocks.filter(
-    (stock) =>
-      stock.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      stock.name.toLowerCase().includes(searchTerm.toLowerCase())
+  // Filter portfolio based on search term
+  const filteredPortfolio = portfolio.filter(
+    (holding) =>
+      holding.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      holding.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -115,39 +128,39 @@ export const SellStocks: React.FC = () => {
               />
             </div>
 
-            {/* Stock List with real-time updates */}
+            {/* Portfolio List */}
             <div className="space-y-4 overflow-y-auto w-[400px] h-[calc(100vh-200px)]">
               {loading ? (
                 <LoadingSpinner />
               ) : (
-                filteredStocks.map((stock) => (
+                filteredPortfolio.map((holding) => (
                   <motion.div
-                    key={stock.symbol}
+                    key={holding.symbol}
                     layout
                     className={`p-4 rounded-xl cursor-pointer transition-all ${
-                      selectedStockDetail?.symbol === stock.symbol
+                      selectedStockDetail?.symbol === holding.symbol
                         ? 'bg-white/10'
                         : 'bg-black/20 hover:bg-white/5'
                     }`}
-                    onClick={() => handleStockSelect(stock)}
+                    onClick={() => handleStockSelect(holding)}
                   >
                     <div className="flex justify-between items-start">
                       <div>
-                        <h3 className="font-medium">{stock.symbol}</h3>
-                        <p className="text-sm text-white/60">{stock.name}</p>
+                        <h3 className="font-medium">{holding.symbol}</h3>
+                        <p className="text-sm text-white/60">{holding.name}</p>
                       </div>
                       <motion.div
                         animate={{
-                          color: (stock.changePercent || 0) >= 0 ? '#34D399' : '#EF4444',
+                          color: (holding.totalReturn || 0) >= 0 ? '#34D399' : '#EF4444',
                         }}
                         className="text-right"
                       >
-                        <p className="font-medium">₹{(stock.price || 0).toFixed(2)}</p>
+                        <p className="font-medium">₹{holding.currentPrice.toFixed(2)}</p>
                         <p className="text-sm flex items-center gap-1">
-                          {(stock.changePercent !== undefined) && (
+                          {(holding.totalReturn !== undefined) && (
                             <>
-                              {(stock.changePercent >= 0) ? <ArrowUp size={12} /> : <ArrowDown size={12} />}
-                              {Math.abs(stock.changePercent).toFixed(2)}%
+                              {(holding.totalReturn >= 0) ? <ArrowUp size={12} /> : <ArrowDown size={12} />}
+                              {Math.abs(holding.totalReturn).toFixed(2)}%
                             </>
                           )}
                         </p>
@@ -162,12 +175,10 @@ export const SellStocks: React.FC = () => {
 
         {/* Main Content */}
         <div className="flex-1 overflow-y-auto">
-          {stockDetailLoading ? (
-            <LoadingSpinner />
-          ) : selectedStockDetail ? (
+          {selectedStockDetail ? (
             <StockDetail
               stock={selectedStockDetail}
-              onSellClick={setSelectedStock} // Changed to onSellClick
+              onSellClick={setSelectedStock}
               loading={loading}
             />
           ) : (
@@ -179,6 +190,12 @@ export const SellStocks: React.FC = () => {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Portfolio Table */}
+      <div className="p-8">
+        <h2 className="text-xl font-bold mb-4">Your Portfolio</h2>
+        <PortfolioTable data={portfolio} />
       </div>
 
       <AnimatePresence>
@@ -204,7 +221,7 @@ export const SellStocks: React.FC = () => {
         <SellModal
           stock={selectedStock}
           onClose={() => setSelectedStock(null)}
-          onSuccess={handleTransactionSuccess}
+          onSuccess={handleSell}
         />
       )}
     </div>

@@ -1,17 +1,26 @@
 import React from 'react';
 import { ArrowUp, ArrowDown } from 'lucide-react';
-import { Portfolio } from './Portfolio';
+
+export interface Portfolio {
+  quantity: number;
+  id: number;
+  symbol: string;
+  name: string;
+  shares: number;
+  value: number;
+  change: number;
+  averagePrice: number;
+  currentPrice: number;
+  totalReturn: number;
+  purchaseDate: string;
+}
 
 interface PortfolioTableProps {
   data: Portfolio[];
-  onBuyClick: (symbol: string) => void;
-  onSellClick: (symbol: string) => void;
 }
 
 export const PortfolioTable: React.FC<PortfolioTableProps> = ({
   data = [],
-  onBuyClick,
-  onSellClick,
 }) => {
   if (!data || data.length === 0) {
     return (
@@ -37,7 +46,6 @@ export const PortfolioTable: React.FC<PortfolioTableProps> = ({
             <th className="py-4 px-6 text-xs font-medium text-gray-400 text-right">Current Price</th>
             <th className="py-4 px-6 text-xs font-medium text-gray-400 text-right">Current Value</th>
             <th className="py-4 px-6 text-xs font-medium text-gray-400 text-right">P&L</th>
-            <th className="py-4 px-6 text-xs font-medium text-gray-400 text-center">Actions</th>
             <th className="py-4 px-6 text-xs font-medium text-gray-400 text-center">Last Updated</th>
           </tr>
         </thead>
@@ -70,26 +78,8 @@ export const PortfolioTable: React.FC<PortfolioTableProps> = ({
                   <span>₹{formatNumber(Math.abs(holding.totalReturn ?? 0))}</span>
                 </div>
               </td>
-              <td className="py-4 px-6">
-                <div className="flex justify-center gap-2">
-                  <button
-                    onClick={() => onBuyClick(holding.symbol)}
-                    className="px-4 py-1.5 bg-green-500/10 text-green-400 rounded-lg text-xs font-medium 
-                             hover:bg-green-500/20 transition-colors"
-                  >
-                    Buy
-                  </button>
-                  <button
-                    onClick={() => onSellClick(holding.symbol)}
-                    className="px-4 py-1.5 bg-red-500/10 text-red-400 rounded-lg text-xs font-medium
-                             hover:bg-red-500/20 transition-colors"
-                  >
-                    Sell
-                  </button>
-                </div>
-              </td>
               <td className="py-4 px-6 text-right font-mono text-white">
-                {holding.lastUpdated}
+                {holding.purchaseDate}
               </td>
             </tr>
           ))}

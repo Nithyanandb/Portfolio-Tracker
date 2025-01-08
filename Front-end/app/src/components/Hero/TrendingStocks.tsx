@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { TrendingUp, RefreshCw, ArrowRight } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { API_CONFIG } from '../config/API_CONFIG';
+import { useNavigate } from 'react-router-dom';
 
 const TrendingStocks: React.FC = () => {
   const { data: trending, refetch, isRefetching, isLoading } = useQuery({
@@ -10,7 +11,11 @@ const TrendingStocks: React.FC = () => {
     queryFn: () => fetch(API_CONFIG.getEndpointUrl('TRENDING')).then(res => res.json()),
     refetchInterval: API_CONFIG.CACHE_DURATION,
   });
+  const navigate = useNavigate(); // Initialize the navigate function
 
+  const handleClick = () => {
+    navigate('/stock/all'); // Redirect to the /stock/all route
+  };
   const trendingStocks = [
     { symbol: 'AAPL', name: 'Apple Inc.', price: '182.63', change: '+1.25%' },
     { symbol: 'TSLA', name: 'Tesla, Inc.', price: '238.45', change: '+2.8%' },
@@ -64,14 +69,18 @@ const TrendingStocks: React.FC = () => {
           ))}
         </div>
 
-        {/* Enhanced Action Button */}
         <motion.button
-          whileHover={{ x: 4 }}
-          className="w-full flex items-center justify-between p-6 border-t border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300"
-        >
-          <span className="text-sm text-white tracking-[0.25em]">VIEW ALL STOCKS</span>
-          <ArrowRight className="w-4 h-4 text-white transform group-hover:translate-x-1 transition-transform" />
-        </motion.button>
+      whileHover={{ x: 4 }} // Add a subtle hover animation
+      whileTap={{ scale: 0.98 }} // Add a subtle tap animation
+      onClick={handleClick} // Trigger the redirection on click
+      className="w-full flex items-center justify-between p-6 rounded-lg border border-gray-200 bg-blue-200 shadow-sm hover:shadow-md transition-all duration-300"
+      style={{
+        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.05)',
+      }}
+    >
+      <span className="text-sm text-gray-800 font-medium tracking-wide">VIEW ALL STOCKS</span>
+      <ArrowRight className="w-4 h-4 text-gray-800 transform group-hover:translate-x-1 transition-transform" />
+    </motion.button>
       </div>
     </div>
   );

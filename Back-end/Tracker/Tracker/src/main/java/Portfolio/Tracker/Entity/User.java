@@ -25,13 +25,15 @@ public class User implements UserDetails {
 
     @Column(unique = true)
     private String email;
-    
+
+    @Column(nullable = true)
     private String password;
     private String name;
 
     @Enumerated(EnumType.STRING)
     private AuthProvider provider;
 
+    @Column(nullable = false)
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;

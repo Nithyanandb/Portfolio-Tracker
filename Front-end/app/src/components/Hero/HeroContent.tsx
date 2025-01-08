@@ -103,7 +103,11 @@ const HeroContent: React.FC = () => {
         </motion.div>
       </motion.div>
 
-      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+     {/* AuthModal */}
+          <AuthModal
+            isOpen={isAuthModalOpen}
+            onClose={() => setIsAuthModalOpen(false)}
+          />
     </div>
   );
 };
