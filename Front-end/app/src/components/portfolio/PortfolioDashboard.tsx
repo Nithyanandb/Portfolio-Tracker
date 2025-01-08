@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import CalendarHeatmap from 'react-calendar-heatmap';
 import 'react-calendar-heatmap/dist/styles.css';
@@ -12,6 +12,7 @@ import TrendingStocks from '../Hero/TrendingStocks';
 import { Portfolio, PortfolioStats } from './Portfolio';
 import { useAuth } from '../hooks/useAuth';
 import { BuyModal } from '../pages/BuyStocks/BuyModal';
+import { TrendingUp, TrendingDown } from 'lucide-react'; // Import icons
 import './portfolioDashboard.css';
 
 export const PortfolioDashboard: React.FC = () => {
@@ -27,8 +28,18 @@ export const PortfolioDashboard: React.FC = () => {
   const [buyModalStock, setBuyModalStock] = useState<{ symbol: string; name: string; price: number } | null>(null);
   const { isAuthenticated, user, token } = useAuth();
 
-  // Calculate portfolio value dynamically
+  // Track previous portfolio value
+  const prevPortfolioValueRef = useRef<number>(0);
   const portfolioValue = calculatePortfolioValue(portfolio);
+
+  // Determine if portfolio value has increased or decreased
+  const portfolioChange = portfolioValue - prevPortfolioValueRef.current;
+  const portfolioChangePercent = ((portfolioChange / prevPortfolioValueRef.current) * 100).toFixed(2);
+
+  // Update previous portfolio value
+  useEffect(() => {
+    prevPortfolioValueRef.current = portfolioValue;
+  }, [portfolioValue]);
 
   // Track page views
   useEffect(() => {
@@ -226,7 +237,28 @@ export const PortfolioDashboard: React.FC = () => {
           {user && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '4rem' }}>
               <span style={{ fontSize: '1.875rem', fontWeight: '600', color: '#f3f4f6' }}>Welcome, {user.name}</span>
-              <span style={{ fontSize: '1.25rem', fontWeight: '500', color: '#f3f4f6' }}>Portfolio Value: ${portfolioValue.toFixed(2)}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <span style={{ fontSize: '1.25rem', fontWeight: '500', color: '#f3f4f6' }}>
+                  Portfolio Value: ${portfolioValue.toFixed(2)}
+                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  {portfolioChange >= 0 ? (
+                    <TrendingUp size={20} color="#34D399" /> // Green for increase
+                  ) : (
+                    <TrendingDown size={20} color="#EF4444" /> // Red for decrease
+                  )}
+                  <span
+                    style={{
+                      fontSize: '1rem',
+                      fontWeight: '500',
+                      color: portfolioChange >= 0 ? '#34D399' : '#EF4444',
+                    }}
+                  >
+                    {portfolioChange >= 0 ? '+' : ''}
+                    {portfolioChangePercent}%
+                  </span>
+                </div>
+              </div>
             </div>
           )}
         </header>
@@ -293,10 +325,9 @@ export const PortfolioDashboard: React.FC = () => {
   );
 };
 
-// Function to calculate portfolio value
 const calculatePortfolioValue = (portfolio: Portfolio[]) => {
   return portfolio.reduce((total, holding) => {
-    const currentPrice = holding.currentPrice || 0;
-    return total + (holding.quantity * currentPrice);
-  }, 0);
+    const value = holding.value || 0; // Use holding.value for calculation
+    return total + value; // Add or subtract based on the value
+  }, 0); // Start with a total of 0
 };
