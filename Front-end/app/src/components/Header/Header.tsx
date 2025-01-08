@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { LogOut, ChevronDown, User, Settings, Loader2, Briefcase, Menu } from 'lucide-react';
+import { LogOut, ChevronDown, Settings, Loader2, Briefcase, Menu } from 'lucide-react';
 import { Logo } from './Logo';
 import { NavigationMenu } from './NavigationMenu';
 import { useAuth } from '../hooks/useAuth';
 import AuthModal from '../Auth/AuthModal';
-import StockTicker from './StockTicker/StockTicker';
 import { SearchPopover } from './SearchPopover';
-import { stocks } from './StockTicker/stockData';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Header: React.FC = () => {
   const { user, logout, isAuthenticated, isAuthenticating } = useAuth();
@@ -20,32 +18,19 @@ const Header: React.FC = () => {
   // Transform values for smooth animations
   const headerOpacity = useTransform(scrollY, [0, 100], [1, 0.98]);
   const headerBlur = useTransform(scrollY, [0, 100], [0, 8]);
-  const tickerY = useTransform(scrollY, [0, 100], [0, -100]);
-  const tickerOpacity = useTransform(scrollY, [0, 60], [1, 0]);
-  const tickerScale = useTransform(scrollY, [0, 100], [1, 0.95]);
-
-  // Wave animation for the ticker
-  const waveEffect = useTransform(scrollY, [0, 100], [0, 20]);
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleProfileClick = () => {
     navigate('/portfolio');
   };
-
-  // Array of paths where we want to show the stock ticker
-  const showTickerPaths = ['/'];
-
-  // Check if current path should show ticker
-  const shouldShowTicker = showTickerPaths.includes(location.pathname);
 
   return (
     <motion.header
       className="fixed top-0 left-0 right-0 z-50"
       style={{
         opacity: headerOpacity,
-        backdropFilter: `blur(${headerBlur}px)`
+        backdropFilter: `blur(${headerBlur}px)`,
       }}
     >
       <div className="relative bg-black/80">
@@ -67,12 +52,16 @@ const Header: React.FC = () => {
             {/* Navigation Menu */}
             <div className={`${isMobileMenuOpen ? 'block' : 'hidden'} md:flex items-center gap-8`}>
               <div className="absolute inset-0 flex items-center justify-center md:static">
-                <NavigationMenu />
+                {/* Pass isAuthModalOpen and setIsAuthModalOpen to NavigationMenu */}
+                <NavigationMenu
+                  isAuthModalOpen={isAuthModalOpen}
+                  setIsAuthModalOpen={setIsAuthModalOpen}
+                />
               </div>
               <div className="flex items-center gap-6">
                 <SearchPopover />
                 {isAuthenticated ? (
-                  <div 
+                  <div
                     className="relative"
                     onMouseEnter={() => setIsUserMenuOpen(true)}
                     onMouseLeave={() => setIsUserMenuOpen(false)}
@@ -98,9 +87,9 @@ const Header: React.FC = () => {
                           animate={{ opacity: 1, y: 0, scale: 1 }}
                           exit={{ opacity: 0, y: 8, scale: 0.98 }}
                           whileHover={{ scale: 1.01 }}
-                          transition={{ 
+                          transition={{
                             duration: 0,
-                            ease: [0.4, 0, 0.2, 1]
+                            ease: [0.4, 0, 0.2, 1],
                           }}
                           className="absolute right-0 mt-2 w-[280px] py-2 origin-top-right bg-gray-900/90 backdrop-blur-xl"
                         >
@@ -182,27 +171,7 @@ const Header: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* Only render StockTicker if we're on the allowed paths */}
-      {shouldShowTicker && (
-        <motion.div
-          className="absolute left-0 right-0 overflow-hidden"
-          style={{
-            y: tickerY,
-            opacity: tickerOpacity,
-            scale: tickerScale
-          }}
-        >
-          <motion.div
-            className="container mx-auto"
-            style={{
-              transform: waveEffect.get() ? `translate3d(0, ${Math.sin(Date.now() / 1000) * waveEffect.get()}px, 0)` : 'none'
-            }}
-          >
-            <StockTicker stocks={stocks} />
-          </motion.div>
-        </motion.div>
-      )}
-
+      {/* AuthModal */}
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}

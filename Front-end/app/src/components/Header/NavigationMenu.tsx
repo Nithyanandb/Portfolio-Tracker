@@ -12,48 +12,40 @@ import {
   Binary,
   LineChart,
   BookOpen,
-  GraduationCap,
   Target,
   Building2,
   Laptop,
   Brain,
   Lightbulb,
-  Globe,
-  Wallet,
   Info,
   Menu,
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
-import AuthModal from '../Auth/AuthModal';
 import { useAuth } from '../hooks/useAuth';
 
 interface NavigationMenuProps {
   className?: string;
+  isAuthModalOpen: boolean;
+  setIsAuthModalOpen: (value: boolean) => void;
 }
 
-export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => {
-  const { isAuthenticated } = useAuth();
+export const NavigationMenu: React.FC<NavigationMenuProps> = ({
+  className,
+  isAuthModalOpen,
+  setIsAuthModalOpen,
+}) => {
   const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // State for mobile menu
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleMouseEnter = (menuId: string) => {
     setHoveredMenu(menuId);
   };
 
   const handleMouseLeave = () => {
-    setHoveredMenu(MenuId); 
-  };
-
-  const handleNavigation = (e: React.MouseEvent, href: string) => {
-    e.preventDefault();
-    if (!isAuthenticated) {
-      setPendingNavigation(href);
-      setIsAuthModalOpen(true);
-      return;
+    if (!hoveredMenu) {
+      setHoveredMenu(null);
     }
-    window.location.href = href;
   };
 
   const handleAuthSuccess = () => {
@@ -66,7 +58,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
 
   return (
     <>
-     <NavigationMenuPrimitive.Root className={className}>
+      <NavigationMenuPrimitive.Root className={className}>
         {/* Mobile Menu Toggle */}
         <div className="md:hidden flex justify-end p-4">
           <button
@@ -82,13 +74,13 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
           className={`flex items-center gap-6 ${isMobileMenuOpen ? 'block' : 'hidden'} md:flex`}
         >
           {/* Markets */}
-          <NavItem 
-            href="/" 
-            label="Markets" 
+          <NavItem
+            href="/"
+            label="Markets"
             isHovered={hoveredMenu === 'markets'}
             onMouseEnter={() => handleMouseEnter('markets')}
             onMouseLeave={handleMouseLeave}
-            icon={<BarChart2 size={18} />} // Add icon for Markets
+            icon={<BarChart2 size={18} />}
           >
             <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-4 md:p-12">
               {/* Left Side - Markets Content */}
@@ -120,15 +112,27 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
                     Stock Market
                   </h3>
                   <div className="grid gap-2">
-                    <NavLink href="/stock/all" icon={<BarChart2 size={20} />}>
+                    <NavLink
+                      href="/stock/all"
+                      icon={<BarChart2 size={20} />}
+                      setIsAuthModalOpen={setIsAuthModalOpen}
+                    >
                       <span className="font-medium">All Stocks</span>
                       <span className="text-sm text-white/60">Browse all available stocks</span>
                     </NavLink>
-                    <NavLink href="/stock/buy" icon={<DollarSign size={20} />}>
+                    <NavLink
+                      href="/stock/buy"
+                      icon={<DollarSign size={20} />}
+                      setIsAuthModalOpen={setIsAuthModalOpen}
+                    >
                       <span className="font-medium">Buy Stocks</span>
                       <span className="text-sm text-white/60">Place buy orders</span>
                     </NavLink>
-                    <NavLink href="/stock/sell" icon={<PieChart size={20} />}>
+                    <NavLink
+                      href="/stock/sell"
+                      icon={<PieChart size={20} />}
+                      setIsAuthModalOpen={setIsAuthModalOpen}
+                    >
                       <span className="font-medium">Sell Stocks</span>
                       <span className="text-sm text-white/60">Manage your holdings</span>
                     </NavLink>
@@ -139,15 +143,27 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
                     Market Indices
                   </h3>
                   <div className="grid gap-2">
-                    <NavLink href="/indices/nifty" icon={<Target size={20} />}>
+                    <NavLink
+                      href="/indices/nifty"
+                      icon={<Target size={20} />}
+                      setIsAuthModalOpen={setIsAuthModalOpen}
+                    >
                       <span className="font-medium">NIFTY 50</span>
                       <span className="text-sm text-white/60">Track primary index</span>
                     </NavLink>
-                    <NavLink href="/indices/sensex" icon={<LineChart size={20} />}>
+                    <NavLink
+                      href="/indices/sensex"
+                      icon={<LineChart size={20} />}
+                      setIsAuthModalOpen={setIsAuthModalOpen}
+                    >
                       <span className="font-medium">SENSEX</span>
                       <span className="text-sm text-white/60">BSE benchmark index</span>
                     </NavLink>
-                    <NavLink href="/indices/banknifty" icon={<Landmark size={20} />}>
+                    <NavLink
+                      href="/indices/banknifty"
+                      icon={<Landmark size={20} />}
+                      setIsAuthModalOpen={setIsAuthModalOpen}
+                    >
                       <span className="font-medium">BANK NIFTY</span>
                       <span className="text-sm text-white/60">Banking sector performance</span>
                     </NavLink>
@@ -158,13 +174,13 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
           </NavItem>
 
           {/* Trading */}
-          <NavItem 
-            href="/trading" 
-            label="Trading" 
+          <NavItem
+            href="/trading"
+            label="Trading"
             isHovered={hoveredMenu === 'trading'}
             onMouseEnter={() => handleMouseEnter('trading')}
             onMouseLeave={handleMouseLeave}
-            icon={<TrendingUp size={18} />} // Add icon for Trading
+            icon={<TrendingUp size={18} />}
           >
             <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-4 md:p-12">
               {/* Left Side - Trading Image */}
@@ -196,19 +212,35 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
                     Basic Trading
                   </h3>
                   <div className="space-y-2">
-                    <NavLink href="/trading/spot" icon={<TrendingUp size={20} />}>
+                    <NavLink
+                      href="/trading/spot"
+                      icon={<TrendingUp size={20} />}
+                      setIsAuthModalOpen={setIsAuthModalOpen}
+                    >
                       <span className="font-medium">Spot Trading</span>
                       <span className="text-sm text-white/60">Direct market access</span>
                     </NavLink>
-                    <NavLink href="/trading/margin" icon={<Briefcase size={20} />}>
+                    <NavLink
+                      href="/trading/margin"
+                      icon={<Briefcase size={20} />}
+                      setIsAuthModalOpen={setIsAuthModalOpen}
+                    >
                       <span className="font-medium">Margin Trading</span>
                       <span className="text-sm text-white/60">Leverage your positions</span>
                     </NavLink>
-                    <NavLink href="/trading/futures" icon={<LineChart size={20} />}>
+                    <NavLink
+                      href="/trading/futures"
+                      icon={<LineChart size={20} />}
+                      setIsAuthModalOpen={setIsAuthModalOpen}
+                    >
                       <span className="font-medium">Futures</span>
                       <span className="text-sm text-white/60">Trade market futures</span>
                     </NavLink>
-                    <NavLink href="/trading/options" icon={<Binary size={20} />}>
+                    <NavLink
+                      href="/trading/options"
+                      icon={<Binary size={20} />}
+                      setIsAuthModalOpen={setIsAuthModalOpen}
+                    >
                       <span className="font-medium">Options</span>
                       <span className="text-sm text-white/60">Options trading platform</span>
                     </NavLink>
@@ -219,19 +251,35 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
                     Advanced
                   </h3>
                   <div className="space-y-2">
-                    <NavLink href="/trading/algo" icon={<Laptop size={20} />}>
+                    <NavLink
+                      href="/trading/algo"
+                      icon={<Laptop size={20} />}
+                      setIsAuthModalOpen={setIsAuthModalOpen}
+                    >
                       <span className="font-medium">Algo Trading</span>
                       <span className="text-sm text-white/60">Automated systems</span>
                     </NavLink>
-                    <NavLink href="/trading/derivatives" icon={<Building2 size={20} />}>
+                    <NavLink
+                      href="/trading/derivatives"
+                      icon={<Building2 size={20} />}
+                      setIsAuthModalOpen={setIsAuthModalOpen}
+                    >
                       <span className="font-medium">Derivatives</span>
                       <span className="text-sm text-white/60">Complex instruments</span>
                     </NavLink>
-                    <NavLink href="/trading/analysis" icon={<Brain size={20} />}>
+                    <NavLink
+                      href="/trading/analysis"
+                      icon={<Brain size={20} />}
+                      setIsAuthModalOpen={setIsAuthModalOpen}
+                    >
                       <span className="font-medium">Technical Analysis</span>
                       <span className="text-sm text-white/60">Chart analysis tools</span>
                     </NavLink>
-                    <NavLink href="/trading/scanner" icon={<Target size={20} />}>
+                    <NavLink
+                      href="/trading/scanner"
+                      icon={<Target size={20} />}
+                      setIsAuthModalOpen={setIsAuthModalOpen}
+                    >
                       <span className="font-medium">Market Scanner</span>
                       <span className="text-sm text-white/60">Find opportunities</span>
                     </NavLink>
@@ -242,13 +290,13 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
           </NavItem>
 
           {/* Learn */}
-          <NavItem 
-            href="/learn" 
-            label="Learn" 
+          <NavItem
+            href="/learn"
+            label="Learn"
             isHovered={hoveredMenu === 'learn'}
             onMouseEnter={() => handleMouseEnter('learn')}
             onMouseLeave={handleMouseLeave}
-            icon={<BookOpen size={18} />} // Add icon for Learn
+            icon={<BookOpen size={18} />}
           >
             <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-4 md:p-12">
               {/* Left Side - Learn Image */}
@@ -275,19 +323,35 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
 
               {/* Right Side - Learning Paths */}
               <div className="space-y-4">
-                <NavLink href="/learn/basics" icon={<BookOpen size={20} />} className="learning-path">
+                <NavLink
+                  href="/learn/basics"
+                  icon={<BookOpen size={20} />}
+                  setIsAuthModalOpen={setIsAuthModalOpen}
+                >
                   <span className="font-medium">Trading Basics</span>
                   <span className="text-sm text-white/60">Start your trading journey</span>
                 </NavLink>
-                <NavLink href="/learn/technical" icon={<LineChart size={20} />} className="learning-path">
+                <NavLink
+                  href="/learn/technical"
+                  icon={<LineChart size={20} />}
+                  setIsAuthModalOpen={setIsAuthModalOpen}
+                >
                   <span className="font-medium">Technical Analysis</span>
                   <span className="text-sm text-white/60">Chart patterns & indicators</span>
                 </NavLink>
-                <NavLink href="/learn/fundamental" icon={<Brain size={20} />} className="learning-path">
+                <NavLink
+                  href="/learn/fundamental"
+                  icon={<Brain size={20} />}
+                  setIsAuthModalOpen={setIsAuthModalOpen}
+                >
                   <span className="font-medium">Fundamental Analysis</span>
                   <span className="text-sm text-white/60">Evaluate company metrics</span>
                 </NavLink>
-                <NavLink href="/learn/strategies" icon={<Lightbulb size={20} />} className="learning-path">
+                <NavLink
+                  href="/learn/strategies"
+                  icon={<Lightbulb size={20} />}
+                  setIsAuthModalOpen={setIsAuthModalOpen}
+                >
                   <span className="font-medium">Trading Strategies</span>
                   <span className="text-sm text-white/60">Advanced trading techniques</span>
                 </NavLink>
@@ -298,7 +362,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
           {/* About */}
           <SimpleNavLink href="/about">
             <div className="flex items-center gap-1.5">
-              <Info size={18} className="text-white/80 hover:text-white" /> {/* Add icon for About */}
+              <Info size={18} className="text-white/80 hover:text-white" />
               <span>About</span>
             </div>
           </SimpleNavLink>
@@ -306,19 +370,11 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ className }) => 
 
         <NavigationMenuPrimitive.Viewport className="absolute left-0 right-0 top-full" />
       </NavigationMenuPrimitive.Root>
-
-    <AuthModal  
-      isOpen={isAuthModalOpen}
-      onClose={() => {
-        setIsAuthModalOpen(false);
-        setPendingNavigation(null);
-      }}
-      onSuccess={handleAuthSuccess}
-    />
     </>
   );
 };
 
+// NavItem Component
 const NavItem: React.FC<{
   href: string;
   label: string;
@@ -326,41 +382,35 @@ const NavItem: React.FC<{
   isHovered: boolean;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
-  icon?: React.ReactElement; // Add icon prop
-}> = ({ href, label, children, isHovered, onMouseEnter, onMouseLeave, icon }) => {
+  icon?: React.ReactElement;
+}> = ({ label, children, isHovered, onMouseEnter, onMouseLeave, icon }) => {
   const [isDropdownHovered, setIsDropdownHovered] = useState(false);
 
   return (
     <NavigationMenuPrimitive.Item
       onMouseEnter={onMouseEnter}
       onMouseLeave={() => {
-        // Only close if neither the button nor the dropdown is hovered
         if (!isDropdownHovered) {
           onMouseLeave();
         }
       }}
     >
-      <NavigationMenuPrimitive.Trigger 
-        className="group flex items-center gap-1.5 text-white/80 hover:text-white transition-colors outline-none"
-      >
+      <NavigationMenuPrimitive.Trigger className="group flex items-center gap-1.5 text-white/80 hover:text-white transition-colors outline-none">
         {icon && React.cloneElement(icon, { className: "h-4 w-4 text-white/80 group-hover:text-white" })}
         <span className="text-sm font-medium tracking-wide">{label}</span>
-        <motion.div
-          animate={{ rotate: isHovered ? 180 : 0 }}
-          transition={{ duration: 0 }}
-        >
+        <motion.div animate={{ rotate: isHovered ? 180 : 0 }} transition={{ duration: 0 }}>
           <ChevronDown className="h-3.5 w-3.5" />
         </motion.div>
       </NavigationMenuPrimitive.Trigger>
 
       <AnimatePresence>
         {isHovered && (
-          <NavigationMenuPrimitive.Content 
+          <NavigationMenuPrimitive.Content
             className="absolute left-0 right-0 top-full z-50 w-screen"
-            onMouseEnter={() => setIsDropdownHovered(true)} // Track dropdown hover
+            onMouseEnter={() => setIsDropdownHovered(true)}
             onMouseLeave={() => {
               setIsDropdownHovered(false);
-              onMouseLeave(); // Close dropdown when leaving
+              onMouseLeave();
             }}
           >
             <motion.div
@@ -379,14 +429,15 @@ const NavItem: React.FC<{
   );
 };
 
+// NavLink Component
 const NavLink: React.FC<{
   href: string;
   children: React.ReactNode;
   icon?: React.ReactElement;
   className?: string;
-}> = ({ href, children, icon, className }) => {
+  setIsAuthModalOpen: (value: boolean) => void;
+}> = ({ href, children, icon, className, setIsAuthModalOpen }) => {
   const { isAuthenticated } = useAuth();
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -398,34 +449,24 @@ const NavLink: React.FC<{
   };
 
   return (
-    <>
-      <motion.a
-        href={href}
-        className={cn(
-          "group flex flex-col gap-0.5 p-4 rounded-lg hover:bg-white/5 transition-all duration-200",
-          className
-        )}
-        whileHover={{ x: 0 }}
-        onClick={handleClick}
-      >
-        <div className="flex items-center gap-3">
-          {icon && React.cloneElement(icon, { className: "text-white/60 group-hover:text-white transition-colors" })}
-          <div className="flex flex-col">{children}</div>
-        </div>
-      </motion.a>
-
-      <AuthModal 
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-        onSuccess={() => {
-          setIsAuthModalOpen(false);
-          window.location.href = href;
-        }}
-      />
-    </>
+    <motion.a
+      href={href}
+      className={cn(
+        "group flex flex-col gap-0.5 p-4 rounded-lg hover:bg-white/5 transition-all duration-200",
+        className
+      )}
+      whileHover={{ x: 0 }}
+      onClick={handleClick}
+    >
+      <div className="flex items-center gap-3">
+        {icon && React.cloneElement(icon, { className: "text-white/60 group-hover:text-white transition-colors" })}
+        <div className="flex flex-col">{children}</div>
+      </div>
+    </motion.a>
   );
 };
 
+// SimpleNavLink Component
 const SimpleNavLink: React.FC<{ href: string; children: React.ReactNode }> = ({
   href,
   children,

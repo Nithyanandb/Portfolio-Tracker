@@ -89,7 +89,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div className="fixed inset-0 flex items-center justify-center bg-black backdrop-blur-xl">
+        <motion.div
+          className="fixed inset-0 flex items-center justify-center bg-black backdrop-blur-xl z-[9999]"
+          style={{ zIndex: 9999 }} // Ensure the modal is always on top
+        >
           <div className="absolute inset-0 bg-black/90 backdrop-blur-xl">
             <div className="absolute inset-0 opacity-10" 
                  style={{
@@ -127,7 +130,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 <h3 className="text-2xl font-light tracking-wide text-white">
                   Verifying Credentials
                 </h3>
-             <SecureConnection/>
+                <SecureConnection/>
               </div>
             </motion.div>
           ) : (
