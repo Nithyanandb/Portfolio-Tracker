@@ -1,15 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 interface SellModalProps {
-  stock: typeof symbols[0];
+  stock: {
+    symbol: string;
+    quantity: number; // Add quantity to the stock interface
+  };
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (symbol: string, quantity: number) => void; // Update onSuccess to accept symbol and quantity
 }
 
 export const SellModal: React.FC<SellModalProps> = ({ stock, onClose, onSuccess }) => {
+  const [quantity, setQuantity] = useState<number>(0);
+  const [error, setError] = useState<string | null>(null);
+
   const handleSell = () => {
-    // Implement sell logic here
-    onSuccess();
+    // Validate the quantity
+    if (quantity <= 0) {
+      setError('Quantity must be greater than 0.');
+      return;
+    }
+
+    if (quantity > stock.quantity) {
+      setError('Quantity exceeds available shares.');
+      return;
+    }
+
+    // Clear any previous errors
+    setError(null);
+
+    // Call the onSuccess callback with the symbol and quantity
+    onSuccess(stock.symbol, quantity);
+
+    // Close the modal
     onClose();
   };
 
@@ -21,8 +43,13 @@ export const SellModal: React.FC<SellModalProps> = ({ stock, onClose, onSuccess 
         <input
           type="number"
           placeholder="Quantity"
+          value={quantity}
+          onChange={(e) => setQuantity(Number(e.target.value))}
           className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 mb-6 focus:outline-none focus:ring-2 focus:ring-white/20"
         />
+        {error && (
+          <p className="text-red-500 text-sm mb-4">{error}</p>
+        )}
         <div className="flex justify-end gap-4">
           <button
             onClick={onClose}

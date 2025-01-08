@@ -64,17 +64,13 @@ public class TransactionService {
     }
 
     private void updatePortfolio(Portfolio portfolio, TransactionRequest request, StockQuote quote) {
-        int newQuantity;
-        double newTotalCost;
+        int newQuantity = "BUY".equals(request.getType())
+                ? portfolio.getQuantity() + request.getQuantity()
+                : portfolio.getQuantity() - request.getQuantity();
 
-        if ("BUY".equals(request.getType())) {
-            newQuantity = portfolio.getQuantity() + request.getQuantity();
-            newTotalCost = (portfolio.getAveragePrice() * portfolio.getQuantity()) 
-                + (quote.getCurrentPrice() * request.getQuantity());
-        } else {
-            newQuantity = portfolio.getQuantity() - request.getQuantity();
-            newTotalCost = portfolio.getAveragePrice() * newQuantity;
-        }
+        double newTotalCost = "BUY".equals(request.getType())
+                ? (portfolio.getAveragePrice() * portfolio.getQuantity()) + (quote.getCurrentPrice() * request.getQuantity())
+                : portfolio.getAveragePrice() * newQuantity;
 
         portfolio.setQuantity(newQuantity);
         portfolio.setAveragePrice(newQuantity > 0 ? newTotalCost / newQuantity : 0);

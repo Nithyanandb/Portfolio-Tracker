@@ -19,10 +19,11 @@ public class PortfolioController {
     public ResponseEntity<ApiResponse<List<PortfolioResponse>>> getPortfolio(Authentication auth) {
         try {
             List<PortfolioResponse> portfolio = portfolioService.getPortfolioByUser(auth.getName());
+            System.out.println("Portfolio Response: " + portfolio); // Log the response
             return ResponseEntity.ok(new ApiResponse<>(true, "Portfolio retrieved successfully", portfolio));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
-                .body(new ApiResponse<>(false, e.getMessage(), null));
+                    .body(new ApiResponse<>(false, e.getMessage(), null));
         }
     }
 

@@ -5,8 +5,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header/Header';
 import { LoadingSpinner } from '../../ui/LoadingSpinner';
 import { useAuth } from '@/components/hooks/useAuth';
-import { StockDetail } from '../BuyStocks/StockDetail';
+import { StockDetail } from './StockDetail';
 import { PortfolioTable } from '../../portfolio/PortfolioTable';
+import { formatMoney, formatPercent, Portfolio } from '@/components/portfolio/Portfolio';
 
 export const SellStocks: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -15,21 +16,47 @@ export const SellStocks: React.FC = () => {
   const [selectedStock, setSelectedStock] = useState<Portfolio | null>(null);
   const [selectedStockDetail, setSelectedStockDetail] = useState<Portfolio | null>(null);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [portfolio, setPortfolio] = useState<Portfolio[]>([]); // Initialize as an array
   const { user, token } = useAuth();
 
-  // Mock portfolio data (replace with actual data from your backend)
-  const [portfolio, setPortfolio] = useState<Portfolio[]>([
-    {
-      id: 1,
-      symbol: 'MSFT',
-      name: 'Microsoft Corporation',
-      quantity: 1,
-      averagePrice: 423.93,
-      currentPrice: 424.30,
-      totalReturn: 0.09,
-      purchaseDate: '2023-10-01',
-    },
-  ]);
+  // Fetch portfolio data on component mount
+  useEffect(() => {
+    const fetchPortfolio = async () => {
+      try {
+        const response = await fetch('http://localhost:2000/portfolio', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch portfolio');
+        }
+
+        const { data } = await response.json();
+        console.log('Backend Response:', data); // Debugging
+
+        // Validate portfolio data
+        if (Array.isArray(data)) {
+          const validPortfolio = data.filter(
+            (holding) => holding?.symbol && holding?.name
+          );
+          setPortfolio(validPortfolio);
+        } else {
+          throw new Error('Invalid portfolio data format');
+        }
+      } catch (error) {
+        console.error('Error fetching portfolio:', error);
+        setError('Failed to load portfolio');
+        setPortfolio([]); // Reset portfolio to an empty array in case of error
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPortfolio();
+  }, [token]);
 
   const handleTransactionSuccess = () => {
     setShowSuccessPopup(true);
@@ -37,15 +64,6 @@ export const SellStocks: React.FC = () => {
       setShowSuccessPopup(false);
     }, 3000);
   };
-
-  useEffect(() => {
-    setLoading(true);
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000); // Simulate loading delay
-
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleStockSelect = (stock: Portfolio) => {
     setSelectedStockDetail(stock);
@@ -90,10 +108,10 @@ export const SellStocks: React.FC = () => {
   };
 
   // Filter portfolio based on search term
-  const filteredPortfolio = portfolio.filter(
+  const filteredPortfolio = (Array.isArray(portfolio) ? portfolio : []).filter(
     (holding) =>
-      holding.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      holding.name.toLowerCase().includes(searchTerm.toLowerCase())
+      holding?.symbol?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      holding?.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -155,12 +173,12 @@ export const SellStocks: React.FC = () => {
                         }}
                         className="text-right"
                       >
-                        <p className="font-medium">₹{holding.currentPrice.toFixed(2)}</p>
+                        <p className="font-medium">{formatMoney(holding.currentPrice)}</p>
                         <p className="text-sm flex items-center gap-1">
                           {(holding.totalReturn !== undefined) && (
                             <>
                               {(holding.totalReturn >= 0) ? <ArrowUp size={12} /> : <ArrowDown size={12} />}
-                              {Math.abs(holding.totalReturn).toFixed(2)}%
+                              {formatPercent(Math.abs(holding.totalReturn))}
                             </>
                           )}
                         </p>
