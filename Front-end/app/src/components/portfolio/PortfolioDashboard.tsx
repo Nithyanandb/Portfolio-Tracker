@@ -13,7 +13,7 @@ import { BuyModal } from '../pages/BuyStocks/BuyModal';
 import { TrendingUp, TrendingDown } from 'lucide-react'; // Import icons
 import './portfolioDashboard.css';
 
-export const PortfolioDashboard: React.FC = () => {
+const PortfolioDashboard: React.FC = () => {
   const [portfolio, setPortfolio] = useState<Portfolio[]>([]);
   const [stats, setStats] = useState<PortfolioStats | null>(null);
   const [pageViews, setPageViews] = useState<{ date: string; count: number }[]>([]);
@@ -328,3 +328,5 @@ const calculatePortfolioValue = (portfolio: Portfolio[]) => {
     return total + value; 
   }, 0);
 };
+
+export default PortfolioDashboard;

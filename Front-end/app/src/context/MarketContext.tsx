@@ -12,12 +12,12 @@ const queryClient = new QueryClient({
 
 export const MarketContext = createContext<any>(null);
 
-export const MarketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const MarketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <QueryClientProvider client={queryClient}>
       {children}
     </QueryClientProvider>
   );
 };
-
+export default MarketProvider;
 export const useMarket = () => useContext(MarketContext); 

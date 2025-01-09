@@ -1,15 +1,18 @@
 import React, { Suspense } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { AuthProvider } from './components/Auth/AuthContext';
-import { MarketProvider } from './context/MarketContext';
-import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
+import AuthProvider from './components/Auth/AuthContext';
+import MarketProvider from './context/MarketContext';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import ProtectedRoute from "./components/routes/ProtectedRoute";
 import AppLayout from './components/Layout/AppLayout';
 import CookieConsent from './CookieConsent';
-import {LoadingSpinner} from '../src/components/ui/LoadingSpinner'; // Add a loading spinner component
-import { LearnPage, TradingStrategiesPage, TechnicalAnalysisPage, FundamentalAnalysisPage } from './components/Header/Navigation/Learn';
-import { PortfolioDashboard } from './components/portfolio/PortfolioDashboard';
+import LoadingSpinner from '../src/components/ui/LoadingSpinner'; // Add a loading spinner component
+import LearnPage from './components/Header/Navigation/LearnPage';
+import PortfolioDashboard  from './components/portfolio/PortfolioDashboard';
+import FundamentalAnalysisPage from './components/Header/Navigation/FundamentalAnalysisPage';
+import TechnicalAnalysisPage from './components/Header/Navigation/TechnicalAnalysisPage';
+import TradingStrategiesPage from './components/Header/Navigation/TradingStrategiesPage';
 
 // Lazy-loaded page components
 const Hero = React.lazy(() => import('./components/Hero/Hero'));
