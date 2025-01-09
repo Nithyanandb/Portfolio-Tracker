@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Search, ArrowUp, ArrowDown, Globe, DollarSign, Check } from 'lucide-react';
-import { SellModal } from './SellModal';
+import SellModal  from './SellModal';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header/Header';
-import { LoadingSpinner } from '../../ui/LoadingSpinner';
-import { useAuth } from '@/components/hooks/useAuth';
-import { StockDetail } from './StockDetail';
-import { PortfolioTable } from '../../portfolio/PortfolioTable';
+import LoadingSpinner from '../../ui/LoadingSpinner';
+import  useAuth from '@/components/hooks/useAuth';
+import  StockDetail from './StockDetail';
+import PortfolioTable  from '../../portfolio/PortfolioTable';
 import { formatMoney, formatPercent, Portfolio } from '@/components/portfolio/Portfolio';
 
 export const SellStocks: React.FC = () => {

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp, TrendingDown, Sparkles, Brain } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { BuyModal } from '../pages/BuyStocks/BuyModal'; // Import the BuyModal component
+import  BuyModal from '../pages/BuyStocks/BuyModal'; // Import the BuyModal component
 
 interface Recommendation {
   symbol: string;

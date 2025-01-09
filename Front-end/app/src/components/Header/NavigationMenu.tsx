@@ -21,7 +21,7 @@ import {
   Menu,
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
-import { useAuth } from '../hooks/useAuth';
+import useAuth from '../hooks/useAuth';
 
 interface NavigationMenuProps {
   className?: string;

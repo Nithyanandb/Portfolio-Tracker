@@ -6,7 +6,7 @@ interface ActivityChartProps {
   data: { date: string; count: number }[];
 }
 
-export const ActivityChart: React.FC<ActivityChartProps> = ({ data }) => {
+const ActivityChart: React.FC<ActivityChartProps> = ({ data }) => {
   const config = {
     data,
     xField: 'date',
@@ -30,3 +30,5 @@ export const ActivityChart: React.FC<ActivityChartProps> = ({ data }) => {
 
   return <Area {...config} />;
 };
+
+export default ActivityChart;

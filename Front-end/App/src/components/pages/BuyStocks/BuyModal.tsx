@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { MinusIcon, PlusIcon, XIcon } from 'lucide-react';
 import { useBuyStock } from './useBuyStock';
-import { useAuth } from '../../hooks/useAuth';
+import  useAuth  from '../../hooks/useAuth';
 import AuthModal from '../../Auth/AuthModal';
 
 interface BuyModalProps {
@@ -13,7 +13,7 @@ interface BuyModalProps {
   onClose: () => void;
   onSuccess: () => void;
 }
-export const BuyModal: React.FC<BuyModalProps> = ({ stock, onClose, onSuccess }) => {
+const BuyModal: React.FC<BuyModalProps> = ({ stock, onClose, onSuccess }) => {
 
   const [quantity, setQuantity] = useState(1);
   const { isAuthenticated } = useAuth();
@@ -117,3 +117,5 @@ export const BuyModal: React.FC<BuyModalProps> = ({ stock, onClose, onSuccess })
 </>
   );
 };
+
+export default BuyModal;

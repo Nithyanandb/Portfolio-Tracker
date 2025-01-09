@@ -9,7 +9,7 @@ interface SellModalProps {
   onSuccess: (symbol: string, quantity: number) => void; // Update onSuccess to accept symbol and quantity
 }
 
-export const SellModal: React.FC<SellModalProps> = ({ stock, onClose, onSuccess }) => {
+const SellModal: React.FC<SellModalProps> = ({ stock, onClose, onSuccess }) => {
   const [quantity, setQuantity] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
 
@@ -68,3 +68,5 @@ export const SellModal: React.FC<SellModalProps> = ({ stock, onClose, onSuccess 
     </div>
   );
 };
+
+export default SellModal;

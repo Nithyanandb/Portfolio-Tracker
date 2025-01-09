@@ -10,7 +10,7 @@ interface TransactionModalProps {
   onSubmit: (type: 'BUY' | 'SELL', symbol: string) => void;
 }
 
-export const TransactionModal: React.FC<TransactionModalProps> = ({
+ const TransactionModal: React.FC<TransactionModalProps> = ({
   isOpen,
   onClose,
   type,
@@ -64,3 +64,5 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
     </motion.div>
   );
 };
+
+export default TransactionModal;

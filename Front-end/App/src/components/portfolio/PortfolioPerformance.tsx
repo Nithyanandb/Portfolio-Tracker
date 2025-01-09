@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Area } from '@ant-design/plots';
 import { Calendar, Activity, TrendingUp, Users } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../hooks/useAuth';
-import { portfolioApi } from './portfolioApi';
+import  useAuth  from '../hooks/useAuth';
+import  portfolioApi  from './portfolioApi';
 import { LoginActivityData, ActivityStats } from './Portfolio';
 import { toast } from 'react-hot-toast';
-import { ActivityHeatmap } from './ActivityHeatmap';
-import { ActivityChart } from './ActivityChart'; // Import the component
-import { ActivityCard } from './ActivityCard';
+import  ActivityHeatmap  from './ActivityHeatmap';
+import  ActivityChart  from './ActivityChart'; // Import the component
+import  ActivityCard  from './ActivityCard';
 
 export const PortfolioPerformance: React.FC = () => {
   const { isAuthenticated, user } = useAuth();

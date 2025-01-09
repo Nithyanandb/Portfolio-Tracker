@@ -19,7 +19,7 @@ interface PortfolioTableProps {
   data: Portfolio[];
 }
 
-export const PortfolioTable: React.FC<PortfolioTableProps> = ({
+ const PortfolioTable: React.FC<PortfolioTableProps> = ({
   data = [],
 }) => {
   if (!data || data.length === 0) {
@@ -88,3 +88,5 @@ export const PortfolioTable: React.FC<PortfolioTableProps> = ({
     </div>
   );
 };
+
+export default PortfolioTable;

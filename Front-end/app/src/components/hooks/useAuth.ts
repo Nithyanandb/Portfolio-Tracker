@@ -16,7 +16,7 @@ interface AuthData {
   expiresAt: number;
 }
 
-export const useAuth = () => {
+const useAuth = () => {
   const context = useContext(AuthContext);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
 
@@ -146,3 +146,5 @@ export const useAuth = () => {
     logout
   };
 }; 
+
+export default useAuth;

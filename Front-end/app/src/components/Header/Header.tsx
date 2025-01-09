@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { LogOut, ChevronDown, Settings, Loader2, Briefcase, Menu } from 'lucide-react';
 import { Logo } from './Logo';
 import { NavigationMenu } from './NavigationMenu';
-import { useAuth } from '../hooks/useAuth';
+import  useAuth  from '../hooks/useAuth';
 import AuthModal from '../Auth/AuthModal';
 import { SearchPopover } from './SearchPopover';
 import { useNavigate } from 'react-router-dom';

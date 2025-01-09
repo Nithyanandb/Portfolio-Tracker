@@ -7,7 +7,7 @@ interface ActivityCardProps {
   value: number;
 }
 
-export const ActivityCard: React.FC<ActivityCardProps> = ({ icon, title, value }) => {
+ const ActivityCard: React.FC<ActivityCardProps> = ({ icon, title, value }) => {
   return (
     <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: '1rem', borderRadius: '0.5rem', backdropFilter: 'blur(20px)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
@@ -18,3 +18,5 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({ icon, title, value }
     </div>
   );
 };
+
+export default ActivityCard;

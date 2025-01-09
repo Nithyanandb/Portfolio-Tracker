@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, ArrowUp, ArrowDown, Globe, DollarSign, Check } from 'lucide-react';
-import { BuyModal } from './BuyModal';
+import  BuyModal from './BuyModal';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header/Header';
 import { StockDetail } from './StockDetail';
-import { useAuth } from '@/components/hooks/useAuth';
 import { symbols } from '../../Stock/StocksPage/symbols';
-import { LoadingSpinner } from '../../ui/LoadingSpinner';
+import LoadingSpinner from '../../ui/LoadingSpinner';
 
 export const BuyStocks: React.FC = () => {
   const [stocks, setStocks] = useState(symbols);

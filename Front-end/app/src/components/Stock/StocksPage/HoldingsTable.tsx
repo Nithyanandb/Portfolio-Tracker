@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BuyModal } from '@/components/pages/BuyStocks/BuyModal';
+import  BuyModal  from '@/components/pages/BuyStocks/BuyModal';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, Loader2, Search } from 'lucide-react'; // Added Search icon for search functionality
 

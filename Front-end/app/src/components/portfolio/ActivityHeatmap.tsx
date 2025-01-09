@@ -6,7 +6,7 @@ interface ActivityHeatmapProps {
   data: { date: string; count: number }[];
 }
 
-export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ data }) => {
+ const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ data }) => {
   return (
     <CalendarHeatmap
       startDate={new Date(new Date().setFullYear(new Date().getFullYear() - 1))} // Last 1 year
@@ -32,3 +32,5 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ data }) => {
     />
   );
 };
+
+export default ActivityHeatmap;

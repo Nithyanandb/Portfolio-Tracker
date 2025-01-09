@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import CalendarHeatmap from 'react-calendar-heatmap';
 import 'react-calendar-heatmap/dist/styles.css';
-import { PortfolioTable } from './PortfolioTable';
-import { TransactionModal } from './TransactionModal';
-import { portfolioApi } from './portfolioApi';
+import  PortfolioTable  from './PortfolioTable';
+import  TransactionModal  from './TransactionModal';
+import  portfolioApi  from './portfolioApi';
 import WatchlistManager from '../Hero/WatchlistManager';
 import StockDashboard from '../Stock/StockDashboard';
 import TrendingStocks from '../Hero/TrendingStocks';
 import { Portfolio, PortfolioStats } from './Portfolio';
-import { useAuth } from '../hooks/useAuth';
-import { BuyModal } from '../pages/BuyStocks/BuyModal';
+import  useAuth from '../hooks/useAuth';
+import BuyModal  from '../pages/BuyStocks/BuyModal';
 import { TrendingUp, TrendingDown } from 'lucide-react'; // Import icons
 import './portfolioDashboard.css';
 

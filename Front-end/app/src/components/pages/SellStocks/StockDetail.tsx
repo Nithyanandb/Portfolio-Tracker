@@ -9,7 +9,7 @@ interface StockDetailProps {
   loading?: boolean;
 }
 
-export const StockDetail: React.FC<StockDetailProps> = ({ stock, onSellClick, loading }) => {
+const StockDetail: React.FC<StockDetailProps> = ({ stock, onSellClick, loading }) => {
   const [timeFrame, setTimeFrame] = useState<string>('1D');
   const [currentTime, setCurrentTime] = useState(new Date());
   const [recommendationTrends, setRecommendationTrends] = useState<any[]>([]);
@@ -179,3 +179,5 @@ export const StockDetail: React.FC<StockDetailProps> = ({ stock, onSellClick, lo
     </AnimatePresence>
   );
 };
+
+export default StockDetail;

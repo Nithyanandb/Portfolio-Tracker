@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { buyStock, TransactionRequest } from './transactions';
-import { useAuth } from '../../hooks/useAuth';
+import  useAuth  from '../../hooks/useAuth';
 
 interface UseBuyStockProps {
   onSuccess: () => void;
