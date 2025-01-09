@@ -2,14 +2,16 @@
 module.exports = {
   content: [
     "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    "./src/**/*.{js,ts,jsx,tsx}", // Ensure all relevant files are included
   ],
   theme: {
     extend: {
+      // Custom screen sizes
       screens: {
         xs: '300px', // For 300px and up
         sm2: '500px', // For 500px and up
       },
+      // Custom colors
       colors: {
         black: '#0f0f0f',
         primary: '#3B82F6', // Primary color
@@ -19,17 +21,19 @@ module.exports = {
         text: '#ffffff', // Default text color
         'text-secondary': '#9ca3af', // Secondary text color
       },
+      // Custom font families
       fontFamily: {
         sans: ['Inter var', 'system-ui', 'sans-serif'],
         mono: ['Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],
       },
+      // Custom animations
       animation: {
         gradient: 'gradient 8s linear infinite',
-        backgroundTransition: 'bg-transition 12s infinite ease-in-out',
         'gradient-x': 'gradient-x 15s ease infinite',
         'spin-slow': 'spin 3s linear infinite',
         'pulse-slow': 'pulse 5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
+      // Keyframes for animations
       keyframes: {
         gradient: {
           '0%, 100%': {
@@ -41,34 +45,32 @@ module.exports = {
             'background-position': 'right center',
           },
         },
-        bgTransition: {
-          '0%': { 'background-image': `url('https://images.unsplash.com/photo-1639322537228-f710d846310a')` },
-          '50%': { 'background-image': `url('https://images.unsplash.com/photo-1622473591622-2c15a05f48e8')` },
-          '100%': { 'background-image': `url('https://images.unsplash.com/photo-1639322537228-f710d846310a')` },
-        },
         'gradient-x': {
           '0%, 100%': {
             'background-size': '200% 200%',
-            'background-position': 'left center'
+            'background-position': 'left center',
           },
           '50%': {
             'background-size': '200% 200%',
-            'background-position': 'right center'
+            'background-position': 'right center',
           },
         },
       },
+      // Custom background images
       backgroundImage: {
-        unsplashImage: "url('https://images.unsplash.com/photo-1639322537228-f710d846310a')",
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+      // Custom backdrop blur
       backdropBlur: {
         '3xl': '64px',
       },
+      // Custom box shadows
       boxShadow: {
-        'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
-        'neumorphic': '20px 20px 60px #0a0a0a, -20px -20px 60px #141414',
+        glass: '0 4px 30px rgba(0, 0, 0, 0.1)',
+        neumorphic: '20px 20px 60px #0a0a0a, -20px -20px 60px #141414',
       },
+      // Custom border radius
       borderRadius: {
         '4xl': '2rem',
       },

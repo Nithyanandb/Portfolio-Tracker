@@ -12,7 +12,8 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@ant-design/plots": "^2.3.2",
+    "@ant-design/plots": "^1.2.6",
+    "@fullhuman/postcss-purgecss": "^7.0.2",
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.2.0",
     "@radix-ui/react-navigation-menu": "^1.2.3",
@@ -20,6 +21,7 @@
     "@tailwindcss/typography": "^0.5.15",
     "@tanstack/react-query": "^5.28.4",
     "@tanstack/react-table": "^8.11.8",
+    "@tsparticles/react": "^3.0.0",
     "@types/styled-components": "^5.1.34",
     "axios": "^1.6.7",
     "chart.js": "^4.4.1",
@@ -28,6 +30,7 @@
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "finnhub": "^1.2.19",
+    "fmin": "^0.0.4",
     "framer-motion": "^11.15.0",
     "lightweight-charts": "^4.2.2",
     "lucide-react": "^0.344.0",
@@ -39,12 +42,11 @@
     "react-icons": "^5.4.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.22.3",
-    "react-tsparticles": "^2.12.2",
     "recharts": "^2.12.2",
+    "rollup": "^4.30.1",
     "styled-components": "^6.1.13",
     "tailwind-merge": "^2.6.0",
     "tailwindcss": "^3.3.3",
-    "tsparticles": "^2.12.0",
     "tsparticles-slim": "^2.12.0",
     "ws": "^8.18.0",
     "zod": "^3.22.4"
@@ -74,9 +76,9 @@
     "sass": "^1.83.0",
     "sass-embedded": "^1.83.0",
     "tailwindcss": "^3.4.1",
+    "terser": "^5.37.0",
     "typescript": "^5.7.2",
     "vite": "^6.0.7",
-    "vite-plugin-compression": "^0.5.1",
-    "vite-plugin-purgecss": "^0.2.12"
+    "vite-plugin-compression": "^0.5.1"
   }
 }

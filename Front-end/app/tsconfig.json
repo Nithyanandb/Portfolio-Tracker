@@ -4,8 +4,8 @@
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
-    "noEmitOnError": false, // Emit JavaScript even if there are errors
-    "skipLibCheck": true,   // Skip type-checking of declaration files
+    "noEmitOnError": false,
+    "skipLibCheck": true,
     "strict": false,
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -13,14 +13,15 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-   
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "esModuleInterop": true, // Add this
+    "allowSyntheticDefaultImports": true // Add this
   },
   "include": ["src", "webpack.config.js"],
   "references": [{ "path": "./tsconfig.node.json" }]
