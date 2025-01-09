@@ -5,11 +5,12 @@
 
 /* CSS Variables */
 :root {
-  --background-dark: #000000;
-  --card-dark: #1a1a1a;
-  --text-primary: #ffffff;
-  --text-secondary: #a0aec0;
-  --accent-blue: #3B82F6;
+  --background-dark: #0d1117; /* GitHub's dark background color */
+  --card-dark: #161b22; /* GitHub's card background color */
+  --text-primary: #c9d1d9; /* GitHub's primary text color */
+  --text-secondary: #8b949e; /* GitHub's secondary text color */
+  --accent-blue: #58a6ff; /* GitHub's accent blue color */
+  --border-color: #30363d; /* GitHub's border color */
 }
 
 /* Dark Theme */
@@ -21,15 +22,11 @@
 
 /* Global Background */
 .global-background {
-  background-color: #0f0f0f; /* Fallback color */
-  background-image: url('https://images.unsplash.com/photo-1639322537228-f710d846310a');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed; /* Optional: Makes the background fixed */
+  background-color: var(--background-dark);
+  background-image: none; /* Remove the image for a cleaner look */
 }
 
-/* Optional: Add a gradient overlay for better readability */
+/* Optional: Add a subtle gradient overlay for depth */
 .global-background::before {
   content: '';
   position: absolute;
@@ -37,51 +34,53 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(to bottom, rgba(15, 15, 15, 0.9), rgba(15, 15, 15, 0.7));
+  background: radial-gradient(circle at center, rgba(88, 166, 255, 0.05) 0%, transparent 70%);
   z-index: -1;
-}
-
-/* Gradient Background */
-.gradient-background {
-  background: linear-gradient(to bottom right, #000000, #1a1a1a);
-  position: relative;
-  overflow: hidden;
-}
-
-.gradient-background::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at center, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
-  animation: pulse 8s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 0.8; }
 }
 
 /* Card Styling */
 .card-dark {
   background-color: var(--card-dark);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
+  border-radius: 6px; /* GitHub's border radius */
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05); /* Subtle shadow */
 }
 
 /* Tailwind Layers - Base */
 @layer base {
   body {
-    @apply bg-black text-white antialiased;
+    @apply bg-[var(--background-dark)] text-[var(--text-primary)] antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-[var(--text-primary)];
+  }
+
+  p {
+    @apply text-[var(--text-secondary)];
+  }
+
+  a {
+    @apply text-[var(--accent-blue)] hover:underline;
   }
 }
 
 /* Tailwind Layers - Components */
 @layer components {
   .glass-card {
-    @apply bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl;
+    @apply bg-[var(--card-dark)] backdrop-blur-lg border border-[var(--border-color)] rounded-lg;
   }
 
   .glass-button {
-    @apply bg-white/10 hover:bg-white/20 backdrop-blur-lg border border-white/20 rounded-lg px-6 py-3 text-white transition-all duration-300;
+    @apply bg-[var(--card-dark)] hover:bg-[var(--background-dark)] backdrop-blur-lg border border-[var(--border-color)] rounded-md px-4 py-2 text-[var(--text-primary)] transition-all duration-300;
+  }
+
+  .github-navbar {
+    @apply bg-[var(--card-dark)] border-b border-[var(--border-color)] p-4;
+  }
+
+  .github-sidebar {
+    @apply bg-[var(--card-dark)] border-r border-[var(--border-color)] p-4;
   }
 }
 
@@ -92,14 +91,14 @@
   }
 
   .glass-effect {
-    @apply backdrop-blur-lg bg-white/5 border border-white/10;
+    @apply backdrop-blur-lg bg-[var(--card-dark)] border border-[var(--border-color)];
   }
 }
 
 /* Custom Animations */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
+  50% { transform: translateY(-10px); }
 }
 
 .animate-float {
@@ -108,7 +107,7 @@
 
 /* Gradient Text */
 .gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500;
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-[var(--accent-blue)] to-purple-500;
 }
 
 /* Custom Scrollbar */
@@ -139,11 +138,6 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
-  @apply bg-black text-white;
-  overflow-x: hidden;
-}
-
 /* Optional: Add this if you want even smoother transitions */
 * {
   transition: all 0.25s ease-out;
@@ -156,10 +150,6 @@ body {
   100% { background-position: 0% 50%; }
 }
 
-.scroll-smooth {
-  scroll-behavior: smooth;
-}
-
 /* Smooth Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
@@ -170,12 +160,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(59, 130, 246, 0.2);
+  background: rgba(88, 166, 255, 0.2);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(59, 130, 246, 0.3);
+  background: rgba(88, 166, 255, 0.3);
 }
 
 /* Remove Snap Scrolling */
@@ -189,25 +179,6 @@ body {
 .scroll-container {
   scroll-behavior: smooth;
   transition: scroll-behavior 0.8s cubic-bezier(0.65, 0, 0.35, 1);
-}
-
-/* Smooth Scrollbar with Slower Tracking */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(59, 130, 246, 0.2);
-  border-radius: 3px;
-  transition: background-color 0.5s ease;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(59, 130, 246, 0.3);
 }
 
 /* Add Smooth Transition for All Animations */

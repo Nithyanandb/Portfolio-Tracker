@@ -116,7 +116,7 @@ const MarketWatch: React.FC = () => {
   return (
     <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Updated premium glass effect with Apple-like gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900/90 to-black/95" />
+      <div className="absolute inset-0 " />
 
       {/* Header section with Apple-like typography */}
       <div className="relative flex items-center justify-between py-8">
@@ -159,7 +159,7 @@ const MarketWatch: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               className="group relative bg-white/[0.03] hover:bg-white/[0.06] 
-                rounded-xl transition-all duration-300 overflow-hidden"
+                 rounded-[5px] transition-all duration-300 overflow-hidden"
             >
               {/* Image with gradient overlay */}
               <div className="relative w-full h-40">
@@ -176,7 +176,7 @@ const MarketWatch: React.FC = () => {
                 <div className="flex justify-between items-start mb-2">
                   <span className="text-xs font-medium text-white/60">{news.timestamp}</span>
                   {news.impact && (
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                    <span className={`px-2 py-0.5 text-xs font-medium ${
                       news.impact === 'high' ? 'bg-blue-500/20 text-blue-300' :
                       news.impact === 'medium' ? 'bg-purple-500/20 text-purple-300' :
                       'bg-green-500/20 text-green-300'

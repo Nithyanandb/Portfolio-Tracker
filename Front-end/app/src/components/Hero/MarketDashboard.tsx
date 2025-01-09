@@ -81,9 +81,9 @@ const MarketDashboard: React.FC = () => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-black">
       {/* Premium gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900/90 to-black" />
+      <div className="absolute inset-0" />
 
-      <div className="relative max-w-10xl mx-auto p-4 sm:p-6 lg:p-8">
+      <div className="relative max-w-[400px] mx-auto  sm:p-6 lg:p-0">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <motion.button
@@ -111,7 +111,7 @@ const MarketDashboard: React.FC = () => {
         {/* Indices Table */}
         <div className="mb-6">
           <h2 className="text-xl font-semibold text-white mb-3">Indices</h2>
-          <div className="bg-white/[0.02] backdrop-blur-xl rounded-xl p-4">
+          <div className="">
             <table className="min-w-full">
               <thead>
                 <tr>
@@ -135,7 +135,7 @@ const MarketDashboard: React.FC = () => {
 {/* Key Indicators Table */}
 <div className="mb-6">
   <div className="flex items-center justify-between mb-3">
-    <div className="bg-white/[0.02] backdrop-blur-xl rounded-xl p-0">
+    <div className="p-0">
       <h2 className="text-xl font-semibold p-2 text-white mb-3">Key Indicators</h2>
       <table className="min-w-full">
         <thead>
@@ -149,14 +149,14 @@ const MarketDashboard: React.FC = () => {
         <tbody>
           {keyIndicators.map((indicator, i) => (
             <tr key={i} className="hover:bg-white/[0.05] transition-colors">
-              <td className="px-4 py-3 whitespace-nowrap text-sm text-white">{indicator.name}</td>
-              <td className="px-4 py-3 whitespace-nowrap text-sm text-white">{indicator.ltp}</td>
-              <td className={`px-4 py-3 whitespace-nowrap text-sm ${
+              <td className="px-4 py-4 whitespace-nowrap text-sm text-white">{indicator.name}</td>
+              <td className="px-4 py-4 whitespace-nowrap text-sm text-white">{indicator.ltp}</td>
+              <td className={`px-4 py-4 whitespace-nowrap text-sm ${
                 indicator.change.startsWith('-') ? 'text-rose-400' : 'text-green-400'
               }`}>
                 {indicator.change}
               </td>
-              <td className={`px-4 py-3 whitespace-nowrap text-sm ${
+              <td className={`px-4 py-4 whitespace-nowrap text-sm ${
                 indicator.changePercent.startsWith('-') ? 'text-rose-400' : 'text-green-400'
               }`}>
                 {/* Ensure the percent symbol is inline with the number */}
@@ -172,21 +172,21 @@ const MarketDashboard: React.FC = () => {
 {/* Cryptocurrency Section */}
 <div className="mb-6">
   <h2 className="text-xl font-semibold text-white mb-3">Top Cryptos</h2>
-  <div className="bg-white/[0.02] backdrop-blur-xl rounded-xl p-4">
+  <div className="">
     <table className="min-w-full">
       <thead>
         <tr>
-          <th className="px-4 py-2 text-left text-sm font-medium text-gray-400 uppercase tracking-wider">Pair</th>
-          <th className="px-4 py-2 text-left text-sm font-medium text-gray-400 uppercase tracking-wider">Vol</th>
-          <th className="px-4 py-2 text-left text-sm font-medium text-gray-400 uppercase tracking-wider">Change</th>
+          <th className="px-4 py-4 text-left text-sm font-medium text-gray-400 uppercase tracking-wider">Pair</th>
+          <th className="px-4 py-4 text-left text-sm font-medium text-gray-400 uppercase tracking-wider">Vol</th>
+          <th className="px-4 py-4 text-left text-sm font-medium text-gray-400 uppercase tracking-wider">Change</th>
         </tr>
       </thead>
       <tbody>
         {cryptocurrencies.map((crypto, index) => (
           <tr key={index} className="hover:bg-white/[0.05] transition-colors">
-            <td className="px-4 py-3 whitespace-nowrap text-sm text-white">{crypto.pair}</td>
-            <td className="px-4 py-3 whitespace-nowrap text-sm text-white">{crypto.vol}</td>
-            <td className={`px-4 py-3 whitespace-nowrap text-sm ${
+            <td className="px-4 py-4 whitespace-nowrap text-sm text-white">{crypto.pair}</td>
+            <td className="px-4 py-4 whitespace-nowrap text-sm text-white">{crypto.vol}</td>
+            <td className={`px-4 py-4 whitespace-nowrap text-sm ${
               crypto.change.startsWith('-') ? 'text-rose-400' : 'text-green-400'
             }`}>
               {crypto.change}
@@ -204,7 +204,7 @@ const MarketDashboard: React.FC = () => {
             <motion.button
               key={i}
               whileHover={{ x: 4 }}
-              className="w-full flex items-center justify-between p-2 bg-white/[0.02] hover:bg-white/[0.04] rounded-lg transition-all duration-300 group"
+              className="w-full flex items-center justify-between p-2  hover:bg-white/[0.04]transition-all duration-300 group"
             >
               <span className="text-sm font-medium text-white">{link}</span>
               <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />

@@ -6,8 +6,8 @@ const Footer = () => (
   <footer className="relative bg-black pt-24 pb-12 md:pt-32 md:pb-16">
     {/* Grok-style glow effect */}
     <div className="absolute inset-0">
-      <div className="absolute bottom-0 left-1/3 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-blue-500/5 rounded-full blur-[80px] md:blur-[120px]" />
-      <div className="absolute top-0 right-1/3 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-purple-500/5 rounded-full blur-[80px] md:blur-[120px]" />
+      <div className="absolute bottom-0 left-1/3 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-black rounded-full blur-[80px] md:blur-[120px]" />
+      <div className="absolute top-0 right-1/3 w-[300px] h-[300px] md:w-[500px] md:h-[500px]  rounded-full blur-[80px] md:blur-[120px]" />
     </div>
 
     <div className="relative max-w-7xl mx-auto px-4 md:px-6">

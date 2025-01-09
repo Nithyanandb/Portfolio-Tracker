@@ -64,7 +64,7 @@ const router = createBrowserRouter([
 
             {/* Premium gradient overlays */}
             <div className="fixed inset-0 pointer-events-none">
-              <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-transparent to-black/90" />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-transparent to-black" />
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_black_100%)] opacity-70" />
             </div>
           </div>

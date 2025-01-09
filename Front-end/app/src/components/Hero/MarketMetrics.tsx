@@ -30,7 +30,7 @@ const MarketMetrics: React.FC = () => {
   return (
     <div className="relative p-6">
       {/* Premium glass effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5" />
+      <div className="absolute inset-0 " />
       
       <div className="relative grid grid-cols-1 md:grid-cols-3 gap-6">
         {metrics.map((metric, index) => (
@@ -39,10 +39,10 @@ const MarketMetrics: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="group relative bg-white/5 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300"
+            className="group relative p-2  transition-all duration-300"
           >
             {/* Glow effect on hover */}
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500" />
+            <div className="absolute inset-0 opacity-0  transition-opacity duration-500" />
             
             <div className="relative">
               <div className="flex items-center justify-between mb-4">
