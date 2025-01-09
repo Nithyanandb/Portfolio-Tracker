@@ -45,7 +45,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: (
-      <AppLayout d={undefined} children={''}>
+      <AppLayout>
         <Suspense fallback={<LoadingSpinner />}>
           <div className="relative min-h-screen">
             <div className="relative z-10 overflow-auto custom-scrollbar">
@@ -76,7 +76,7 @@ const router = createBrowserRouter([
     path: '/portfolio',
     element: (
       <ProtectedRoute>
-        <AppLayout d={undefined} children={''}>
+        <AppLayout>
           <Suspense fallback={<LoadingSpinner />}>
             <div className="relative">
               <div className="relative z-10">
