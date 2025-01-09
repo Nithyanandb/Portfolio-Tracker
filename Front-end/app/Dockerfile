@@ -17,8 +17,14 @@ RUN npm run build
 # Stage 2: Serve the application
 FROM nginx:alpine
 
+# Set working directory for nginx
+WORKDIR /usr/share/nginx/html
+
+# Remove default nginx static files
+RUN rm -rf ./*
+
 # Copy the built application from the builder stage
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /app/dist .
 
 # Copy the custom nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
