@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './components/Auth/AuthContext';
 import { MarketProvider } from './context/MarketContext';
 import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
-import { ProtectedRoute } from './components/routes/ProtectedRoute';
+import ProtectedRoute from "./components/routes/ProtectedRoute";
 import AppLayout from './components/Layout/AppLayout';
 import CookieConsent from './CookieConsent';
 import {LoadingSpinner} from '../src/components/ui/LoadingSpinner'; // Add a loading spinner component
