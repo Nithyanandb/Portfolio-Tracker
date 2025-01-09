@@ -118,7 +118,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = useCallback(async () => {
     try {
-      await fetch('http://localhost:2000/auth/logout', {
+      await fetch('https://production-backend-production.up.railway.app/auth/logout', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -146,8 +146,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAuthenticating,
         setUser,
         setToken,
-        loginWithGoogle: () => handleOAuthPopup('http://localhost:2000/oauth2/authorization/google'),
-        loginWithGithub: () => handleOAuthPopup('http://localhost:2000/oauth2/authorization/github'),
+        loginWithGoogle: () => handleOAuthPopup('https://production-backend-production.up.railway.app/oauth2/authorization/google'),
+        loginWithGithub: () => handleOAuthPopup('https://production-backend-production.up.railway.app/oauth2/authorization/github'),
         logout,
         error,
         handleOAuthCallback,

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Stock, StockTransaction } from '../types/Stock';
 
-const API_BASE_URL = 'http://localhost:2000/';
+const API_BASE_URL = 'https://production-backend-production.up.railway.app/';
 
 export const stockApi = {
   getAllStocks: () => axios.get<Stock[]>(`${API_BASE_URL}/stocks`),

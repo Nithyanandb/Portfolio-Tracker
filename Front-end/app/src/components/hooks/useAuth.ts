@@ -98,18 +98,18 @@ export const useAuth = () => {
   };
 
   const loginWithGoogle = () => {
-    handleOAuthPopup('http://localhost:2000/oauth2/authorization/google');
+    handleOAuthPopup('https://production-backend-production.up.railway.app/oauth2/authorization/google');
   };
 
   const loginWithGithub = () => {
-    handleOAuthPopup('http://localhost:2000/oauth2/authorization/github');
+    handleOAuthPopup('https://production-backend-production.up.railway.app/oauth2/authorization/github');
   };
   const logout = useCallback(async () => {
     try {
       const authData = localStorage.getItem('auth');
       if (authData) {
         const { token } = JSON.parse(authData);
-        const response = await fetch('http://localhost:2000/auth/logout', {
+        const response = await fetch('https://production-backend-production.up.railway.app/auth/logout', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,

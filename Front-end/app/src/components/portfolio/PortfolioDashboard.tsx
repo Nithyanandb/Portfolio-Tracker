@@ -132,7 +132,7 @@ export const PortfolioDashboard: React.FC = () => {
     price: number;
   }) => {
     try {
-      const response = await fetch('http://localhost:2000/transaction/buy', {
+      const response = await fetch('https://production-backend-production.up.railway.app/transaction/buy', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

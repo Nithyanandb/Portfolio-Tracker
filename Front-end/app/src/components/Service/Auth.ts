@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:2000/auth';
+const API_URL = 'https://production-backend-production.up.railway.app/auth';
 
 export interface AuthCredentials {
   email: string;
@@ -16,7 +16,7 @@ export interface AuthResponse {
 
 // Create axios instance with default config
 const api = axios.create({
-  baseURL: 'http://localhost:2000',
+  baseURL: 'https://production-backend-production.up.railway.app',
   headers: {
     'Content-Type': 'application/json'
   },
@@ -70,11 +70,11 @@ export const authService = {
   },
 
   loginWithGoogle(): void {
-    window.location.href = 'http://localhost:2000/oauth2/authorization/google';
+    window.location.href = 'https://production-backend-production.up.railway.app/oauth2/authorization/google';
   },
 
   loginWithGithub(): void {
-    window.location.href = 'http://localhost:2000/oauth2/authorization/github';
+    window.location.href = 'https://production-backend-production.up.railway.app/oauth2/authorization/github';
   },
 
   logout(): void {
