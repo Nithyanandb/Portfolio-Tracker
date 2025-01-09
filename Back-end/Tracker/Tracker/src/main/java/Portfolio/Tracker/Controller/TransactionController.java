@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/transaction")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "https://production-frontend-final.onrender.com", allowCredentials = "true")
 @RequiredArgsConstructor
 public class TransactionController {
     private final TransactionService transactionService;

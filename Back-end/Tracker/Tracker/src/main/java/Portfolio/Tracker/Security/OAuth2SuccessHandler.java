@@ -24,7 +24,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final JwtTokenProvider tokenProvider;
     private final UserService userService;
     
-    @Value("${app.oauth2.redirectUri:http://localhost:3000/oauth2/redirect}")
+    @Value("${app.oauth2.redirectUri:https://production-frontend-final.onrender.com/oauth2/redirect}")
     private String redirectUri;
 
     public OAuth2SuccessHandler(JwtTokenProvider tokenProvider, UserService userService) {
