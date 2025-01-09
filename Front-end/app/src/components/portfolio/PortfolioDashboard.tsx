@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
 import CalendarHeatmap from 'react-calendar-heatmap';
 import 'react-calendar-heatmap/dist/styles.css';
 import { PortfolioTable } from './PortfolioTable';
 import { TransactionModal } from './TransactionModal';
 import { portfolioApi } from './portfolioApi';
 import WatchlistManager from '../Hero/WatchlistManager';
-import { PortfolioPerformance } from './PortfolioPerformance';
 import StockDashboard from '../Stock/StockDashboard';
 import TrendingStocks from '../Hero/TrendingStocks';
 import { Portfolio, PortfolioStats } from './Portfolio';
@@ -206,11 +204,11 @@ export const PortfolioDashboard: React.FC = () => {
               return 'color-github-4';
             }
           }}
-          tooltipDataAttrs={(value) => ({
-            'data-tooltip': value
-              ? `${value.date}: ${value.count} page view${value.count !== 1 ? 's' : ''}`
-              : 'No data',
-          })}
+          // tooltipDataAttrs={(value) => ({
+          //   'data-tooltip': value
+          //     ? `${value.date}: ${value.count} page view${value.count !== 1 ? 's' : ''}`
+          //     : 'No data',
+          // })}
           showWeekdayLabels={true}
           onClick={(value) => {
             if (value) {
@@ -270,8 +268,7 @@ export const PortfolioDashboard: React.FC = () => {
           </div>
           <PortfolioTable
             data={portfolio}
-            onBuyClick={(symbol) => handleTransaction('BUY', symbol)}
-            onSellClick={(symbol) => handleTransaction('SELL', symbol)}
+            
           />
         </div>
 

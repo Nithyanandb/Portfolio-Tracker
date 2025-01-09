@@ -143,24 +143,24 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               exit={{ scale: 0.95 }}
               className={cn(
                 "relative z-0 w-full h-full rounded-2xl overflow-hidden flex", // Full height and width
-                "bg-white/5 backdrop-blur-5xl",
+                "bg-black backdrop-blur-0",
                 (isAuthenticating || success) && "opacity-0" // Removed pointer-events-none
               )}
             >
               {/* Left Side: Background Image */}
               <div
-                className="w-1/2 h-full bg-cover bg-center"
-                style={{
-                  backgroundImage: `url('https://images.unsplash.com/photo-1736192252876-e086cd9fa39b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw0N3x8fGVufDB8fHx8fA%3D%3D')`,
-                }}
-              >
-                <div className="absolute inset-0 bg-black/50 flex items-end p-8">
-                  <div className="text-white">
-                    <h2 className="text-4xl font-bold mb-2">Welcome</h2>
-                    <p className="text-lg">Join us and explore.</p>
-                  </div>
-                </div>
-              </div>
+  className="w-1/2 h-full bg-cover bg-center" // Removed backdrop-blur-0
+  style={{
+    backgroundImage: `url('https://images.unsplash.com/photo-1732823267576-38b408c43809?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzNDB8fHxlbnwwfHx8fHw%3D')`,
+  }}
+>
+  <div className="absolute inset-0 bg-black/50 flex items-end p-8">
+    <div className="text-white">
+      <h2 className="text-4xl font-bold mb-2">Welcome</h2>
+      <p className="text-lg">Join us and explore.</p>
+    </div>
+  </div>
+</div>
 
               {/* Right Side: Login/Register Form */}
               <div

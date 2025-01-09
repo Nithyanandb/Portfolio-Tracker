@@ -29,5 +29,20 @@ $enable-shadows: true; // Enable box shadows
 $enable-gradients: false; // Disable gradients
 $enable-responsive-font-sizes: true; // Enable responsive font sizes
 
+// Override Bootstrap variables before importing
+$primary: $primary !default;
+$secondary: $secondary !default;
+$success: $success !default;
+$info: $info !default;
+$warning: $warning !default;
+$danger: $danger !default;
+$light: $light !default;
+$dark: $dark !default;
+$border-radius: $border-radius !default;
+$box-shadow: $box-shadow !default;
+$enable-shadows: $enable-shadows !default;
+$enable-gradients: $enable-gradients !default;
+$enable-responsive-font-sizes: $enable-responsive-font-sizes !default;
+
 // Import Bootstrap
-@use "bootstrap/scss/bootstrap";
+@import "bootstrap/scss/bootstrap";

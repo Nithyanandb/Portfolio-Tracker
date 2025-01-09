@@ -1,6 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
 import { theme } from './theme';
-import DynamicBackground from '@/components/background/DynamicBackground';
 
 export const GlobalStyles = createGlobalStyle`
   :root {

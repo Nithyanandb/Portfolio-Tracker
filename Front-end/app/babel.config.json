@@ -1,0 +1,23 @@
+{
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-typescript",
+      "@babel/preset-react"
+    ],
+    "plugins": [
+      "@babel/plugin-transform-runtime",
+      [
+        "babel-plugin-transform-imports",
+        {
+          "@ant-design/plots": {
+            "transform": "@ant-design/plots/lib/${member}",
+            "preventFullImport": true
+          },
+          "@heroicons/react": {
+            "transform": "@heroicons/react/24/outline/${member}",
+            "preventFullImport": true
+          }
+        }
+      ]
+    ]
+  }
