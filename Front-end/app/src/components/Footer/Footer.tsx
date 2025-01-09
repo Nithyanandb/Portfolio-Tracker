@@ -16,8 +16,10 @@ const Footer = () => (
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
         className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-16 mb-16 md:mb-24"
       >
+        {/* Logo and Description */}
         <div className="space-y-6 md:space-y-8">
           <Logo />
           <p className="text-sm md:text-base text-white/40 leading-relaxed">
@@ -25,45 +27,80 @@ const Footer = () => (
           </p>
         </div>
 
-        {[
-          {
-            title: "Platform",
-            links: ["Trading system", "Investment tools", "Market research", "Portfolio analytics", "AI insights"]
-          },
-          {
-            title: "Company",
-            links: ["About us", "Careers", "Newsroom", "Contact", "Support"]
-          },
-          {
-            title: "Legal",
-            links: ["Privacy", "Terms", "Security", "Compliance", "Accessibility"]
-          }
-        ].map((section, index) => (
-          <motion.div 
-            key={section.title}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: index * 0.1 }}
-            className="space-y-6 md:space-y-8"
-          >
-            <h4 className="text-xs md:text-sm uppercase tracking-wider text-white/40">
-              {section.title}
-            </h4>
-            <ul className="space-y-4 md:space-y-6">
-              {section.links.map((link) => (
-                <li key={link}>
-                  <a 
-                    href="#" 
-                    className="text-sm md:text-base text-white/60 hover:text-white transition-colors duration-300"
-                  >
-                    {link}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-        ))}
+        {/* Platform Links */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="space-y-6 md:space-y-8"
+        >
+          <h4 className="text-xs md:text-sm uppercase tracking-wider text-white/40">
+            Platform
+          </h4>
+          <ul className="space-y-4 md:space-y-6">
+            {["Trading system", "Investment tools", "Market research", "Portfolio analytics", "AI insights"].map((link) => (
+              <li key={link}>
+                <a 
+                  href="#" 
+                  className="text-sm md:text-base text-white/60 hover:text-white transition-colors duration-300"
+                >
+                  {link}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </motion.div>
+
+        {/* Company Links */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          className="space-y-6 md:space-y-8"
+        >
+          <h4 className="text-xs md:text-sm uppercase tracking-wider text-white/40">
+            Company
+          </h4>
+          <ul className="space-y-4 md:space-y-6">
+            {["About us", "Careers", "Newsroom", "Contact", "Support"].map((link) => (
+              <li key={link}>
+                <a 
+                  href="#" 
+                  className="text-sm md:text-base text-white/60 hover:text-white transition-colors duration-300"
+                >
+                  {link}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </motion.div>
+
+        {/* Legal Links */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3 }}
+          className="space-y-6 md:space-y-8"
+        >
+          <h4 className="text-xs md:text-sm uppercase tracking-wider text-white/40">
+            Legal
+          </h4>
+          <ul className="space-y-4 md:space-y-6">
+            {["Privacy", "Terms", "Security", "Compliance", "Accessibility"].map((link) => (
+              <li key={link}>
+                <a 
+                  href="#" 
+                  className="text-sm md:text-base text-white/60 hover:text-white transition-colors duration-300"
+                >
+                  {link}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </motion.div>
       </motion.div>
 
       {/* Bottom Section */}
@@ -71,9 +108,11 @@ const Footer = () => (
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
         className="pt-8 border-t border-white/5"
       >
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6">
+          {/* Copyright */}
           <p className="text-xs md:text-sm text-white/40">
             © 2024 CapX. All rights reserved.
           </p>

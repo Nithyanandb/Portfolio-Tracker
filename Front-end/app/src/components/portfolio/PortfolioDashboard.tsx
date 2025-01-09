@@ -327,7 +327,7 @@ export const PortfolioDashboard: React.FC = () => {
 
 const calculatePortfolioValue = (portfolio: Portfolio[]) => {
   return portfolio.reduce((total, holding) => {
-    const value = holding.value || 0; // Use holding.value for calculation
-    return total + value; // Add or subtract based on the value
-  }, 0); // Start with a total of 0
+    const value = holding.value || 0; 
+    return total + value; 
+  }, 0);
 };

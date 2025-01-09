@@ -1,5 +1,5 @@
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { ArrowRight, Shield, LineChart, Sparkles } from "lucide-react";
 
 const features = [
@@ -38,6 +38,20 @@ const features = [
   }
 ];
 
+// Animation variants
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8 } }
+};
+
+const staggerChildren: Variants = {
+  visible: {
+    transition: {
+      staggerChildren: 0.2
+    }
+  }
+};
+
 const Features = () => {
   return (
     <section className="py-16 md:py-32 bg-black">
@@ -46,53 +60,67 @@ const Features = () => {
           key={index}
           className="relative min-h-screen flex items-center justify-center py-16 md:py-32"
         >
+          {/* Background Gradient and Glow Effect */}
           <div className="absolute inset-0">
             <div className="absolute inset-0 bg-gradient-to-b from-black via-black/95 to-black/90" />
-            {/* Grok-style glow effect */}
             <div className="absolute inset-0">
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] md:w-[800px] md:h-[800px] bg-blue-500/5 rounded-full blur-[60px] md:blur-[120px]" />
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[600px] md:h-[600px] bg-purple-500/5 rounded-full blur-[60px] md:blur-[120px] animate-pulse" />
             </div>
           </div>
           
+          {/* Content Container */}
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className={`flex flex-col lg:flex-row items-center gap-12 md:gap-24 ${
               index % 2 === 1 ? 'lg:flex-row-reverse' : ''
             }`}>
               {/* Content Side */}
               <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial="hidden"
+                whileInView="visible"
                 viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
+                variants={staggerChildren}
                 className="flex-1 max-w-xl"
               >
-                <h2 className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight mb-4">
+                <motion.h2
+                  variants={fadeInUp}
+                  className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight mb-4"
+                >
                   <span className="text-white">{feature.title}</span>
                   <br />
                   <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-transparent bg-clip-text">
                     {feature.gradient}
                   </span>
-                </h2>
-                <p className="text-lg md:text-xl text-white/60 mb-8 md:mb-16 font-light">
+                </motion.h2>
+                <motion.p
+                  variants={fadeInUp}
+                  className="text-lg md:text-xl text-white/60 mb-8 md:mb-16 font-light"
+                >
                   {feature.description}
-                </p>
+                </motion.p>
 
                 {/* Stats Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12 mb-8 md:mb-16">
+                <motion.div
+                  variants={staggerChildren}
+                  className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12 mb-8 md:mb-16"
+                >
                   {feature.stats.map((stat, statIndex) => (
-                    <div key={statIndex}>
+                    <motion.div
+                      key={statIndex}
+                      variants={fadeInUp}
+                    >
                       <div className="text-2xl md:text-3xl font-medium text-white mb-2">
                         {stat.value}
                       </div>
                       <div className="text-sm text-white/40 uppercase tracking-wider">
                         {stat.label}
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
-                </div>
+                </motion.div>
 
                 <motion.button
+                  variants={fadeInUp}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   className="group relative px-4 py-2 bg-white rounded-full text-black text-lg 
@@ -107,10 +135,10 @@ const Features = () => {
 
               {/* Image Side */}
               <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial="hidden"
+                whileInView="visible"
                 viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
+                variants={fadeInUp}
                 className="flex-1 relative"
               >
                 <div className="relative aspect-[4/3] rounded-3xl overflow-hidden">

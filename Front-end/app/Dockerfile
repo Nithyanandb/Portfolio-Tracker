@@ -1,23 +1,16 @@
-    # Use an official Node.js runtime as a parent image
-    FROM node:20-alpine
+# Stage 1: Build the application
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package.json package-lock.json* ./
+RUN npm install
+COPY . .
+RUN npm run build
 
-    # Set the working directory inside the container
-    WORKDIR /app
-
-    # Copy package.json and package-lock.json (or yarn.lock)
-    COPY package.json package-lock.json* ./
-
-    # Install dependencies
-    RUN npm install
-
-    # Copy the rest of the application code
-    COPY . .
-
-    # Build the application
-    RUN npm run build
-
-    # Expose the port the app runs on
-    EXPOSE 3000
-
-    # Command to run the application
-    CMD ["npm", "run", "preview"]
+# Stage 2: Serve the application
+FROM node:20-alpine
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY package.json package-lock.json* ./
+RUN npm install --production
+EXPOSE 3000
+CMD ["npm", "run", "preview"]
