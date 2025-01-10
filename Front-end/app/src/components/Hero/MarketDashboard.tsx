@@ -96,18 +96,7 @@ const MarketDashboard: React.FC = () => {
           </motion.button>
         </div>
 
-        {/* Market Status */}
-        <div className="flex items-center gap-2 mb-6">
-          <div
-            className={`h-2.5 w-2.5 rounded-full ${
-              marketStatus.isOpen ? 'bg-green-400' : 'bg-red-400'
-            } shadow-lg shadow-green-500/20 animate-pulse`}
-          />
-          <span className="text-sm text-gray-400">
-            {marketStatus.isOpen ? 'Market Open' : 'Market Closed'}
-          </span>
-        </div>
-
+      
         {/* Indices Table */}
         <div className="mb-6">
           <h2 className="text-xl font-semibold text-white mb-3">Indices</h2>

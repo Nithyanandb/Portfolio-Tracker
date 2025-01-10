@@ -9,13 +9,15 @@ import AppLayout from './components/Layout/AppLayout';
 import CookieConsent from './CookieConsent';
 import LoadingSpinner from '../src/components/ui/LoadingSpinner'; // Add a loading spinner component
 import LearnPage from './components/Header/Navigation/LearnPage';
-import PortfolioDashboard  from './components/portfolio/PortfolioDashboard';
+import PortfolioDashboard from './components/portfolio/PortfolioDashboard';
 import FundamentalAnalysisPage from './components/Header/Navigation/FundamentalAnalysisPage';
 import TechnicalAnalysisPage from './components/Header/Navigation/TechnicalAnalysisPage';
 import TradingStrategiesPage from './components/Header/Navigation/TradingStrategiesPage';
+import Hero from './components/Hero/Hero';
+import BuyStocks from './components/pages/BuyStocks/BuyStocks';
+import SellStocks from './components/pages/SellStocks/SellStocks';
+import StockMarket from './components/Stock/StocksPage/StockMarket';
 
-// Lazy-loaded page components
-const Hero = React.lazy(() => import('./components/Hero/Hero'));
 const Features = React.lazy(() => import('./components/Features/Features'));
 const Security = React.lazy(() => import('./components/Security/Security'));
 const OAuthCallback = React.lazy(() => import('./components/Auth/OAuthCallback'));
@@ -24,10 +26,7 @@ const FuturesTrading = React.lazy(() => import('./components/Header/Navigation/F
 const MarginTrading = React.lazy(() => import('./components/Header/Navigation/MarginTrading'));
 const SpotTrading = React.lazy(() => import('./components/Header/Navigation/SpotTrading'));
 const OptionsTrading = React.lazy(() => import('./components/Header/Navigation/trading/OptionsTrading'));
-const BuyStocks = React.lazy(() => import('./components/pages/BuyStocks/BuyStocks'));
-const StockMarket = React.lazy(() => import('./components/Stock/StocksPage/StockMarket'));
 const About = React.lazy(() => import('./components/Header/About/About'));
-const SellStocks = React.lazy(() => import('./components/pages/SellStocks/SellStocks'));
 
 // Create a QueryClient instance
 const queryClient = new QueryClient({
@@ -46,12 +45,13 @@ const router = createBrowserRouter([
     path: '/',
     element: (
       <AppLayout>
+        <Hero />
         <Suspense fallback={<LoadingSpinner />}>
           <div className="relative min-h-screen">
             <div className="relative z-10 overflow-auto custom-scrollbar">
               <div className="space-y-32 pb-32">
                 <section className="min-h-screen flex-center transition-all duration-1000">
-                  <Hero />
+                  {/* Hero section content */}
                 </section>
                 <section className="min-h-screen flex-center transition-all duration-1000">
                   <Features />

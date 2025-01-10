@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ApiResponse, Portfolio, PortfolioStats, LoginActivityData, ActivityStats } from './Portfolio';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:2000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://production-backend-production.up.railway.app';
 
 const api = axios.create({
   baseURL: API_BASE_URL,

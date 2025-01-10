@@ -1,0 +1,55 @@
+/* Market Effect Animations */
+.market-effect-bullish {
+    animation: slideUpPattern 20s linear infinite;
+  }
+  
+  .market-effect-bearish {
+    animation: slideDownPattern 20s linear infinite;
+  }
+  
+  .market-effect-neutral {
+    animation: pulsePattern 10s ease-in-out infinite;
+  }
+  
+  @keyframes slideUpPattern {
+    from {
+      background-position: 0 0;
+    }
+    to {
+      background-position: 0 -100%;
+    }
+  }
+  
+  @keyframes slideDownPattern {
+    from {
+      background-position: 0 0;
+    }
+    to {
+      background-position: 0 100%;
+    }
+  }
+  
+  @keyframes pulsePattern {
+    0%, 100% {
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+  
+  /* Market Trend Indicators */
+  .trend-up-glow {
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
+  }
+  
+  .trend-down-glow {
+    box-shadow: 0 0 30px rgba(239, 68, 68, 0.2);
+  }
+  
+  /* Market Pattern Overlays */
+  .pattern-grid {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }

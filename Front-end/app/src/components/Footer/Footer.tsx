@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Logo } from '../Header/Logo';
 
 const Footer = () => (
-  <footer className="relative bg-black pt-24 pb-12 md:pt-32 md:pb-16">
+  <footer className="relative bg-black pt-16 pb-12 md:pt-24 md:pb-16">
     {/* Grok-style glow effect */}
     <div className="absolute inset-0">
       <div className="absolute bottom-0 left-1/3 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-black rounded-full blur-[80px] md:blur-[120px]" />
@@ -17,10 +17,10 @@ const Footer = () => (
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8 }}
-        className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-16 mb-16 md:mb-24"
+        className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 mb-12 md:mb-16"
       >
         {/* Logo and Description */}
-        <div className="space-y-6 md:space-y-8">
+        <div className="space-y-4 md:space-y-6">
           <Logo />
           <p className="text-sm md:text-base text-white/40 leading-relaxed">
             Elevate your trading experience with AI-powered intelligence
@@ -33,12 +33,12 @@ const Footer = () => (
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.1 }}
-          className="space-y-6 md:space-y-8"
+          className="space-y-4 md:space-y-6"
         >
           <h4 className="text-xs md:text-sm uppercase tracking-wider text-white/40">
             Platform
           </h4>
-          <ul className="space-y-4 md:space-y-6">
+          <ul className="space-y-2 md:space-y-4">
             {["Trading system", "Investment tools", "Market research", "Portfolio analytics", "AI insights"].map((link) => (
               <li key={link}>
                 <a 
@@ -58,12 +58,12 @@ const Footer = () => (
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="space-y-6 md:space-y-8"
+          className="space-y-4 md:space-y-6"
         >
           <h4 className="text-xs md:text-sm uppercase tracking-wider text-white/40">
             Company
           </h4>
-          <ul className="space-y-4 md:space-y-6">
+          <ul className="space-y-2 md:space-y-4">
             {["About us", "Careers", "Newsroom", "Contact", "Support"].map((link) => (
               <li key={link}>
                 <a 
@@ -83,12 +83,12 @@ const Footer = () => (
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
-          className="space-y-6 md:space-y-8"
+          className="space-y-4 md:space-y-6"
         >
           <h4 className="text-xs md:text-sm uppercase tracking-wider text-white/40">
             Legal
           </h4>
-          <ul className="space-y-4 md:space-y-6">
+          <ul className="space-y-2 md:space-y-4">
             {["Privacy", "Terms", "Security", "Compliance", "Accessibility"].map((link) => (
               <li key={link}>
                 <a 

@@ -1,0 +1,25 @@
+/* Base Styles and CSS Variables */
+:root {
+  /* Primary Colors */
+  --color-primary: #EF2D1A;
+  --color-secondary: #FF8F71;
+  
+  /* Dark Theme Colors */
+  --bg-dark-primary: #000000;
+  --bg-dark-secondary: #111111;
+  
+  /* Glass Effect Colors */
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #FF8F71 0%, #EF2D1A 100%);
+}
+
+/* Base Layer Styles */
+@layer base {
+  body {
+    @apply antialiased text-white bg-black min-h-screen;
+    font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+  }
+}

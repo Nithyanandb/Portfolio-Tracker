@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Portfolio, PortfolioStats, Transaction } from './useApi';
 
 const api = axios.create({
-  baseURL: 'http://localhost:2000/api',
+  baseURL: 'https://production-backend-production.up.railway.app',
   headers: {
     'Content-Type': 'application/json'
   }

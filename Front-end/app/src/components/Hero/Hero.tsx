@@ -7,9 +7,9 @@ import MarketMetrics from './MarketMetrics';
 import MarketDashboard from './MarketDashboard';
 import { WorldIndices } from '../market/WorldIndices';
 import MarketGraph from './MarketGraph';
-import { symbols } from '../Stock/StocksPage/symbols'; // Import the symbols array
-import EarningsSurprise from './EarningsSurprise'; // Import the new component
-import SectorPerformance from './SectorPerformance'; // Import the new component
+import { symbols } from '../Stock/StocksPage/symbols';
+import EarningsSurprise from './EarningsSurprise';
+import SectorPerformance from './SectorPerformance';
 
 const Hero: React.FC = () => {
   const [currentSymbol, setCurrentSymbol] = useState(symbols[0].symbol);
@@ -35,15 +35,13 @@ const Hero: React.FC = () => {
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
-     
-
       {/* Content */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="relative z-10"
       >
-        <div className="container px-0 lg:px-0">
+        <div className="container px-0 sm:px-0 lg:px-0 mx-auto">
           <div className="flex justify-center items-center min-h-screen">
             <div className="w-full max-w-full">
               <HeroContent />
@@ -51,13 +49,12 @@ const Hero: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 mt-8">
-            
             <div className="lg:col-span-8 space-y-4 lg:space-y-8">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="lg:p-6  overflow-hidden transition-all duration-500"
+                className="lg:p-6 overflow-hidden transition-all duration-500"
               >
                 <MarketWatch />
               </motion.div>
@@ -69,11 +66,13 @@ const Hero: React.FC = () => {
                 className="lg:p-6 overflow-hidden transition-all duration-500"
               >
                 <MarketMetrics />
+                {/* Hide MarketGraph on screens below 500px */}
                 <motion.div
                   key={currentSymbol}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5 }}
+                  className="hidden sm:block"
                 >
                   {loading ? (
                     <div className="flex justify-center items-center h-64">
@@ -82,37 +81,38 @@ const Hero: React.FC = () => {
                     </div>
                   ) : (
                     <div className="lg:p-6">
-                    <MarketGraph symbol={currentSymbol} />
+                      <MarketGraph symbol={currentSymbol} />
                     </div>
                   )}
                 </motion.div>
               </motion.div>
 
-              {/* EarningsSurprise Component */}
+              {/* Hide EarningsSurprise on screens below 500px */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="lg:p-6 overflow-hidden transition-all duration-500"
+                className="lg:p-6 overflow-hidden transition-all duration-500 hidden sm:block"
               >
                 <EarningsSurprise symbol={currentSymbol} limit={50} />
               </motion.div>
 
-              {/* SectorPerformance Component */}
+              {/* Hide SectorPerformance on screens below 500px */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
-                className="lg:p-6 overflow-hidden transition-all duration-500"
+                className="lg:p-6 overflow-hidden transition-all duration-500 hidden sm:block"
               >
                 <SectorPerformance />
               </motion.div>
 
+              {/* Hide WorldIndices on screens below 500px */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="lg:p-6  overflow-hidden transition-all duration-500 hidden sm:block"
+                className="lg:p-6 overflow-hidden transition-all duration-500 hidden sm:block"
               >
                 <WorldIndices isLoading={false} />
               </motion.div>
@@ -124,7 +124,7 @@ const Hero: React.FC = () => {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.4 }}
-                  className=" overflow-hidden transition-all duration-500"
+                  className="overflow-hidden transition-all duration-500"
                 >
                   <MarketDashboard />
                 </motion.div>
@@ -147,10 +147,8 @@ const Hero: React.FC = () => {
           </div>
         </div>
       </motion.div>
-
-     
     </div>
   );
 };
 
-export default Hero;
+export default Hero;  

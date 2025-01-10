@@ -11,13 +11,149 @@
     html {
       scroll-behavior: smooth;
     }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+
+    /* Fade-In Animation */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Scroll-to-Top Button */
+    #scroll-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    #scroll-to-top.visible {
+      opacity: 1;
+    }
+
+    /* Parallax Effect */
+    .parallax {
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    /* Lazy Loading */
+    .lazy-load {
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .lazy-load.loaded {
+      opacity: 1;
+    }
   </style>
-  <script type="module" crossorigin src="/assets/js/index-BXv8YnNY.js"></script>
+  <script type="module" crossorigin src="/assets/js/index-Bzd9u0I7.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/js/react-BAR5trb5.js">
   <link rel="modulepreload" crossorigin href="/assets/js/vendor-Cqa_4s5f.js">
-  <link rel="stylesheet" crossorigin href="/assets/css/index-BrI1tUv2.css">
+  <link rel="stylesheet" crossorigin href="/assets/css/index-PB72b-iY.css">
 </head>
 <body>
-  <div id="root"></div>
+  <div id="root"></div>
+  <button id="scroll-to-top" title="Scroll to Top">↑</button>
+  <script>
+    // Scroll-to-Top Button
+    const scrollToTopButton = document.getElementById('scroll-to-top');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        scrollToTopButton.classList.add('visible');
+      } else {
+        scrollToTopButton.classList.remove('visible');
+      }
+    });
+
+    scrollToTopButton.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    });
+
+    // Fade-In Animations
+    const addScrollAnimations = () => {
+      const fadeInElements = document.querySelectorAll('.fade-in');
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+            } else {
+              entry.target.classList.remove('visible');
+            }
+          });
+        },
+        {
+          threshold: 0.1,
+        }
+      );
+
+      fadeInElements.forEach((element) => observer.observe(element));
+    };
+
+    document.addEventListener('DOMContentLoaded', addScrollAnimations);
+
+    // Lazy Loading Images
+    const lazyLoadImages = () => {
+      const lazyImages = document.querySelectorAll('.lazy-load');
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const img = entry.target;
+              img.src = img.dataset.src;
+              img.classList.remove('lazy-load');
+              observer.unobserve(img);
+            }
+          });
+        },
+        {
+          rootMargin: '0px 0px 200px 0px',
+        }
+      );
+
+      lazyImages.forEach((img) => observer.observe(img));
+    };
+
+    document.addEventListener('DOMContentLoaded', lazyLoadImages);
+  </script>
 </body>
 </html>

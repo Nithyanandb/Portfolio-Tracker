@@ -18,19 +18,19 @@ const CookieConsent = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50">
-      <div className="bg-white/40 backdrop-blur-md border-t border-white/[0.1] px-8 py-4">
-        <div className="max-w-[1200px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-bold text-black text-center md:text-left">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      <div className="bg-white/90 backdrop-blur-md border border-white/[0.1] rounded-lg shadow-lg p-8 max-w-[500px] w-full mx-4">
+        <div className="flex flex-col items-center justify-center gap-4">
+          <p className="text-bold text-black text-center">
             This website uses cookies to improve your experience. By continuing to browse, you agree to our use of cookies.
           </p>
           <div className="flex items-center gap-6">
-            <a href="/privacy" className="text-[13px] text-blue-900 hover:text-white transition-colors">
+            <a href="/privacy" className="text-[13px] text-blue-900 hover:text-blue-700 transition-colors">
               Learn More
             </a>
             <button
               onClick={handleAccept}
-              className="text-[13px] font-medium bg-white text-black px-6 py-1 rounded hover:bg-white/90 transition-colors"
+              className="text-[13px] font-medium bg-blue-900 text-white px-6 py-2 rounded hover:bg-blue-700 transition-colors"
             >
               Got it
             </button>

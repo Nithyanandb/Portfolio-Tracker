@@ -374,7 +374,6 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
   );
 };
 
-// NavItem Component
 const NavItem: React.FC<{
   href: string;
   label: string;
@@ -384,21 +383,15 @@ const NavItem: React.FC<{
   onMouseLeave: () => void;
   icon?: React.ReactElement;
 }> = ({ label, children, isHovered, onMouseEnter, onMouseLeave, icon }) => {
-  const [isDropdownHovered, setIsDropdownHovered] = useState(false);
-
   return (
     <NavigationMenuPrimitive.Item
       onMouseEnter={onMouseEnter}
-      onMouseLeave={() => {
-        if (!isDropdownHovered) {
-          onMouseLeave();
-        }
-      }}
+      onMouseLeave={onMouseLeave}
     >
       <NavigationMenuPrimitive.Trigger className="group flex items-center gap-1.5 text-white/80 hover:text-white transition-colors outline-none">
         {icon && React.cloneElement(icon, { className: "h-4 w-4 text-white/80 group-hover:text-white" })}
         <span className="text-sm font-medium tracking-wide">{label}</span>
-        <motion.div animate={{ rotate: isHovered ? 180 : 0 }} transition={{ duration: 0 }}>
+        <motion.div animate={{ rotate: isHovered ? 180 : 0 }} transition={{ duration: 0.2 }}>
           <ChevronDown className="h-3.5 w-3.5" />
         </motion.div>
       </NavigationMenuPrimitive.Trigger>
@@ -407,17 +400,14 @@ const NavItem: React.FC<{
         {isHovered && (
           <NavigationMenuPrimitive.Content
             className="absolute left-0 right-0 top-full z-50 w-screen"
-            onMouseEnter={() => setIsDropdownHovered(true)}
-            onMouseLeave={() => {
-              setIsDropdownHovered(false);
-              onMouseLeave();
-            }}
+            onMouseEnter={onMouseEnter} // Keep the menu open when hovering over the dropdown
+            onMouseLeave={onMouseLeave} // Close the menu when leaving the dropdown
           >
             <motion.div
-              initial={{ opacity: 0, y: 0 }}
+              initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 0 }}
-              transition={{ duration: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
               className="bg-black/95 backdrop-blur-xl border-t border-white/10"
             >
               {children}
@@ -428,7 +418,6 @@ const NavItem: React.FC<{
     </NavigationMenuPrimitive.Item>
   );
 };
-
 // NavLink Component
 const NavLink: React.FC<{
   href: string;

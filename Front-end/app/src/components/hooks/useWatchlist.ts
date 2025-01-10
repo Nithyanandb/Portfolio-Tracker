@@ -9,7 +9,7 @@ export const useWatchlist = () => {
   const fetchWatchlist = useCallback(async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('http://localhost:2000/api/watchlist');
+      const response = await fetch('https://production-backend-production.up.railway.app/api/watchlist');
       if (!response.ok) throw new Error('Failed to fetch watchlist');
       const data = await response.json();
       setWatchlist(data);
@@ -26,7 +26,7 @@ export const useWatchlist = () => {
 
   const addToWatchlist = async (symbol: string) => {
     try {
-      const response = await fetch('http://localhost:2000/api/watchlist', {
+      const response = await fetch('https://production-backend-production.up.railway.app/api/watchlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ symbol }),
@@ -40,7 +40,7 @@ export const useWatchlist = () => {
 
   const removeFromWatchlist = async (id: string) => {
     try {
-      const response = await fetch(`http://localhost:2000/api/watchlist/${id}`, {
+      const response = await fetch(`https://production-backend-production.up.railway.app/api/watchlist/${id}`, {
         method: 'DELETE',
       });
       if (!response.ok) throw new Error('Failed to remove from watchlist');
@@ -52,7 +52,7 @@ export const useWatchlist = () => {
 
   const updateWatchlistItem = async (id: string, data: Partial<WatchlistItem>) => {
     try {
-      const response = await fetch(`http://localhost:2000/api/watchlist/${id}`, {
+      const response = await fetch(`https://production-backend-production.up.railway.app/api/watchlist/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),

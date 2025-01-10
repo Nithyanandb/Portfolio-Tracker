@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_API_URL = 'http://localhost:2000/transaction';
+const BASE_API_URL = 'https://production-backend-production.up.railway.app/transaction';
 
 // Helper function to handle API requests
 const handleTransactionRequest = async (url: string, transaction: {

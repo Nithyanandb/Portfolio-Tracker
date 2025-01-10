@@ -7,7 +7,7 @@ import { StockDetail } from './StockDetail';
 import { symbols } from '../../Stock/StocksPage/symbols';
 import LoadingSpinner from '../../ui/LoadingSpinner';
 
-export const BuyStocks: React.FC = () => {
+const BuyStocks: React.FC = () => {
   const [stocks, setStocks] = useState(symbols);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

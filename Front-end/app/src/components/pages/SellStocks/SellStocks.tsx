@@ -23,7 +23,7 @@ export const SellStocks: React.FC = () => {
   useEffect(() => {
     const fetchPortfolio = async () => {
       try {
-        const response = await fetch('http://localhost:2000/portfolio', {
+        const response = await fetch('https://production-backend-production.up.railway.app/portfolio', {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -71,7 +71,7 @@ export const SellStocks: React.FC = () => {
 
   const handleSell = async (symbol: string, quantity: number) => {
     try {
-      const response = await fetch('http://localhost:2000/transaction/sell', {
+      const response = await fetch('https://production-backend-production.up.railway.app/transaction/sell', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

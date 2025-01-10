@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:2000/api/button';
+const BASE_URL = 'https://production-backend-production.up.railway.app/api/button';
 
 export interface ButtonActionRequest {
   actionType: string;

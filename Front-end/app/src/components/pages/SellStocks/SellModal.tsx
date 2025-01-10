@@ -37,7 +37,7 @@ const SellModal: React.FC<SellModalProps> = ({ stock, onClose, onSuccess }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-zinc-900 rounded-xl p-8 w-96">
+      <div className="bg-black rounded-xl p-8 w-96">
         <h2 className="text-xl font-bold mb-4">Sell {stock.symbol}</h2>
         <p className="text-gray-400 mb-6">Enter the quantity you want to sell (in rupees).</p>
         <input

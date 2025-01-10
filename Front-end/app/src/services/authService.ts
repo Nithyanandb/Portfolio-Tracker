@@ -33,11 +33,11 @@ const authService = {
   },
 
   loginWithGoogle() {
-    window.location.href = 'http://localhost:2000/oauth2/authorization/google';
+    window.location.href = 'https://production-backend-production.up.railway.app/oauth2/authorization/google';
   },
 
   loginWithGithub() {
-    window.location.href = 'http://localhost:2000/oauth2/authorization/github';
+    window.location.href = 'https://production-backend-production.up.railway.app/oauth2/authorization/github';
   },
 
   setAuthUser(data: AuthResponse) {

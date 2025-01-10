@@ -107,8 +107,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           {/* Loading/Success State */}
           {(isAuthenticating || success) ? (
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 0, scale: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
               className="relative z-10 text-center space-y-8"
             >
@@ -138,9 +138,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             </motion.div>
           ) : (
             <motion.div
-              initial={{ scale: 0.95 }}
+              initial={{ scale: 1 }}
               animate={{ scale: 1 }}
-              exit={{ scale: 0.95 }}
+              exit={{ scale: 1 }}
               className={cn(
                 "relative z-0 w-full h-full rounded-2xl overflow-hidden flex", // Full height and width
                 "bg-black backdrop-blur-0",
