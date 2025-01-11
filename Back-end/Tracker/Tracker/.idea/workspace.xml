@@ -4,14 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a5f9c716-fdb7-4cf9-a563-304f0b744b97" name="Changes" comment="" />
+    <list default="true" id="a5f9c716-fdb7-4cf9-a563-304f0b744b97" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/src/main/java/Portfolio/Tracker/Security/OAuth2SuccessHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Portfolio/Tracker/Security/OAuth2SuccessHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Portfolio/Tracker/Security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Portfolio/Tracker/Security/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Portfolio/Tracker/Service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Portfolio/Tracker/Service/impl/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -48,7 +53,7 @@
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "Application.BackendApplication.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Q-Main",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/NITHISH/Documents/GitHub/Portfolio-Tracker/Back-end/Tracker/Tracker",
     "project.structure.last.edited": "Project",
